@@ -24,35 +24,43 @@ if(isset($_POST['submit'])){
 	{
 		// request a forecast (getCurrentConditions(), getForecastForToday() or getForecastForWeek())
 		$forecast = $simpleNWS->getForecastForWeek();
+		$time_layouts = $forecast->getTimeLayouts();
+		$hourly_temp = $forecast->getHourlyRecordedTemperature();
+		$hourly_humidity = $forecast->getHourlyHumidity();
+		$hourly_windspeed = $forecast->getHourlyWindSpeed();
+		$hourly_cloudcover = $forecast->getHourlyCloudCover();
 
 		// print the request URL
 		$requestURL = $forecast->getRequestURL();
 		$requestParts = explode('?', $requestURL);
 		echo "Requested URL:<br>", $requestParts[0], "?", $requestParts[1], "<br><br>";
 	   
+		
 	    // print the time layout
-		$time_layout = $forecast->getTimeLayouts()['k-p3h-n37-3'];
 		echo "time layout<br>";
-		foreach($time_layout as $f)
-			echo $f,"<br>";
+		$i = 0;
+		foreach($time_layouts as $key => $value){
+			if($i == 2){
+				echo $key,"<br>";
+				foreach($time_layouts[$key] as $time)
+					echo $time,"<br>";
+			}
+			$i++;
+		}
 			
 		// print the weather data
-		$hourly_temp = $forecast->getHourlyRecordedTemperature();
 		echo "temperature<br>";
 		foreach($hourly_temp as $f)
 			echo $f,"<br>";
 			
-		$hourly_humidity = $forecast->getHourlyHumidity();
 		echo "humidity<br>";
 		foreach($hourly_humidity as $f)
 			echo $f,"<br>";
 			
-		$hourly_windspeed = $forecast->getHourlyWindSpeed();
 		echo "wind speed<br>";
 		foreach($hourly_windspeed as $f)
 			echo $f,"<br>";
 			
-		$hourly_cloudcover = $forecast->getHourlyCloudCover();
 		echo "cloud cover<br>";
 		foreach($hourly_cloudcover as $f)
 			echo $f,"<br>";
