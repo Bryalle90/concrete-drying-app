@@ -11,8 +11,8 @@ class Main
     }
 	
 	//Performs Calculation to determine evaporation rate. Standard Form.
-	public function StandardCalc($time, $hourly_temp, $hourly_humidity, $hourly_windspeed, $hourly_cloudcover){
-		$evapRate = ((pow($hourly_temp, 2.5) - (($hourly_humidity / 100) * pow($hourly_temp, 2.5))) * (1 + (0.4 * $hourly_windspeed)) * pow(10, -6));
+	public function StandardCalc($time, $air_temp, $humidity, $windspeed, $concrete_temp){
+		$evapRate = ((pow($concrete_temp, 2.5) - (($humidity / 100) * pow($air_temp, 2.5))) * (1 + (0.4 * $windspeed)) * pow(10, -6));
 		$this->addevapArray($evapRate);
 		$this->addtimeArray($time);
 	}

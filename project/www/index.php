@@ -49,10 +49,15 @@
 					
 					$i = 0;
 					foreach($time_layouts as $key => $value){
-						if($i == 2)
-						{
-							foreach($time_layouts[$key] as $time)
-								$main->StandardCalc($time, $hourly_temp[$time], $hourly_humidity[$time], $hourly_windspeed[$time], $hourly_cloudcover[$time]);
+						if($i == 2){
+							foreach($time_layouts[$key] as $time){
+								if(isset($_POST['tb_ctemp'])){
+									$cTemp = $_POST['tb_ctemp'];
+								}else{
+									$cTemp = $hourly_temp[$time];
+								}
+								$main->StandardCalc($time, $hourly_temp[$time], $hourly_humidity[$time], $hourly_windspeed[$time], $cTemp);
+							}
 						}
 						$i++;
 					}					
