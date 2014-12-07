@@ -25,16 +25,21 @@
 
 	var evapArray = [<?php echo '"'.implode('","', $main->getEvapArray()).'"' ?>];
 	var timeArray = [<?php echo '"'.implode('","', $main->getTimeArray()).'"' ?>];
+	var cArray = [<?php echo '"'.implode('","', $main->getCArray()).'"' ?>];
+	var tArray = [<?php echo '"'.implode('","', $main->getTArray()).'"' ?>];
+	var hArray = [<?php echo '"'.implode('","', $main->getHArray()).'"' ?>];
+	var wArray = [<?php echo '"'.implode('","', $main->getWArray()).'"' ?>];
+	
 	var arrayLength = evapArray.length;
 	var maxEvapRate = Math.max.apply(Math, evapArray);
 	var minEvapRate = Math.min.apply(Math, evapArray);
 	var range = maxEvapRate - minEvapRate;
 	
 
-	document.write(maxEvapRate - minEvapRate);
+	//document.write(maxEvapRate - minEvapRate);
 	document.write(" ");
 	//document.write(minEvapRate);
-	document.write(" ");
+	//document.write(cArray);
 	//document.write(arrayLength);
 		
 	// If everything is in the yellow
@@ -131,7 +136,7 @@
 			}
 			
 			for (i = 0; i < arrayLength; i++)  {
-				 yellowArr[i] = yellowLine;
+				 yellowArr[i] = startValue + (step * stepWidth);
 			}
 				
 
@@ -174,7 +179,7 @@
 		startValue = minEvapRate;
 
 		for (i = 0; i < arrayLength; i++)  {
-			 redArr[i] = startValue + (step * stepWidth);
+			 redArr[i] = startValue + (step * (2*stepWidth));
 		}
 		
 		for (i = 0; i < arrayLength; i++)  {
@@ -190,15 +195,19 @@
 			labels : timeArray,
 			datasets : [
 				{
-					label: "Evaporation Rate",
-					fillColor: "rgba(220,220,220,0.15)",
-         		   strokeColor: "rgba(220,220,220,1)",
-           			 pointColor: "black",
-           			pointStrokeColor: "#fff",
-            		pointHighlightFill: "#fff",
-            		pointHighlightStroke: "rgba(220,220,220,1)",
+					//label: "Evaporation Rate",
+					fillColor: "rgba(0,0,0,.1)",
+         		   strokeColor: "rgba(0,0,0,.1)",
+           			 pointColor: "rgba(0,0,0,.1)",
+
+            		pointHighlightStroke: "rgba(0,0,0,.1)",
+            		showTooltip: false,
 					data : evapArray		
 					
+				},
+				{
+				label: "Evaporation Rate" ,
+				data : evapArray
 				},
 				
 				{               
@@ -233,18 +242,26 @@
                 strokeColor : "rgba(0,0,0,0)",
                 pointColor : "rgba(0,0,0,0)",
                 
-                //Get tempArray
-                data : greenArr
+                //Get tArray
+                data : tArray
+				
+                },
+                {
+               // fillColor: "rgba(220,220,220,0.15)",
+                label: "Concrete Temp",
+                strokeColor : "rgba(0,0,0,0)",
+                pointColor : "rgba(0,0,0,0)",
+                //Get conctempArray
+                data : cArray
 				
                 },
                 {
                 
-                label: "Concrete Temp",
+                label: "Humidity",
                 strokeColor : "rgba(0,0,0,0)",
                 pointColor : "rgba(0,0,0,0)",
-                
-                //Get conctempArray
-                data : greenArr
+
+                data : hArray
 				
                 },
                 {
@@ -252,9 +269,9 @@
                 label: "Wind Speed",
                 strokeColor : "rgba(0,0,0,0)",
                 pointColor : "rgba(0,0,0,0)",
-                
+        
                 //Get windArray
-                data : greenArr
+                data : wArray
 				
                 }
 			]
@@ -268,6 +285,9 @@
    			scaleSteps: step,
    			scaleStepWidth: stepWidth,
    			scaleStartValue: startValue,
+   			tooltipFillColor: "#fff", 
+   			tooltipFontColor: "black",
+   			tooltipTitleFontColor: "black",
    			multiTooltipTemplate: "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>"
 			
 		});

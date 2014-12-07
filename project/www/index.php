@@ -52,22 +52,31 @@
 					foreach($time_layouts as $key => $value){
 						if($i == 2){
 							foreach($time_layouts[$key] as $time){
+								$tTemp = $hourly_temp[$time];
 								$cTemp = $hourly_temp[$time];
+								$hum = $hourly_humidity[$time];
+								$wTemp = $hourly_windspeed[$time];
 								if(!empty($_POST['tb_ctemp'])){
 									$cTemp = $_POST['tb_ctemp'];
 								}
-								$main->StandardCalc($time, $hourly_temp[$time], $hourly_humidity[$time], $hourly_windspeed[$time], $cTemp);
+								$main->StandardCalc($time, $tTemp, $hum, $wTemp, $cTemp);
 							}
 						}
 						$i++;
-					}					
+					}	
+										// draw graph
+				include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";			
 				}
 				catch (\Exception $error){
-					echo $error->getMessage();
+					if( $error->getMessage() == "Invalid latitude. Allowed values are between 20.19 and 50.11"){
+						
+						echo "<font color='red'>Please enter a valid zip code</font>";
+						
+					}
+					
 				}
 				
-				// draw graph
-				include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";
+
 			}
 		?>
 		
