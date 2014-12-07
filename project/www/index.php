@@ -20,9 +20,11 @@
 			use SimpleNWS\SimpleNWS;
 			
 			// if enter button was pressed
-			if(isset($_POST['btn_enter']) && !empty($_POST['tb_zip'])){
+			if(isset($_POST['btn_enter']) && $_POST['tb_zip'] != ""){
 				
 				$ziplist = array($_POST['tb_zip']);
+				$isMetric = isset($_POST['cb_metric']);
+				$customCTemp = $_POST['tb_ctemp'] != "";
 				
 				// create soap client
 				$soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
@@ -52,14 +54,14 @@
 					foreach($time_layouts as $key => $value){
 						if($i == 2){
 							foreach($time_layouts[$key] as $time){
-								$tTemp = $hourly_temp[$time];
+								$aTemp = $hourly_temp[$time];
 								$cTemp = $hourly_temp[$time];
 								$hum = $hourly_humidity[$time];
-								$wTemp = $hourly_windspeed[$time];
-								if(!empty($_POST['tb_ctemp'])){
+								$wSpd = $hourly_windspeed[$time];
+								if($customCTemp){
 									$cTemp = $_POST['tb_ctemp'];
 								}
-								$main->StandardCalc($time, $tTemp, $hum, $wTemp, $cTemp);
+								$main->calcEvap($isMetric, $customCTemp, $time, $aTemp, $hum, $wSpd, $cTemp);
 							}
 						}
 						$i++;
@@ -67,9 +69,7 @@
 				}
 				catch (\Exception $error){
 					if( $error->getMessage() == "Invalid latitude. Allowed values are between 20.19 and 50.11"){
-						
 						echo "<font color='red'>Please enter a valid zip code</font>";
-						
 					}
 					
 				}

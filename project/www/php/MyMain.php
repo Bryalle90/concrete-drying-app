@@ -17,22 +17,55 @@ class Main
         $this->_wArray = array();
     }
 	
-	//Performs Calculation to determine evaporation rate. Standard Form.
-	public function StandardCalc($time, $air_temp, $humidity, $windspeed, $concrete_temp){
-		$evapRate = ((pow($concrete_temp, 2.5) - (($humidity / 100) * pow($air_temp, 2.5))) * (1 + (0.4 * $windspeed)) * pow(10, -6));
+	public function calcEvap($isMetric, $customCTemp, $time, $air_temp, $humidity, $windspd, $concrete_temp){
+		if($isMetric && $customCTemp){
+			$concrete_temp = $this->convertCtoF($concrete_temp);
+		}
+		$evapRate = ((pow($concrete_temp, 2.5) - (($humidity / 100) * pow($air_temp, 2.5))) * (1 + (0.4 * $windspd)) * pow(10, -6));
 		$this->addevapArray(number_format((float)$evapRate, 3, '.',''));
 		$this->addtimeArray($time);
+		
+		if($isMetric){
+			$this->addToArraysMetric($air_temp, $humidity, $windspd, $concrete_temp);
+		}else{
+			$this->addToArraysStd($air_temp, $humidity, $windspd, $concrete_temp);
+		}
+	}
+	
+	private function addToArraysMetric($air_temp, $humidity, $windspeed, $concrete_temp){
+		$this->addcArray($this->convertFtoC($concrete_temp));
+		$this->addtArray($this->convertFtoC($air_temp));
+		$this->addhArray($humidity);
+		$this->addwArray($this->convertMphToKph($windspeed));
+	}
+	
+	private function addToArraysStd($air_temp, $humidity, $windspeed, $concrete_temp){
 		$this->addcArray($concrete_temp);
 		$this->addtArray($air_temp);
-		$this->addtArray($humidity);
+		$this->addhArray($humidity);
 		$this->addwArray($windspeed);
+	}
+	
+	private function convertMphToKph($mph){
+		$conversion_factor = 1.6093439987125;
+		return ($mph*$conversion_factor);
+	}
+	
+	private function convertFtoC($temp){
+		$conversion_factor = 5/9;
+		return (($temp-32)*$conversion_factor);
+	}
+	
+	private function convertCtoF($temp){
+		$conversion_factor = 9/5;
+		return (($temp*$conversion_factor)+32);
 	}
 	
 	private function addevapArray($evapRate){
 		array_push($this->_evapArray, $evapRate);
 	}
 	
-	public function getevapArray(){
+	public function getEvapArray(){
 		return $this->_evapArray;
 	}
 	
@@ -40,7 +73,7 @@ class Main
 		array_push($this->_timeArray, $time);
 	}
 	
-	public function gettimeArray(){
+	public function getTimeArray(){
 		return $this->_timeArray;
 	}
 	
@@ -48,7 +81,7 @@ class Main
 		array_push($this->_cArray, $concrete_temp);
 	}
 	
-	public function getcArray(){
+	public function getCArray(){
 		return $this->_cArray;
 	}
 	
@@ -56,7 +89,7 @@ class Main
 		array_push($this->_tArray, $air_temp);
 	}
 	
-	public function gettArray(){
+	public function getTArray(){
 		return $this->_tArray;
 	}
 	
@@ -64,14 +97,14 @@ class Main
 		array_push($this->_hArray, $humidity);
 	}
 	
-	public function gethArray(){
-		return $this->_tArray;
+	public function getHArray(){
+		return $this->_hArray;
 	}
 	private function addwArray($windspeed){
 		array_push($this->_wArray, $windspeed);
 	}
 	
-	public function getwArray(){
+	public function getWArray(){
 		return $this->_wArray;
 	}
 	
