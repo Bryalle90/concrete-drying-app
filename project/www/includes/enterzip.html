@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<form action="/index.php" method="post" align="center">
-		<p><input type="text" name="tb_zip" placeholder="zip code"></p>
-		<p><input type="text" name="tb_ctemp" placeholder="concrete temp (optional)"></p>
+		<p><input type="zip"  pattern ="\d{5}" maxLength = "5" size= "5" name="tb_zip" placeholder="zip code"  required></p>
+		<p><input type="number" min = -50 size = 3 max = 150  name="tb_ctemp" placeholder="concrete temp (optional)"></p>
 		<p><button type="submit" name="btn_enter" class="btn btn-primary">Enter</button></p>
 	</form>
 </html>
