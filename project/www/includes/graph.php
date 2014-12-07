@@ -208,6 +208,7 @@
 				fillColor : greenColor,
             	strokeColor : "rgba(0,0,0,0)",
              	pointColor : "rgba(0,0,0,0)",
+             	showTooltip: false,
 				data : greenArr
 				},
 		
@@ -216,6 +217,7 @@
                     fillColor: yellowColor,
                     strokeColor : "rgba(0,0,0,0)",
                     pointColor : "rgba(0,0,0,0)",
+                    showTooltip: false,
                     data : yellowArr
                     
                 },
@@ -223,6 +225,7 @@
                    fillColor : redColor,
                     strokeColor : "rgba(0,0,0,0)",
                     pointColor : "rgba(0,0,0,0)",   
+                    showTooltip: false,
                     data : redArr 
                 }
 			]
