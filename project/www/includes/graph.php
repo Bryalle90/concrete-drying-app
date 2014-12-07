@@ -164,36 +164,33 @@
 		
 }
 		//Red, yellow, and Green
-		else{
-		document.write("Everything in Yellow, red, and green");
-					
-			scale = true;
-			step = 15;
-			x = (maxEvapRate - minEvapRate)/ step;
-			stepWidth = x.toFixed(3);
-			startValue = minEvapRate;
-			document.write("Everything in Yellow, red, and green");
-	
-					
-			for (i = 0; i < arrayLength; i++)  {
-				 redArr[i] = startValue + (step * stepWidth);
-			}
-			for (i = 0; i < arrayLength; i++)  {
-				 greenArr[i] = greenLine;
-				}
-			
-				for (i = 0; i < arrayLength; i++)  {
-				 yellowArr[i] = yellowLine;
-			}
+		else
+		{
+		document.write("Everything in Yellow, red, and green");		
+		scale = true;
+		step = 15;
+		x = (maxEvapRate - minEvapRate)/ step;
+		stepWidth = x.toFixed(3);
+		startValue = minEvapRate;
+
+		for (i = 0; i < arrayLength; i++)  {
+			 redArr[i] = startValue + (step * stepWidth);
 		}
 		
-		
+		for (i = 0; i < arrayLength; i++)  {
+			 greenArr[i] = greenLine;
+		}
+			
+		for (i = 0; i < arrayLength; i++)  {
+			 yellowArr[i] = yellowLine;
+		}
+	}			
 		
 		var lineChartData = {
 			labels : timeArray,
 			datasets : [
 				{
-					label: "Evaporation Forecast",
+					label: "Evaporation Rate",
 					fillColor: "rgba(220,220,220,0.15)",
          		   strokeColor: "rgba(220,220,220,1)",
            			 pointColor: "black",
@@ -201,6 +198,7 @@
             		pointHighlightFill: "#fff",
             		pointHighlightStroke: "rgba(220,220,220,1)",
 					data : evapArray		
+					
 				},
 				
 				{               
@@ -227,6 +225,37 @@
                     pointColor : "rgba(0,0,0,0)",   
                     showTooltip: false,
                     data : redArr 
+                },
+                
+                {
+                
+                label: "Air Temp",
+                strokeColor : "rgba(0,0,0,0)",
+                pointColor : "rgba(0,0,0,0)",
+                
+                //Get tempArray
+                data : greenArr
+				
+                },
+                {
+                
+                label: "Concrete Temp",
+                strokeColor : "rgba(0,0,0,0)",
+                pointColor : "rgba(0,0,0,0)",
+                
+                //Get conctempArray
+                data : greenArr
+				
+                },
+                {
+                
+                label: "Wind Speed",
+                strokeColor : "rgba(0,0,0,0)",
+                pointColor : "rgba(0,0,0,0)",
+                
+                //Get windArray
+                data : greenArr
+				
                 }
 			]
 
@@ -238,8 +267,8 @@
 			scaleOverride: scale,
    			scaleSteps: step,
    			scaleStepWidth: stepWidth,
-   			scaleStartValue: startValue
-   			
+   			scaleStartValue: startValue,
+   			multiTooltipTemplate: "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>"
 			
 		});
 		
