@@ -20,7 +20,7 @@
 			use SimpleNWS\SimpleNWS;
 			
 			// if enter button was pressed
-			if(isset($_POST['btn_enter'])){
+			if(isset($_POST['btn_enter']) && !empty($_POST['tb_zip'])){
 				
 				$ziplist = array($_POST['tb_zip']);
 				
@@ -63,9 +63,7 @@
 							}
 						}
 						$i++;
-					}	
-										// draw graph
-				include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";			
+					}
 				}
 				catch (\Exception $error){
 					if( $error->getMessage() == "Invalid latitude. Allowed values are between 20.19 and 50.11"){
@@ -75,8 +73,8 @@
 					}
 					
 				}
-				
-
+				// draw graph
+				include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";
 			}
 		?>
 		
