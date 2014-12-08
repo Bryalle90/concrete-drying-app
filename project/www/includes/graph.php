@@ -29,7 +29,7 @@
 	var tArray = [<?php echo '"'.implode('","', $main->getTArray()).'"' ?>];
 	var hArray = [<?php echo '"'.implode('","', $main->getHArray()).'"' ?>];
 	var wArray = [<?php echo '"'.implode('","', $main->getWArray()).'"' ?>];
-	var cCover = [<?php echo '"'.implode('","', $main->getWArray()).'"' ?>];
+	var cCover = [<?php echo '"'.implode('","', $main->getCcArray()).'"' ?>];
 	
 	
 	//document.write(wArray);

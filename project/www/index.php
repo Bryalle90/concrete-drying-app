@@ -68,7 +68,7 @@
 						$i++;
 					}
 					// draw graph
-				include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";
+					include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";
 				}
 				
 				

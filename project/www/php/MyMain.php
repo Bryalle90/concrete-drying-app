@@ -7,6 +7,7 @@ class Main
 	private $_tArray;
 	private $_hArray;
 	private $_wArray;
+	private $_ccArray;
     public function __construct()
     {
         $this->_evapArray = array();
@@ -15,9 +16,10 @@ class Main
         $this->_tArray = array();
         $this->_hArray = array();
         $this->_wArray = array();
+        $this->_ccArray = array();
     }
 	
-	public function calcEvap($isMetric, $customCTemp, $time, $air_temp, $humidity, $windspd, $concrete_temp){
+	public function calcEvap($isMetric, $customCTemp, $time, $air_temp, $humidity, $windspd, $concrete_temp, $cloud_cover){
 		if($isMetric && $customCTemp){
 			$concrete_temp = $this->convertCtoF($concrete_temp);
 		}
@@ -26,24 +28,26 @@ class Main
 		$this->addtimeArray($time);
 		
 		if($isMetric){
-			$this->addToArraysMetric($air_temp, $humidity, $windspd, $concrete_temp);
+			$this->addToArraysMetric($air_temp, $humidity, $windspd, $concrete_temp, $cloud_cover);
 		}else{
-			$this->addToArraysStd($air_temp, $humidity, $windspd, $concrete_temp);
+			$this->addToArraysStd($air_temp, $humidity, $windspd, $concrete_temp, $cloud_cover);
 		}
 	}
 	
-	private function addToArraysMetric($air_temp, $humidity, $windspeed, $concrete_temp){
+	private function addToArraysMetric($air_temp, $humidity, $windspeed, $concrete_temp, $cloud_cover){
 		$this->addcArray($this->convertFtoC($concrete_temp));
 		$this->addtArray($this->convertFtoC($air_temp));
 		$this->addhArray($humidity);
 		$this->addwArray($this->convertMphToKph($windspeed));
+		$this->addccArray($cloud_cover);
 	}
 	
-	private function addToArraysStd($air_temp, $humidity, $windspeed, $concrete_temp){
+	private function addToArraysStd($air_temp, $humidity, $windspeed, $concrete_temp, $cloud_cover){
 		$this->addcArray($concrete_temp);
 		$this->addtArray($air_temp);
 		$this->addhArray($humidity);
 		$this->addwArray($windspeed);
+		$this->addccArray($cloud_cover);
 	}
 	
 	private function convertMphToKph($mph){
@@ -100,6 +104,7 @@ class Main
 	public function getHArray(){
 		return $this->_hArray;
 	}
+	
 	private function addwArray($windspeed){
 		array_push($this->_wArray, $windspeed);
 	}
@@ -108,5 +113,12 @@ class Main
 		return $this->_wArray;
 	}
 	
+	private function addccArray($cc){
+		array_push($this->_ccArray, $cc);
+	}
+	
+	public function getCcArray(){
+		return $this->_ccArray;
+	}
 }
 ?>
