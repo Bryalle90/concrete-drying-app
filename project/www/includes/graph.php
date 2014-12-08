@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<div style="width:93%" >
+<div style="width:93% " >
 <div><canvas id="canvas" height="300" width="600"></canvas> </div></div>
 
 <script>
@@ -29,19 +29,102 @@
 	var tArray = [<?php echo '"'.implode('","', $main->getTArray()).'"' ?>];
 	var hArray = [<?php echo '"'.implode('","', $main->getHArray()).'"' ?>];
 	var wArray = [<?php echo '"'.implode('","', $main->getWArray()).'"' ?>];
+	var cCover = [<?php echo '"'.implode('","', $main->getWArray()).'"' ?>];
 	
+	
+	//document.write(wArray);
+
+	var month = new Array();
+	month[0] = "January";
+	month[1] = "February";
+	month[2] = "March";
+	month[3] = "April";
+	month[4] = "May";
+	month[5] = "June";
+	month[6] = "July";
+	month[7] = "August";
+	month[8] = "September";
+	month[9] = "October";
+	month[10] = "November";
+	month[11] = "December";
+
+	var year = [];
+	var day = [];
+	var hour = [];
+	var tmpDay = []
+	var tmphour = []
+	
+	var weekday = new Array(7);
+	weekday[0] = "Sunday";
+	weekday[1] = "Monday";
+	weekday[2] = "Tuesday";
+	weekday[3] = "Wednesday";
+	weekday[4] = "Thursday";
+	weekday[5] = "Friday";
+	weekday[6] = "Saturday";
+
 	var arrayLength = evapArray.length;
 	var maxEvapRate = Math.max.apply(Math, evapArray);
 	var minEvapRate = Math.min.apply(Math, evapArray);
 	var range = maxEvapRate - minEvapRate;
+	//document.write(timeArray[0]);
 	
-
-	//document.write(maxEvapRate - minEvapRate);
-	document.write(" ");
-	//document.write(minEvapRate);
-	//document.write(cArray);
-	//document.write(arrayLength);
+	for (var i=0; i<arrayLength; i++) {
+		var string = timeArray[i];
+		var partsArray = string.split('-');
 		
+		year[i] = partsArray[0];
+		month[i] = ((partsArray[1]) - 1);
+		day[i] = partsArray[2];
+		hour[i] = partsArray[3];
+
+		
+		
+		//document.write(year[i]);
+		//document.write("   ");
+		//document.write(month[i]);
+		//document.write(" ");
+		//document.write(day[i]);
+		//document.write(" ");
+		//document.write(hour[i]);
+		//document.write("   ");
+		var d = new Date(year[i], month[i], day[i], hour[i], 0, 0, 0);
+		
+		if (hour[i] >= 12) {
+			var suffex = ' PM'
+		}
+		else{
+			var suffex = ' AM'
+		}
+		
+		if (hour[i] > 12) {
+			hour[i] = (hour[i] - 12) + suffex;
+			}
+		else {
+			hour[i] = hour[i] + suffex;
+		}
+		if (hour == '00') {
+			hour[i] = 12 + suffex;
+		}
+		
+		tmpDay[i] = weekday[d.getDay()];
+
+	}
+	var labelDate = [];
+	
+	labelDate[0] = tmpDay[0] + " " + hour[0]; 
+	
+	for (var i = 1; i < arrayLength; i++)
+	{
+		if (tmpDay[i] == tmpDay[i-1]){
+			//document.write(tmpDay[i], tmpDay[i-1]);
+			labelDate[i] = hour[i];
+		}
+		else{
+			labelDate[i] = tmpDay[i] + " " + hour[i];
+		}
+	}
+	
 	// If everything is in the yellow
 	if (minEvapRate >= greenLine && maxEvapRate <= yellowLine)
 	{
@@ -114,6 +197,9 @@
 								for (i = 0; i < arrayLength; i++)  {
 				 yellowArr[i] = yellowLine;
 			}
+			
+			//redColor = "rgba(255,0,0,0.02)";
+			
 
 		
 		}
@@ -139,7 +225,6 @@
 				 yellowArr[i] = startValue + (step * stepWidth);
 			}
 				
-
 			
 		}
 		
@@ -160,7 +245,6 @@
 					for (i = 0; i < arrayLength; i++)  {
 				  redArr[i] = startValue + (step * stepWidth);
 			}
-
 			
 								for (i = 0; i < arrayLength; i++)  {
 				 yellowArr[i] = yellowLine;
@@ -174,13 +258,12 @@
 		document.write("Everything in Yellow, red, and green");		
 		scale = true;
 		step = 15;
-		x = (maxEvapRate - minEvapRate)/ step;
+		x = (maxEvapRate - minEvapRate)/ (step - 1);
 		stepWidth = x.toFixed(3);
 		startValue = minEvapRate;
 
 		for (i = 0; i < arrayLength; i++)  {
-			 redArr[i] = startValue + (step * (2*stepWidth));
-		}
+		redArr[i] = startValue + (step * stepWidth);		}
 		
 		for (i = 0; i < arrayLength; i++)  {
 			 greenArr[i] = greenLine;
@@ -192,14 +275,13 @@
 	}			
 		
 		var lineChartData = {
-			labels : timeArray,
+			labels : labelDate,
 			datasets : [
 				{
 					//label: "Evaporation Rate",
 					fillColor: "rgba(0,0,0,.1)",
          		   strokeColor: "rgba(0,0,0,.1)",
            			 pointColor: "rgba(0,0,0,.1)",
-
             		pointHighlightStroke: "rgba(0,0,0,.1)",
             		showTooltip: false,
 					data : evapArray		
@@ -260,8 +342,16 @@
                 label: "Humidity",
                 strokeColor : "rgba(0,0,0,0)",
                 pointColor : "rgba(0,0,0,0)",
-
                 data : hArray
+				
+                },
+                                {
+                
+                label: "Cloud Cover",
+                strokeColor : "rgba(0,0,0,0)",
+                pointColor : "rgba(0,0,0,0)",
+
+                data : cCover
 				
                 },
                 {
@@ -275,7 +365,6 @@
 				
                 }
 			]
-
 		}
 	window.onload = function(){
 		var ctx = document.getElementById("canvas").getContext("2d");
@@ -288,15 +377,9 @@
    			tooltipFillColor: "#fff", 
    			tooltipFontColor: "black",
    			tooltipTitleFontColor: "black",
+   			tooltipXOffset: 1,
    			multiTooltipTemplate: "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>"
-			
 		});
-		
-		
-			
-		
-		
-		
 	}
 
 

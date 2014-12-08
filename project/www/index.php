@@ -58,23 +58,27 @@
 								$cTemp = $hourly_temp[$time];
 								$hum = $hourly_humidity[$time];
 								$wSpd = $hourly_windspeed[$time];
+								$cCover = $hourly_cloudcover[$time];
 								if($customCTemp){
 									$cTemp = $_POST['tb_ctemp'];
 								}
-								$main->calcEvap($isMetric, $customCTemp, $time, $aTemp, $hum, $wSpd, $cTemp);
+								$main->calcEvap($isMetric, $customCTemp, $time, $aTemp, $hum, $wSpd, $cTemp, $cCover);
 							}
 						}
 						$i++;
 					}
+					// draw graph
+				include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";
 				}
+				
+				
 				catch (\Exception $error){
 					if( $error->getMessage() == "Invalid latitude. Allowed values are between 20.19 and 50.11"){
 						echo "<font color='red'>Please enter a valid zip code</font>";
 					}
 					
 				}
-				// draw graph
-				include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";
+				
 			}
 		?>
 		
