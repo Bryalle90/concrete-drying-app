@@ -9,11 +9,17 @@
 	</head>
 	<body>
 		<?php
+			// start session
+			session_start();
+			
+			// if user is logged in
+			$loggedin = isset($_SESSION['user']);
+			
 			// show top nav bar and zipcode input
 			include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
 			include $_SERVER['DOCUMENT_ROOT']."/includes/enterzip.html";
 			
-			// require libraries
+ 			// require libraries
 			require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
 			require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
 			require_once($_SERVER['DOCUMENT_ROOT'].'/php/MyMain.php');
@@ -69,17 +75,14 @@
 					}
 					// draw graph
 					include $_SERVER['DOCUMENT_ROOT']."/includes/graph.php";
-				}
-				
-				
+				}				
 				catch (\Exception $error){
 					if( $error->getMessage() == "Invalid latitude. Allowed values are between 20.19 and 50.11"){
 						echo "<font color='red'>Please enter a valid zip code</font>";
 					}
-					
 				}
-				
 			}
+			
 		?>
 		
 		<script src="javascript/Chart.js"></script>

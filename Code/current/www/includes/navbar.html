@@ -21,7 +21,8 @@
 		  </div>
 		  <div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-			  <li><a href="login.html">Log in</a></li>
+			  <?php if(!$loggedin) echo '<li><a href="/php/login.php">Log in</a></li>';?>
+			  <?php if($loggedin){ echo '<li><a href="/php/user.php">'.$_SESSION['user'].'</a></li>'; echo '<li><a href="/php/logout.php">Log out</a></li>';}?>
 			  <li><a href="about.html">About</a></li>
 			</ul>
 		  </div>
