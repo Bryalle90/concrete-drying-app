@@ -15,7 +15,7 @@ class User {
 		$this->password = $password;
 	}
 
-	//connect to the database and the user table
+	//connect to the database
 	public function connectdb(){			
 		$dbhandle = mysql_connect($hostname, $username, $password)
 			OR die("Unable to connect to MySQL");
@@ -23,7 +23,7 @@ class User {
 		echo "Connected to MySQL<br>";
 		
 		$selected = mysql_select_db("Account", $dbhandle)
-			OR die("Could not select user");
+			OR die("Could not select");
 	}
 
 	//inserts a new user to the table
