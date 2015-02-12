@@ -68,7 +68,7 @@
 								if($customCTemp){
 									$cTemp = $_POST['tb_ctemp'];
 								}
-								$main->calcEvap($isMetric, $customCTemp, $time, $aTemp, $hum, $wSpd, $cTemp, $cCover);
+								$main->fillArrays($isMetric, $customCTemp, $time, $aTemp, $hum, $wSpd, $cTemp, $cCover);
 							}
 						}
 						$i++;

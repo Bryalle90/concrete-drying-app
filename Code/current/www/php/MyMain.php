@@ -19,11 +19,11 @@ class Main
         $this->_ccArray = array();
     }
 	
-	public function calcEvap($isMetric, $customCTemp, $time, $air_temp, $humidity, $windspd, $concrete_temp, $cloud_cover){
+	public function fillArrays($isMetric, $customCTemp, $time, $air_temp, $humidity, $windspd, $concrete_temp, $cloud_cover){
 		if($isMetric && $customCTemp){
 			$concrete_temp = $this->convertCtoF($concrete_temp);
 		}
-		$evapRate = ((pow($concrete_temp, 2.5) - (($humidity / 100) * pow($air_temp, 2.5))) * (1 + (0.4 * $windspd)) * pow(10, -6));
+		$evapRate = this->calcEvap($concrete_temp, $humidity, $air_temp, $windspd);
 		$this->addevapArray(number_format((float)$evapRate, 3, '.',''));
 		$this->addtimeArray($time);
 		
@@ -32,6 +32,10 @@ class Main
 		}else{
 			$this->addToArraysStd($air_temp, $humidity, $windspd, $concrete_temp, $cloud_cover);
 		}
+	}
+	
+	public function calcEvap($concrete_temp, $humidity, $air_temp, $windspd){
+		return ((pow($concrete_temp, 2.5) - (($humidity / 100) * pow($air_temp, 2.5))) * (1 + (0.4 * $windspd)) * pow(10, -6));
 	}
 	
 	private function addToArraysMetric($air_temp, $humidity, $windspeed, $concrete_temp, $cloud_cover){
