@@ -31,6 +31,9 @@ $(function ()
 	var yellow = 'rgba(255,255,0,.85)';
 	var green = 'rgba(0, 226, 0, 0.7)';
 	
+	var ModerateRiskBoundary = 0.20;
+	var lowRiskBoundary = 0.15;
+	
 	//Date and time variables
 	var monthname = new Array();
 	monthname[0] = "January";
@@ -299,8 +302,8 @@ $(function ()
 					//If evaporation rate has a high risk show concrete temperature to go from the high to moderate risk and from high to low risk
 					if (this.y > 0.2)
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(0.15, windSpeedArray[index], humidityArray[index], airTempArray[index] );						
-						suggestedModConcTemp = main.getLowerRiskTemp(0.20, windSpeedArray[index], humidityArray[index], airTempArray[index] );
+						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );						
+						suggestedModConcTemp = main.getLowerRiskTemp(ModerateRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );
 						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp + temperatureLabel;
 						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
 					}
@@ -308,7 +311,7 @@ $(function ()
 					//If evaporationg rate has a moderate risk
 					else if (this.y > 0.15)
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(0.15, windSpeedArray[index], humidityArray[index], airTempArray[index] );	
+						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );	
 						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
 					}
 				}//end if
@@ -319,8 +322,8 @@ $(function ()
 					//If evaporation rate has a high risk
 					if (this.y > 0.2)
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(0.15, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));
-						suggestedModConcTemp = main.getLowerRiskTemp(0.20, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));			
+						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));
+						suggestedModConcTemp = main.getLowerRiskTemp(ModerateRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));			
 						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + main.convertFtoC(suggestedModConcTemp) + temperatureLabel;
 						s+= '<br/> \u2022 Concrete temp needed for low risk airTemp:' +  main.convertFtoC(suggestedLowConcTemp) + temperatureLabel;
 					}
@@ -328,7 +331,7 @@ $(function ()
 					//If evaporation rate has a moderate risk
 					else if(this.y > 0.15 )
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(0.15, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));
+						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));
 						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
 					}
 				}//end else
