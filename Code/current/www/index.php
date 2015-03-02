@@ -33,14 +33,14 @@
 			if(isset($_POST['btn_enter']) && $_POST['tb_zip'] != ""){
 				$ziplist = array($_POST['tb_zip']);
 				$zipcode = $ziplist[0];
-					
-				$isMetric = 0;
-				if (isset($_POST['cb_metric'])){
-					$isMetric = 1;
-				}
-
-				$customCTemp = $_POST['tb_ctemp'] != "";
-					
+                
+                $isMetric = 0;
+                if (isset($_POST['cb_metric']))
+                    $isMetric = 1;
+                $customCTemp = 0;
+                if (isset($_POST['tb_ctemp']) && $_POST['tb_ctemp'] != NULL)
+                    $customCTemp = 1;
+                    
 				// create soap client
 				$soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
 
@@ -97,8 +97,8 @@
 					}
 						
 				}
-					
 			}
 		?>
+        
 </body>
 </html>
