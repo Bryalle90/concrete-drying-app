@@ -13,12 +13,18 @@ function Main(zipCode, metric) {
     this.evapArray = [];
 
     this.fillArrays = function(customCTemp, aTemp, time, humidity, windSpeed, concTemp, cloudCoverage) {
+        // if we want metric and the user specified a custom conrete temperature
         if(this.metric && customCTemp){
             concTemp = this.convertCtoF(concTemp);
         }
-        this.addToEvapArray(this.calculateEvapArray(aTemp, humidity, windSpeed, concTemp));
+        
+        // calculate evaporation rate and add it to the evap array
+        this.addToEvapArray(this.calculateEvap(aTemp, humidity, windSpeed, concTemp));
+        
+        // add the time to the time array
         this.addTimeArray(time);
         
+        // if we are using metric, convert the variables to metric values
         if(this.metric){
             this.addToArraysMetric(aTemp, humidity, windSpeed, concTemp, cloudCoverage);
         } else {
@@ -26,19 +32,31 @@ function Main(zipCode, metric) {
         }
     };
 
+    // determines what concrete temperature is needed to change the risk to 'limit'
     this.getLowerRiskTemp = function(limit, windSpeed, humidity, airTemp) {
-        return Math.round(Math.pow(((limit*Math.pow(10,6))/(1+(0.4 * windSpeed)))+(humidity / 100) * (Math.pow(airTemp, 2.5)), 0.4));
+        atemp = Math.pow(airTemp, 2.5);
+        humidPercent = humidity / 100;
+        wspd = 1 + (0.4 * windSpeed);
+        lim = limit*Math.pow(10,6);
+        lowerTemp = Math.pow((lim/wspd) + humidPercent * atemp, 0.4)
+        return (Math.round(lowerTemp));
     };
 
-    this.calculateEvapArray = function(airTemperature, humidity, windSpeed, concTemp) {
-        return ((Math.pow(concTemp, 2.5) - ((humidity / 100) * Math.pow(airTemperature, 2.5))) * (1 + (0.4 * windSpeed)) * Math.pow(10, -6));
+    // calculates evaporation rate for one point in time
+    this.calculateEvap = function(airTemperature, humidity, windSpeed, concTemp) {
+        ctemp = Math.pow(concTemp, 2.5);
+        humidPercent = humidity / 100;
+        atemp = Math.pow(airTemperature, 2.5);
+        wspd = 1 + (0.4 * windSpeed);
+        evap = (ctemp - (humidPercent * atemp)) * wspd * Math.pow(10, -6)
+        return (evap);
     };
     
     this.addToArraysMetric = function(air_temp, humidity, windspeed, concrete_temp, cloud_cover){
-        this.addConcreteTempArray(this.convertFtoC(concrete_temp));
         this.addAirTempArray(this.convertFtoC(air_temp));
         this.addHumidityArray(humidity);
         this.addWindSpeedArray(this.convertMphToKph(windspeed));
+        this.addConcreteTempArray(this.convertFtoC(concrete_temp));
         this.addCloudCoverArray(cloud_cover);
     };
     
