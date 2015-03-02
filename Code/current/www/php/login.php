@@ -1,20 +1,29 @@
 <?php
-	require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
+    require $_SERVER['DOCUMENT_ROOT']."/php/usersdb.php";
+    // require $_SERVER['DOCUMENT_ROOT']."/php/User.php";
 		
 	session_start();
 	// if user tried to log in
 	if(isset($_POST['btn_signin']) && $_POST['tb_email'] != "" && $_POST['tb_pass'] != ""){
-		// $usersdb = new UsersDB();
+		// $user = new User();
+        // $user.connectdb();
+        $userEmail = $_POST['tb_email'];
+        
 		// get user hash from database
-		$hash = '$2y$10$O5ugtbPvNmq.dZmscAitq.pHlm.Ibthasn3.szvvDGPuoXuI4zUN2';
-		if(password_verify($_POST['tb_pass'], $hash)){
-			$user = $_POST['tb_email'];
-			
+        // $hash = user.getPassHash($userEmail);
+        
+        // the testing password is 'pass'.. only temporary
+        $user = new UsersDB();
+		$hash = $user->hashPass('pass');
+        
+		if($user->verifyPass($_POST['tb_pass'], $hash)){
+            // set session array to blank and destroy current session
 			$_SESSION = array();
 			session_destroy();
+            // start new session
 			session_start();
-			$_SESSION['user'] = $user;
-			
+			$_SESSION['user'] = $userEmail;
+			// redirect to index page
 			header("Location: /../index.php");
 		}
 	}
@@ -23,4 +32,5 @@
 	} else {
 		header("Location: /../index.php");
 	}
+
 ?>

@@ -10,22 +10,30 @@
 	</head>
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-		  <div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-			  <span class="sr-only">Toggle navigation</span>
-			  <span class="icon-bar"></span>
-			  <span class="icon-bar"></span>
-			  <span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="/">Concrete Shrinkage Calc</a>
-		  </div>
-		  <div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-			  <?php if(!$loggedin) echo '<li><a href="/php/login.php">Log in</a></li>';?>
-			  <?php if($loggedin){ echo '<li><a href="/php/user.php">'.$_SESSION['user'].'</a></li>'; echo '<li><a href="/php/logout.php">Log out</a></li>';}?>
-			  <li><a href="about.html">About</a></li>
-			</ul>
-		  </div>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Concrete Concepts</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <?php if(!$loggedin){
+                        echo 
+                        '<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">log in<span class="caret"></span></a>
+                            <ul style="width:310px" class="dropdown-menu" role="menu">
+                                <li>';include $_SERVER['DOCUMENT_ROOT']."/includes/login.html"; echo '</li>
+                            </ul>
+                        </li>';
+                    }?>
+                    <?php if($loggedin){ echo '<li><a href="/php/user.php">'.$_SESSION['user'].'</a></li>'; echo '<li><a href="/php/logout.php">Log out</a></li>';}?>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
 		</div>
 	</nav>
 </html>
