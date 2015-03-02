@@ -1,6 +1,4 @@
 <?php
-namespace SimpleNWS;
-
 require_once 'Configuration.php';
 require_once 'DWMLParser.php';
 require_once 'ForecastModel.php';

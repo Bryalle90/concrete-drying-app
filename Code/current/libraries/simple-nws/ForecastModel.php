@@ -1,5 +1,4 @@
 <?php
-namespace SimpleNWS;
 /**
  * Forecast model class
  *

@@ -28,7 +28,6 @@
 			// require libraries
 			require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
 			require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
-			use SimpleNWS\SimpleNWS;
 				
 			// if enter button was pressed
 			if(isset($_POST['btn_enter']) && $_POST['tb_zip'] != ""){

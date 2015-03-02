@@ -1,5 +1,4 @@
 <?php
-namespace SimpleNWS;
 /**
  * Configuration class for the SimpleNWS library
  *

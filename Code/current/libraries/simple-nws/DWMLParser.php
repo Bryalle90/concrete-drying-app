@@ -1,5 +1,4 @@
 <?php
-namespace SimpleNWS;
 /**
  * Parser for NOAA's Digital Weather Markup Language
  *
