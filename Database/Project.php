@@ -1,7 +1,7 @@
-//Weather.php
-//Class used to interact with the weather table in our database.
+//Project.php
+//Class used to interact with the project table in our database.
 //by: zach smith
-//last edited: 2/2/15
+//last edited: 3/3/15
 
 
 class Weather {
@@ -26,6 +26,7 @@ class Weather {
 			OR die("Could not select");
 	}
 
+	
 
 	//close the connection
 	public function _destruct(){
