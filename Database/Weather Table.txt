@@ -1,0 +1,8 @@
+USE Account:
+CREATE TABLE weather (
+	projectID int UNIQUE NOT NULL,
+	evapRate double,
+	time smalldatetime,
+	PRIMARY KEY(projectID)
+);
+INSERT INTO weather(1, 0.512, 2015-2-20 03:00:00);

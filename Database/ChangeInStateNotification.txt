@@ -1,0 +1,8 @@
+USE Account;
+CREATE TABLE changeInStateNotification (
+	projectID int NOT NULL,
+	changeID int UNIQUE NOT NULL,
+	changeTime smalldatetime,
+	PRIMARY KEY(changeID)
+);
+INSERT INTO project VALUES(1, 1, 2015-3-3 06:00:00);
