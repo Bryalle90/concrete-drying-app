@@ -1,4 +1,3 @@
-CREATE DATABASE Account;
 USE Account;
 CREATE TABLE user (
 	userID int UNIQUE NOT NULL,

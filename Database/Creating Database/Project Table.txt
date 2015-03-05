@@ -1,0 +1,9 @@
+USE Account;
+CREATE TABLE project (
+	projectID int UNIQUE NOT NULL,
+	userID int NOT NULL,
+	name varchar(255),
+	zipcode int,
+	PRIMARY KEY(projectID)
+);
+INSERT INTO project VALUES(1, 1, 'Test Project', 62069);

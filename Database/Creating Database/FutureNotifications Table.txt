@@ -1,0 +1,8 @@
+USE Account;
+CREATE TABLE futureNotifications (
+	projectID int NOT NULL,
+	futureID int UNIQUE NOT NULL,
+	futureDate smalldatetime,
+	PRIMARY KEY(futureID)
+);
+INSERT INTO project VALUES(1, 1, 2015-3-15 03:00:00);

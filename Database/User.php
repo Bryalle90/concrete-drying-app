@@ -1,7 +1,7 @@
 //User.php
 //Class used to interact with the uesr table in our database.
 //by: zach smith
-//last edited: 2/2/15
+//last edited: 3/3/15
 
 
 class User {
@@ -29,7 +29,7 @@ class User {
 	//inserts a new user to the table
 	public function addUser($userID, $email, $userPass, $isAdmin){
 		$sql = "INSERT INTO user (userID, email, userPass, isAdmin)
-		VALUES ($userID, $email, $userPass, $isAdmin);
+		VALUES ($userID, $email, $userPass, $isAdmin)";
 
 		if($dbhandle->query($sql) === TRUE) {
 			//output to confirm insertion
@@ -41,7 +41,7 @@ class User {
 
 	//checks to see if email and password match and return userID if they do, returns NULL if not
 	public function isUser($email, $userPass){
-		$sql = "SELECT userID FROM user WHERE email = $email AND userPass = $userPass;
+		$sql = "SELECT userID FROM user WHERE email = $email AND userPass = $userPass";
 		$result = $dphandle->query($sql);
 		
 		if($result == NULL){
@@ -56,7 +56,7 @@ class User {
 
 	//checks to see if user is admin and return true of false
 	public function isUserAdmin($userID){
-		$sql = "SELECT isAdmin FROM user WHERE userID = $userID;
+		$sql = "SELECT isAdmin FROM user WHERE userID = $userID";
 		$result = $dphandle->query($sql);
 
 		if($result == 'y'){
@@ -64,6 +64,13 @@ class User {
 		} else {
 			return FALSE;
 		}
+	}
+
+	//gets the number of entries in the database(used to set next id)
+	public function count(){
+		$sql = "SELECT COUNT(*) FROM user";
+		$result = $dphandle->query($sql);
+		return $result;
 	}
 
 	//close the connection
