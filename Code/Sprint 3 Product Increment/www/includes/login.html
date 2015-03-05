@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)http://getbootstrap.com/2.3.2/examples/signin.html -->
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>Sign in</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <form class="form-horizontal" action="/php/login.php" method="post">
+                <form class="form-group">
+                        <input style="max-width:280px" name="tb_email" id="email" type="text" class="form-control" placeholder="Email address" autocomplete="off">
+                        <input style="max-width:280px" name="tb_pass" id="pass" type="password" class="form-control" placeholder="Password" autocomplete="off">
+                        <button type="submit" name="btn_signin" class="btn btn-primary">Login</button>
+                </form>
+            </form>
+        </div>
+        
+        <script id="hiddenlpsubmitdiv" style="display: none;"></script><script>try{for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++){ var lastpass_f = document.forms[lastpass_iter]; if(typeof(lastpass_f.lpsubmitorig2)=="undefined"){ lastpass_f.lpsubmitorig2 = lastpass_f.submit; lastpass_f.submit = function(){ var form=this; var customEvent = document.createEvent("Event"); customEvent.initEvent("lpCustomEvent", true, true); var d = document.getElementById("hiddenlpsubmitdiv"); if (d) {for(var i = 0; i < document.forms.length; i++){ if(document.forms[i]==form){ d.innerText=i; } } d.dispatchEvent(customEvent); }form.lpsubmitorig2(); } } }}catch(e){}</script>
+    </body>
+</html>
