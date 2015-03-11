@@ -5,7 +5,7 @@
 
     <body>
         <div align="center">
-            <form class="form-inline" action="/index.php" method="post">
+            <form class="form-inline" action="/index.php" method="get">
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-addon">*</div>
@@ -17,7 +17,7 @@
                     <label class="sr-only" for="ctempinput">Concrete Temperature</label>
                     <input style="min-width:200px"  name="tb_ctemp" id="ctempinput" type="number" class="form-control" min="-50" size="3" max="150" placeholder="concrete temp">
                 </div>
-                <button type="submit" name="btn_enter" class="btn btn-primary">Enter</button>
+                <button type="submit" class="btn btn-primary">Enter</button>
                 <div class="checkbox">
                     <label>
                       <input name="cb_metric" type="checkbox"> Metric
