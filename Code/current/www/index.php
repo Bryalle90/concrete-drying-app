@@ -46,6 +46,46 @@
                         $customCTemp = 1;
                         
                     // create soap client
+                    // http://webservicex.net/uszip.asmx
+                    $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
+                    
+                    // get info about zip code
+                    $result = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
+                    $city = $result['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
+                    $state = $result['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
+                    $timezone = $result['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
+                    
+                    // decide UTC offset from time zone
+                    // more info here: http://www.timetemperature.com/tzus/gmt_united_states.shtml
+                    // alaska: K, hawaii: H, puerto rico: A, pacific: P, mountain: M, central: C, eastern: E
+                    switch ($timezone) {
+                        case 'P':
+                            $offset = -8;
+                            break;
+                        case 'M':
+                            $offset = -7;
+                            break;
+                        case 'C':
+                            $offset = -6;
+                            break;
+                        case 'E':
+                            $offset = -5;
+                            break;
+                        case 'K':
+                            $offset = -9;
+                            break;
+                        case 'H':
+                            $offset = -10;
+                            break;
+                        case 'A':
+                            $offset = -4;
+                            break;
+                        default:
+                            $offset = 0;
+                    }
+                    
+                    // create new soap client
+                    // http://graphical.weather.gov/xml/
                     $soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
 
                     // get lon and lat from zip code
@@ -69,27 +109,31 @@
                         $hourly_windspeed = $forecast->getHourlyWindSpeed();
                         $hourly_cloudcover = $forecast->getHourlyCloudCover();
                             
+                        // get the third time layout
                         $i = 0;
                         foreach($time_layouts as $key => $value){
-                            if($i == 2){
-                                foreach($time_layouts[$key] as $time){
-                                    $aTemp = $hourly_temp[$time];
-                                    $cTemp = $hourly_temp[$time];
-                                    $hum = $hourly_humidity[$time];
-                                    $wSpd = $hourly_windspeed[$time];
-                                    $cCover = $hourly_cloudcover[$time];
-                                    if($customCTemp){
-                                        $cTemp = $_GET['tb_ctemp'];
-                                    }
-                                    ?>
-                                        <script>
-                                            main.fillArrays(<?=$customCTemp?>, <?=$aTemp?>, <?php echo json_encode($time) ?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
-                                        </script>
-                                    <?php
-                                }
-                            }
+                            if ($i == 2)
+                                $k = $key;
                             $i++;
                         }
+                        
+                        // fill the javascript weather arrays with values from simpleNWS
+                        foreach($time_layouts[$k] as $time){
+                            $aTemp = $hourly_temp[$time];
+                            $cTemp = $hourly_temp[$time];
+                            $hum = $hourly_humidity[$time];
+                            $wSpd = $hourly_windspeed[$time];
+                            $cCover = $hourly_cloudcover[$time];
+                            if($customCTemp){
+                                $cTemp = $_GET['tb_ctemp'];
+                            }
+                            ?>
+                                <script>
+                                    main.fillArrays(<?=$customCTemp?>, <?=$aTemp?>, <?php echo json_encode($time) ?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
+                                </script>
+                            <?php
+                        }
+                        
                         // draw graph
                         include $_SERVER['DOCUMENT_ROOT']."/includes/graph.html";
                     }
