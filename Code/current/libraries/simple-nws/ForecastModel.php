@@ -443,8 +443,8 @@ class ForecastModel
 
             $aggregateData['recorded_temperature'] = $this->_averageValues($date, $timeInterval, $this->_hourlyRecordedTemperature);
             $aggregateData['apparent_temperature'] = $this->_averageValues($date, $timeInterval, $this->_hourlyApparentTemperature);
-            $aggregateData['precipitation']        = $this->_averageValues($date, $timeInterval, $this->_hourlyPrecipitation);
-            $aggregateData['snow_amount']          = $this->_averageValues($date, $timeInterval, $this->_hourlySnowAmount);
+            // $aggregateData['precipitation']        = $this->_averageValues($date, $timeInterval, $this->_hourlyPrecipitation);
+            // $aggregateData['snow_amount']          = $this->_averageValues($date, $timeInterval, $this->_hourlySnowAmount);
             $aggregateData['cloud_coverage']       = $this->_averageValues($date, $timeInterval, $this->_hourlyCloudCover);
             $aggregateData['wind_speed']           = $this->_averageValues($date, $timeInterval, $this->_hourlyWindSpeed);
             $aggregateData['humidity']             = $this->_averageValues($date, $timeInterval, $this->_hourlyHumidity);

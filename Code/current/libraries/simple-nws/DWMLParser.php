@@ -81,26 +81,97 @@ class DWMLParser
      */
     private function _validate()
     {
+        if(!$this->_checkCONUS() && !$this->_checkHAWAII() && !$this->_checkALASKA() && !$this->_checkGUAM() && !$this->_checkPR())
+        {
+            // invalid coordinates
+            throw new \Exception('Invalid coordinates.');
+        }
+        /**
         // check the datatype for latitude and make sure it's in the valid range
         if ((!is_float($this->_latitude)) || ($this->_latitude < Configuration::$minLatitude) || ($this->_latitude > Configuration::$maxLatitude))
         {
             // invalid latitude
             throw new \Exception('Invalid latitude. Allowed values are between '.Configuration::$minLatitude.' and '.Configuration::$maxLatitude);
         }
-
+        
         // check the datatype for longitude and make sure it's in the valid range
         if ((!is_float($this->_longitude)) || ($this->_longitude < Configuration::$minLongitude) || ($this->_longitude > Configuration::$maxLongitude))
         {
             // invalid longitude
             throw new \Exception('Invalid longitude. Allowed values are between '.Configuration::$minLongitude.' and '.Configuration::$maxLongitude);
         }
-
+        */
         // check timeframe
         if (!in_array($this->_timeframe, Configuration::$allowedTimeframeValues))
         {
             // invalid timeframe
             throw new \Exception('Invalid timeframe. Allowed values: '.implode(', ', Configuration::$allowedTimeframeValues));
         }
+    }
+    
+    private function _checkCONUS()
+    {
+        if ((!is_float($this->_latitude)) || ($this->_latitude < Configuration::$minLatitude_CONUS) || ($this->_latitude > Configuration::$maxLatitude_CONUS))
+        {
+            return 0;
+        }
+        if ((!is_float($this->_longitude)) || ($this->_longitude < Configuration::$minLongitude_CONUS) || ($this->_longitude > Configuration::$maxLongitude_CONUS))
+        {
+            return 0;
+        }
+        return 1;
+    }
+    
+    private function _checkHAWAII()
+    {
+        if ((!is_float($this->_latitude)) || ($this->_latitude < Configuration::$minLatitude_HAWAII) || ($this->_latitude > Configuration::$maxLatitude_HAWAII))
+        {
+            return 0;
+        }
+        if ((!is_float($this->_longitude)) || ($this->_longitude < Configuration::$minLongitude_HAWAII) || ($this->_longitude > Configuration::$maxLongitude_HAWAII))
+        {
+            return 0;
+        }
+        return 1;
+    }
+    
+    private function _checkALASKA()
+    {
+        if ((!is_float($this->_latitude)) || ($this->_latitude < Configuration::$minLatitude_ALASKA) || ($this->_latitude > Configuration::$maxLatitude_ALASKA))
+        {
+            return 0;
+        }
+        if ((!is_float($this->_longitude)) || ($this->_longitude < Configuration::$minLongitude_ALASKA) || ($this->_longitude > Configuration::$maxLongitude_ALASKA))
+        {
+            return 0;
+        }
+        return 1;
+    }
+    
+    private function _checkGUAM()
+    {
+        if ((!is_float($this->_latitude)) || ($this->_latitude < Configuration::$minLatitude_GUAM) || ($this->_latitude > Configuration::$maxLatitude_GUAM))
+        {
+            return 0;
+        }
+        if ((!is_float($this->_longitude)) || ($this->_longitude < Configuration::$minLongitude_GUAM) || ($this->_longitude > Configuration::$maxLongitude_GUAM))
+        {
+            return 0;
+        }
+        return 1;
+    }
+    
+    private function _checkPR()
+    {
+        if ((!is_float($this->_latitude)) || ($this->_latitude < Configuration::$minLatitude_PR) || ($this->_latitude > Configuration::$maxLatitude_PR))
+        {
+            return 0;
+        }
+        if ((!is_float($this->_longitude)) || ($this->_longitude < Configuration::$minLongitude_PR) || ($this->_longitude > Configuration::$maxLongitude_PR))
+        {
+            return 0;
+        }
+        return 1;
     }
 
 
