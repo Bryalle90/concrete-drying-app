@@ -50,7 +50,11 @@ class DWMLParser
 
         // build the URL based on parameters
         $requestURL = $this->_buildURL();
-        //echo $requestURL.'</br>';
+        /**
+        echo '<pre>';
+        echo $requestURL;
+        echo '</pre>';
+        */
         $this->_forecast->setRequestURL($requestURL);
 
         // perform the request and get the XML data
@@ -205,8 +209,8 @@ class DWMLParser
                 $endTimestamp   = strtotime('tomorrow');
                 break;
             case 'week':
-                $startTimestamp = strtotime('today');
-                $endTimestamp   = strtotime('today + 1 week');
+                $startTimestamp = strtotime('now - 1 day');
+                $endTimestamp   = strtotime('now + 1 week');
                 break;
             case 'now':
             default:
