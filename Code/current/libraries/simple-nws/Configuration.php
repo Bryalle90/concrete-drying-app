@@ -106,8 +106,8 @@ class Configuration
                                       'temp',  // Temperature
                                       'appt',  // Apparent Temperature
                                       'wx',    // Weather
-                                      'qpf',   // Liquid Precipitation Amount
-                                      'snow',  // Snowfall Amount
+                                      //'qpf',   // Liquid Precipitation Amount
+                                      //'snow',  // Snowfall Amount
                                       'sky',   // Cloud Cover Amount
                                       'wspd',  // Wind Speed
                                       'rh');   // Relative Humidity

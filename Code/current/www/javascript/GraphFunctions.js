@@ -4,6 +4,8 @@
 function Main(zipCode, metric) {
     this.zipCode = zipCode;
     this.metric = metric;
+    this.city = "";
+    this.state = "";
     this.airTempArray = [];
     this.timeArray = [];
     this.humidityArray = [];
@@ -11,9 +13,10 @@ function Main(zipCode, metric) {
     this.concTempArray = [];
     this.cloudCoverArray = [];
     this.evapArray = [];
+    
 
     this.fillArrays = function(customCTemp, aTemp, time, humidity, windSpeed, concTemp, cloudCoverage) {
-        // if we want metric and the user specified a custom conrete temperature
+        // if we want metric and the user specified a custom concrete temperature
         if(this.metric && customCTemp){
             concTemp = this.convertCtoF(concTemp);
         }
@@ -90,6 +93,26 @@ function Main(zipCode, metric) {
     };
  
     // getters/setters
+    this.setCity = function(city){
+        this.city = city;
+    };
+    
+    this.setState = function(state){
+        this.state = state;
+    };
+    
+    this.getCity = function(){
+        return this.city;
+    };
+    
+    this.getState = function(){
+        return this.state;
+    };
+    
+    this.getTitle = function() {
+        return (this.city + ', ' + this.state + ' ' + this.zipCode);
+    };
+    
     this.isMetric = function(){
         return this.metric;
     };
