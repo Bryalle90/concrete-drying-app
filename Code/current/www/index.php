@@ -34,15 +34,15 @@
 			require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
 				
 			// if the zip code is valid
-			if(isset($_GET['tb_zip']))
-                if (preg_match($ZIPPATTERN, $_GET['tb_zip'])){
-                    $ziplist = array($_GET['tb_zip']);
+			if(isset($_GET['zip']))
+                if (preg_match($ZIPPATTERN, $_GET['zip'])){
+                    $ziplist = array($_GET['zip']);
                     
                     $isMetric = 0;
                     if (isset($_GET['cb_metric']))
                         $isMetric = 1;
                     $customCTemp = 0;
-                    if (isset($_GET['tb_ctemp']) && $_GET['tb_ctemp'] != NULL)
+                    if (isset($_GET['ctemp']) && $_GET['ctemp'] != NULL)
                         $customCTemp = 1;
                     
                     // create new soap client
@@ -78,14 +78,21 @@
                         
                         // get info about zip code
                         $result = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
+                        $city = $result['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
+                        $state = $result['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
+                        if($state != 'GU')
+                            $tz = $result['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
+                        else
+                            $tz = "Chamorro";
                         ?>
                         <script>
-                        main.setCity(<?=json_encode($result['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'])?>);
-                        main.setState(<?=json_encode($result['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'])?>);
+                        main.setCity(<?=json_encode($city)?>);
+                        main.setState(<?=json_encode($state)?>);
+                        main.setTimezone(<?=json_encode($tz)?>);
                         </script>
                         <?php
 			
-                        // get the third time layout
+                        // get the third time layout (Every 3 hours out to 72 hours, Every 6 hours out to 168 hours)
                         $i = 0;
                         foreach($time_layouts as $key => $value){
                             if ($i == 2)
@@ -101,7 +108,7 @@
                             $wSpd = $hourly_windspeed[$time];
                             $cCover = $hourly_cloudcover[$time];
                             if($customCTemp){
-                                $cTemp = $_GET['tb_ctemp'];
+                                $cTemp = $_GET['ctemp'];
                             }
                             ?>
                             <script>
@@ -115,12 +122,12 @@
                     }
                     catch (\Exception $error){
                         if( $error->getMessage() == "Invalid coordinates."){
-                            echo '<div class="alert alert-danger" role="alert">Please enter a valid zip code</div>';
+                            echo '<div class="alert alert-danger" role="alert">invalid zipcode: Could not get coordinates from zip code</div>';
                         }
                             
                     }
                 } else {
-                    echo '<div class="alert alert-danger" role="alert">Please enter a valid zip code</div>';
+                    echo '<div class="alert alert-danger" role="alert">Please enter 5-digit numerical zip code</div>';
                 }
 		?>
         

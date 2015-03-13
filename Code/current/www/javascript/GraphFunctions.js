@@ -6,6 +6,7 @@ function Main(zipCode, metric) {
     this.metric = metric;
     this.city = "";
     this.state = "";
+    this.timezone = "";
     this.airTempArray = [];
     this.timeArray = [];
     this.humidityArray = [];
@@ -109,8 +110,12 @@ function Main(zipCode, metric) {
         return this.state;
     };
     
-    this.getTitle = function() {
-        return (this.city + ', ' + this.state + ' ' + this.zipCode);
+    this.setTimezone = function(timezone){
+        this.timezone = timezone;
+    };
+    
+    this.getTimezone = function(){
+        return this.timezone;
     };
     
     this.isMetric = function(){
