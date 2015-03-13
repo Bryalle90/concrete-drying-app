@@ -8,7 +8,7 @@ Desc: This file generates the graph
 -->
 
 <!--Container that the chart is in -->
-<div id="container" style = "height:430px;" ></div>
+<div id="container" style = "height:430px; auto" ></div>
 <script>
 	
 $(function ()
@@ -21,15 +21,20 @@ $(function ()
 	var timeArray = main.getTimeArray();
 	var cloudCoverArray = main.getCloudCoverArray();
 	var windSpeedArray = main.getWindSpeedArray();
-	
+
 	var zipCode = main.getZipCode();
 	var isMetric = main.isMetric();	
 	var arrayLength = evapArray.length;
+
+	var city = main.getCity();
+	var state = main.getState();
+	var timezone = main.getTimezone();
 	
 	//These colors are used for the plotbands and tooltip borders
 	var red = 'rgba(255, 0, 0, 0.8)';
 	var yellow = 'rgba(255,255,0,.85)';
 	var green = 'rgba(0, 226, 0, 0.7)';
+	var tmpColor = ''
 	
 	var ModerateRiskBoundary = 0.20;
 	var lowRiskBoundary = 0.15;
@@ -70,7 +75,32 @@ $(function ()
 	var evaporationRateLabel = "";
 	var temperatureLabel = "";
 	var windLabel = "";
-
+	var title = city + ', ' + state + ' ' + zipCode;
+	switch (timezone) {
+		case 'P':
+			timezone = '(Pacfic Time Zone)';
+			break;
+		case 'C':
+			timezone = '(Central Time Zone)';
+			break;
+		case 'M':
+			timezone = '(Mountain Time Zone)';
+			break;
+		case 'E':
+			timezone = '(Eastern Time Zone)';
+			break;
+		case 'K':
+			timezone = '(Alaska Time Zone)';
+			break;
+		case 'H':
+			timezone = '(Hawaii-Aleutian Time Zone)';
+			break;
+		case 'A':
+			timezone = '(Atlantic Time Zone)';
+			break;
+		
+	}
+	
 	//Add suffixes of labels 
 	//If metric assign metric labels
 	if (isMetric)
@@ -88,7 +118,6 @@ $(function ()
 		evaporationRateLabel = ' lb/ft'+'\xB2'+'/hr </b> ';
 		temperatureLabel = '\xB0'+'F';
 		windLabel = 'mph';
-		
 	}
 
 	//Format dates and times
@@ -130,7 +159,7 @@ $(function ()
 		nameOfDay[i] = weekday[d.getDay()];
 	}
 
-	var subtitle = nameOfMonth[0] + " " + day[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1];
+	var subtitle = nameOfMonth[0] + " " + day[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1] + ' ' + timezone;
 
 	//Labels for x-axis
 	var labelDate = [];
@@ -145,9 +174,9 @@ $(function ()
 	$('#container').highcharts
 	({
 		//title configuration
-		title:
+		title: 
 		{
-			text: zipCode,
+			text: title,
 			 x: 35 //center
 		},
 
@@ -198,7 +227,7 @@ $(function ()
 			[{
 				//Green (low risk) plot band
 				from: -.8,
-				to: .15,
+				to: lowRiskBoundary,
 				color: green,
 				//Green plot band title configuration
 				label:
@@ -216,8 +245,8 @@ $(function ()
 
 			{
 				//Yellow (moderate risk) plot band
-				from: .1501,
-				to: .2,
+				from: lowRiskBoundary,
+				to: ModerateRiskBoundary,
 				color: yellow,
 				
 				//Yellow plot band title configuration
@@ -236,7 +265,7 @@ $(function ()
 
 			{
 				//Red (high risk) plot band
-				from: .200,
+				from: ModerateRiskBoundary,
 				to: 5,
 				color: red,
 				
@@ -258,61 +287,73 @@ $(function ()
 		//Tooltip Configuration
 		tooltip:
 		{
-			shared: false,
-			borderWidth: 2.5,
+			//shared: false,
 			useHTML: true,
-
+			borderWidth: 0,
+			style:
+			{
+				padding: 0
+			},
+			//borderColor: null,
+			
 			//Tooltip Formatter
 			formatter: function()
 			{
+
 				var newSeries = this.series;
 				var index = $.inArray(this.x, labelDate);
-
+				
 				//Sets border color of tooltip
 				// If evap rate is over .2 then Red tooltip border
-				if (this.y > .2)
+				if (this.y > ModerateRiskBoundary)
 				{
-					this.series.color = red;
+					tmpColor = red;
+					//this.borderColor = red;
+					//this.series.tooltip.borderColor = red;
 				}
 				
 				//yellow border
-				else if (this.y > .15 && this.y <= .2)
+				else if (this.y > lowRiskBoundary && this.y <= ModerateRiskBoundary)
 				{
-					this.series.color = yellow;
+					//borderColor: yellow
+					tmpColor = yellow;
+					//this.borderColor = red;
 				}
 				
 				//Green border
 				else
 				{
-					this.series.color = green;
+					tmpColor = green;
+					//this.borderColor = red;
 				}
-
-				var s = '<b>'+ this.x +'</b>';
-				s += '<span style="color:' + this.series.color + '"> </span>';
-				s += '<br/> <b>'+ this.series.name + ': ' + this.y + evaporationRateLabel;
-				s += '<br/>	\u2022 Temperature: ' + airTempArray[index] + temperatureLabel;
+				//borderColor: '#eb454d';
+				//var s = 
+				var s = '<div style= "padding: 10px; border: 3px solid '+tmpColor+';">';
+				s +='<b>'+ this.x +'</b>';
+				s += '<br/> <b>'+ this.series.name + ': ' + this.y.toFixed(2) + evaporationRateLabel;
+				s += '<br/>	\u2022 Temperature: ' + airTempArray[index].toFixed(0) + temperatureLabel;
 				s += '<br/> \u2022 Concrete Temperature: ' + concTempArray[index]+ temperatureLabel;
 				s += '<br/>	\u2022 Wind: ' + windSpeedArray[index] + windLabel;
-				s += '<br/>	\u2022 Relative Humidity: ' + humidityArray[index]+ '%';
-				s += '<br/>	\u2022 Cloud Cover: ' + cloudCoverArray[index] +'%';
+				s += '<br/>	\u2022 Relative Humidity: ' + humidityArray[index].toFixed(0)+ '%';
+				s += '<br/>	\u2022 Cloud Cover: ' + cloudCoverArray[index].toFixed(0) +'%';
 				
 				// If standard
 				if (isMetric == false)
 				{
 					//If evaporation rate has a high risk show concrete temperature to go from the high to moderate risk and from high to low risk
-					if (this.y > 0.2)
+					if (this.y > ModerateRiskBoundary)
 					{
 						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );						
 						suggestedModConcTemp = main.getLowerRiskTemp(ModerateRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );
-						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp + temperatureLabel;
-						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
+						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp.toFixed(0) + temperatureLabel;
+						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
 					}
 
 					//If evaporationg rate has a moderate risk
-					else if (this.y > 0.15)
+					else if (this.y > lowRiskBoundary)
 					{
 						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );	
-						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
+						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
 					}
 				}//end if
 
@@ -320,23 +361,24 @@ $(function ()
 				else
 				{
 					//If evaporation rate has a high risk
-					if (this.y > 0.2)
+					if (this.y > ModerateRiskBoundary)
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));
-						suggestedModConcTemp = main.getLowerRiskTemp(ModerateRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));			
-						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + main.convertFtoC(suggestedModConcTemp) + temperatureLabel;
-						s+= '<br/> \u2022 Concrete temp needed for low risk airTemp:' +  main.convertFtoC(suggestedLowConcTemp) + temperatureLabel;
+						suggestedLowConcTemp = main.convertFtoC(main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));
+						suggestedModConcTemp = main.convertFtoC(main.getLowerRiskTemp(ModerateRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));			
+						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp.toFixed(0) + temperatureLabel;
+						s+= '<br/> \u2022 Concrete temp needed for low risk airTemp:' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
 					}
 
 					//If evaporation rate has a moderate risk
-					else if(this.y > 0.15 )
+					else if(this.y > lowRiskBoundary )
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index]));
-						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
+						suggestedLowConcTemp = main.convertFtoC(main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));
+						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
 					}
 				}//end else
 
 				//return tooltip string
+				s+= '</div>'
 				return s;
 			},
 		},
@@ -360,14 +402,15 @@ $(function ()
 						//If a point is selected display form to change concrete temperature
 						select: function ()
 						{
+							
 							$('#divForm').html
-							(this.category + " -  Evaporation Rate: <input type='text' style = 'width:40px' name= 'EvapRate' value= "
-							+ this.y + " readonly> Temperature: <input type='text' style = 'width:40px' name= 'temp' value= "
-							+ airTempArray[this.index] + " readonly> Concrete Temperature <input type='text' style = 'width:40px' maxlength = '5' name= 'concTemp' id = 'concTemp' value= "
-							+ concTempArray[this.index] + " autofocus>Wind Speed: <input type='text' style = 'width:40px' name= 'windspeed' value= "
-							+ windSpeedArray[this.index] + " readonly> Relative Humidity: <input type='text' style = 'width:40px' name= 'humidity' value= "
-							+ humidityArray[this.index] + " readonly> Cloud Cover: <input type='text' style = 'width:40px' name= 'cloudCover' value= "
-							+ cloudCoverArray[this.index] + " readonly>");
+							(this.category + " -  Evaporation Rate: <input type='text' style = 'width:35px' name= 'EvapRate' value= "
+							+ this.y.toFixed(2) + " readonly>" +evaporationRateLabel +" &nbsp &nbsp Temperature: <input type='text' style = 'width:25px' name= 'temp' value= "
+							+ airTempArray[this.index].toFixed(0) +" readonly>"+ temperatureLabel+"&nbsp &nbsp Concrete Temperature: <input type='text' style = 'width:25px' maxlength = '5' name= 'concTemp' id = 'concTemp' value= "
+							+ concTempArray[this.index].toFixed(0) + " autofocus> "+ temperatureLabel+ "&nbsp &nbsp Wind Speed: <input type='text' style = 'width:25px' name= 'windspeed' id = 'windspeed' value= "
+							+ windSpeedArray[this.index].toFixed(0) + "> " + windLabel +"&nbsp &nbsp Relative Humidity: <input type='text' style = 'width:25px' name= 'humidity' value= "
+							+ humidityArray[this.index].toFixed(0) + " readonly>% &nbsp &nbsp Cloud Cover: <input type='text' style = 'width:25px' name= 'cloudCover' value= "
+							+ cloudCoverArray[this.index].toFixed(0) + " readonly>%");
 							$('#button').html("<br> <button id = 'button'> Change Concrete Temp </button>");
 						},
 					},
@@ -408,20 +451,27 @@ $(function ()
 		selectedPoints = chart.getSelectedPoints();
 		i = selectedPoints[0].index; //index of last selected point
 		updatedCTemp = document.getElementById('concTemp').value;
-		//Update index of concTempArray with new concrete temperature that user entered in form
+		updatedWindSpeed = document.getElementById('windspeed').value;
+		
+		//Update index of concTempArray and windSpeedArray with new concrete temperature and windspeed that user entered in form
 		concTempArray[i] = updatedCTemp;
-		//Calculating 
-		evapArray[i] = main.calculateEvapArray(airTempArray[i], humidityArray[i], windSpeedArray[i], concTempArray[i])
+		windSpeedArray[i] = updatedWindSpeed;
+		//Calculating
+
+		evapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], concTempArray[i]);
+		
+		//calculate evaprate for metric 
+		
 		//Update chart
 		chart.series[0].data[i].update(evapArray[i]);
 		chart.series[0].update(chart.series[0].data[i].options);
 	});
 });
-
 </script>
-<p> To change the concrete temperature click on a point and enter in a new temp: </p>
+<p> To change the concrete temperature or wind speed click on a point and enter in a new concrete or wind speed: </p>
 <div id="divForm"></div>
 <div id ="button"></div>
+
 
 
 
