@@ -44,45 +44,6 @@
                     $customCTemp = 0;
                     if (isset($_GET['tb_ctemp']) && $_GET['tb_ctemp'] != NULL)
                         $customCTemp = 1;
-                        
-                    // create soap client
-                    // http://webservicex.net/uszip.asmx
-                    $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
-                    
-                    // get info about zip code
-                    $result = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
-                    $city = $result['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
-                    $state = $result['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
-                    $timezone = $result['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
-                    
-                    // decide UTC offset from time zone
-                    // more info here: http://www.timetemperature.com/tzus/gmt_united_states.shtml
-                    // alaska: K, hawaii: H, puerto rico: A, pacific: P, mountain: M, central: C, eastern: E
-                    switch ($timezone) {
-                        case 'P':
-                            $offset = -8;
-                            break;
-                        case 'M':
-                            $offset = -7;
-                            break;
-                        case 'C':
-                            $offset = -6;
-                            break;
-                        case 'E':
-                            $offset = -5;
-                            break;
-                        case 'K':
-                            $offset = -9;
-                            break;
-                        case 'H':
-                            $offset = -10;
-                            break;
-                        case 'A':
-                            $offset = -4;
-                            break;
-                        default:
-                            $offset = 0;
-                    }
                     
                     // create new soap client
                     // http://graphical.weather.gov/xml/
@@ -98,7 +59,9 @@
                     $simpleNWS = new SimpleNWS(floatval($latlon[0]), floatval($latlon[1]));
                     
                     ?>
-                    <script>main = new Main(<?=$ziplist[0]?>, <?=$isMetric?>);</script>
+                    <script>
+                    main = new Main(<?=json_encode($ziplist[0])?>, <?=$isMetric?>);
+                    </script>
                     <?php
                     try{
                         // request a forecast (getCurrentConditions(), getForecastForToday() or getForecastForWeek())
@@ -108,7 +71,20 @@
                         $hourly_humidity = $forecast->getHourlyHumidity();
                         $hourly_windspeed = $forecast->getHourlyWindSpeed();
                         $hourly_cloudcover = $forecast->getHourlyCloudCover();
-                            
+                        
+                        // create new soap client
+                        // http://webservicex.net/uszip.asmx
+                        $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
+                        
+                        // get info about zip code
+                        $result = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
+                        ?>
+                        <script>
+                        main.setCity(<?=json_encode($result['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'])?>);
+                        main.setState(<?=json_encode($result['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'])?>);
+                        </script>
+                        <?php
+			
                         // get the third time layout
                         $i = 0;
                         foreach($time_layouts as $key => $value){
@@ -128,9 +104,9 @@
                                 $cTemp = $_GET['tb_ctemp'];
                             }
                             ?>
-                                <script>
-                                    main.fillArrays(<?=$customCTemp?>, <?=$aTemp?>, <?php echo json_encode($time) ?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
-                                </script>
+                            <script>
+                            main.fillArrays(<?=$customCTemp?>, <?=$aTemp?>, <?php echo json_encode($time) ?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
+                            </script>
                             <?php
                         }
                         

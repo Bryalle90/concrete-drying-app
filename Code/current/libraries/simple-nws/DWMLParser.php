@@ -50,6 +50,7 @@ class DWMLParser
 
         // build the URL based on parameters
         $requestURL = $this->_buildURL();
+        //echo $requestURL.'</br>';
         $this->_forecast->setRequestURL($requestURL);
 
         // perform the request and get the XML data
@@ -222,7 +223,7 @@ class DWMLParser
             $parameters[] = $param.'='.$param;
         }
         $url .= implode('&', $parameters);
-
+        
         return $url;
     }
 
@@ -250,7 +251,7 @@ class DWMLParser
             $values = array();
             foreach ($layout->{'start-valid-time'} as $time)
             {
-                $values[]      = date('Y-m-d-H', strtotime(strval($time)));
+                $values[]      = date('Y-m-d-H', strtotime(strval(str_split($time, 19)[0])));
                 $dateLayouts[] = date('Y-m-d',   strtotime(strval($time)));
             }
 
