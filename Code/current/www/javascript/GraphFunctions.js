@@ -16,12 +16,7 @@ function Main(zipCode, metric) {
     this.evapArray = [];
     
 
-    this.fillArrays = function(customCTemp, aTemp, time, humidity, windSpeed, concTemp, cloudCoverage) {
-        // if we want metric and the user specified a custom concrete temperature
-        if(this.metric && customCTemp){
-            concTemp = this.convertCtoF(concTemp);
-        }
-        
+    this.fillArrays = function(aTemp, time, humidity, windSpeed, concTemp, cloudCoverage) {        
         // calculate evaporation rate and add it to the evap array
         this.addToEvapArray(this.calculateEvap(aTemp, humidity, windSpeed, concTemp));
         

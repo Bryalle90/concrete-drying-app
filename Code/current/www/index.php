@@ -21,122 +21,157 @@
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
 	</head>
 	<body>
-		<?php
-            $ZIPPATTERN = "/\b\d{5}\b/"; // us zip code regex
-            
-			// start session
-			session_start();
-            
-			// if user is logged in
-            $loggedin = 0;
-            if (isset($_SESSION['user']))
-                $loggedin = 1;
-		
-			// show top nav bar and zipcode input
-			include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
-			include $_SERVER['DOCUMENT_ROOT']."/includes/enterzip.html";
-				
-			// require libraries
-			require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
-			require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
-				
-			// if the zip code is valid
-			if(isset($_GET['zip']))
-                if (preg_match($ZIPPATTERN, $_GET['zip'])){
-                    $ziplist = array($_GET['zip']);
-                    
-                    $isMetric = 0;
-                    if (isset($_GET['cb_metric']))
-                        $isMetric = 1;
-                    $customCTemp = 0;
-                    if (isset($_GET['ctemp']) && $_GET['ctemp'] != NULL)
-                        $customCTemp = 1;
-                    
-                    // create new soap client
-                    // http://graphical.weather.gov/xml/
-                    $soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
-
-                    // get lon and lat from zip code
-                    $LatLonList = $soapclient->call('LatLonListZipCode',$ziplist,
-                                                   'uri:DWMLgen',
-                                                   'uri:DWMLgen/LatLonListZipCode');
-
-                    $latlon = new SimpleXMLElement($LatLonList);
-                    $latlon = explode(',', $latlon->latLonList[0]);
-                    $simpleNWS = new SimpleNWS(floatval($latlon[0]), floatval($latlon[1]));
-                    
-                    ?>
-                    <script>
-                    main = new Main(<?=json_encode($ziplist[0])?>, <?=$isMetric?>);
-                    </script>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-0 col-md-1">
+                </div>
+                <div class="col-xs-12 col-md-10">
                     <?php
-                    try{
-                        // request a forecast (getCurrentConditions(), getForecastForToday() or getForecastForWeek())
-                        $forecast = $simpleNWS->getForecastForWeek();
-                        $time_layouts = $forecast->getTimeLayouts();
-                        $hourly_temp = $forecast->getHourlyRecordedTemperature();
-                        $hourly_humidity = $forecast->getHourlyHumidity();
-                        $hourly_windspeed = $forecast->getHourlyWindSpeed();
-                        $hourly_cloudcover = $forecast->getHourlyCloudCover();
+                    $ZIPPATTERN = "/\b\d{5}\b/"; // usa zip code regex
+                    
+                    // start session
+                    session_start();
+                    
+                    // if user is logged in
+                    $loggedin = 0;
+                    if (isset($_SESSION['user']))
+                        $loggedin = 1;
+                
+                    // show top nav bar and zipcode input
+                    include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
+                    include $_SERVER['DOCUMENT_ROOT']."/includes/enterzip.html";
                         
-                        // create new soap client
-                        // http://webservicex.net/uszip.asmx
-                        $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
+                    // require libraries
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
                         
-                        // get info about zip code
-                        $result = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
-                        $city = $result['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
-                        $state = $result['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
-                        if($state != 'GU')
-                            $tz = $result['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
-                        else
-                            $tz = "Chamorro";
-                        ?>
-                        <script>
-                        main.setCity(<?=json_encode($city)?>);
-                        main.setState(<?=json_encode($state)?>);
-                        main.setTimezone(<?=json_encode($tz)?>);
-                        </script>
-                        <?php
-			
-                        // get the third time layout (Every 3 hours out to 72 hours, Every 6 hours out to 168 hours)
-                        $i = 0;
-                        foreach($time_layouts as $key => $value){
-                            if ($i == 2)
-                                $k = $key;
-                            $i++;
-                        }
-                        
-                        // fill the javascript weather arrays with values from simpleNWS
-                        foreach($time_layouts[$k] as $time){
-                            $aTemp = $hourly_temp[$time];
-                            $cTemp = $hourly_temp[$time];
-                            $hum = $hourly_humidity[$time];
-                            $wSpd = $hourly_windspeed[$time];
-                            $cCover = $hourly_cloudcover[$time];
-                            if($customCTemp){
-                                $cTemp = $_GET['ctemp'];
-                            }
+                    if(isset($_GET['zip']))
+                        // if the zip code provided is valid
+                        if (preg_match($ZIPPATTERN, $_GET['zip'])){
+                            $ziplist = array($_GET['zip']);
+                            
+                            $isMetric = 0;
+                            if (isset($_GET['metric']))
+                                $isMetric = 1;
+                            
+                            // create new soap client
+                            // http://graphical.weather.gov/xml/
+                            $soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
+
+                            // get lon and lat from zip code
+                            $LatLonList = $soapclient->call('LatLonListZipCode',$ziplist,
+                                                           'uri:DWMLgen',
+                                                           'uri:DWMLgen/LatLonListZipCode');
+
+                            // parse lon and let from response
+                            $latlon = new SimpleXMLElement($LatLonList);
+                            $latlon = explode(',', $latlon->latLonList[0]);
+                            
+                            // use simpleNWS to get weather info from lon/lat
+                            $simpleNWS = new SimpleNWS(floatval($latlon[0]), floatval($latlon[1]));
+                            
+                            // instantiate graph helper class
                             ?>
                             <script>
-                            main.fillArrays(<?=$customCTemp?>, <?=$aTemp?>, <?php echo json_encode($time) ?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
+                            main = new Main(<?=json_encode($ziplist[0])?>, <?=$isMetric?>);
                             </script>
                             <?php
-                        }
-                        
-                        // draw graph
-                        include $_SERVER['DOCUMENT_ROOT']."/includes/graph.html";
-                    }
-                    catch (\Exception $error){
-                        if( $error->getMessage() == "Invalid coordinates."){
-                            echo '<div class="alert alert-danger" role="alert">invalid zipcode: Could not get coordinates from zip code</div>';
-                        }
                             
-                    }
-                } else {
-                    echo '<div class="alert alert-danger" role="alert">Please enter 5-digit numerical zip code</div>';
-                }
-		?>
-        
+                            try{
+                                // request a forecast (getCurrentConditions(), getForecastForToday() or getForecastForWeek())
+                                $forecast = $simpleNWS->getForecastForWeek();
+                                $time_layouts = $forecast->getTimeLayouts();
+                                $hourly_temp = $forecast->getHourlyRecordedTemperature();
+                                $hourly_humidity = $forecast->getHourlyHumidity();
+                                $hourly_windspeed = $forecast->getHourlyWindSpeed();
+                                $hourly_cloudcover = $forecast->getHourlyCloudCover();
+                    
+                                // get the third time layout (Every 3 hours out to 72 hours, Every 6 hours out to 168 hours)
+                                $i = 0;
+                                foreach($time_layouts as $key => $value){
+                                    if ($i == 2)
+                                        $k = $key;
+                                    $i++;
+                                }
+                                
+                                // fill the javascript weather arrays with values from simpleNWS
+                                foreach($time_layouts[$k] as $time){
+                                    $aTemp = $hourly_temp[$time];
+                                    $hum = $hourly_humidity[$time];
+                                    $wSpd = $hourly_windspeed[$time];
+                                    $cCover = $hourly_cloudcover[$time];
+                                    
+                                    // predict concrete temperature based on air temperature 
+                                    if($aTemp < 30)
+                                        $cTemp = 40;
+                                    elseif($aTemp < 55)
+                                        $cTemp = $hourly_temp[$time] + 10;
+                                    elseif($aTemp < 85)
+                                        $cTemp = $hourly_temp[$time] + 5;
+                                    else
+                                        $cTemp = $hourly_temp[$time];
+                                    
+                                    // fill arrays with weather data
+                                    ?>
+                                    <script>
+                                    main.fillArrays(<?=$aTemp?>, <?php echo json_encode($time) ?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
+                                    </script>
+                                    <?php
+                                }
+                                
+                                // create new soap client to get city, state, and timezone
+                                // http://webservicex.net/uszip.asmx
+                                $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
+                                
+                                // get info about zip code (try multiple times because it is unreliable)
+                                $i = 0;
+                                while(!isset($zipinfo) && $i < 1){
+                                    $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
+                                    $i++;
+                                }
+                                $city = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
+                                $state = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
+                                if($state != 'GU')
+                                    $tz = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
+                                else
+                                    $tz = "Chamorro";
+                                    
+                                // fill in zip info
+                                ?>
+                                <script>
+                                main.setCity(<?=json_encode($city)?>);
+                                main.setState(<?=json_encode($state)?>);
+                                main.setTimezone(<?=json_encode($tz)?>);
+                                </script>
+                                <?php
+                                
+                                // draw graph
+                                include $_SERVER['DOCUMENT_ROOT']."/includes/graph.html";
+                            }
+                            catch (\Exception $error){
+                                if( $error->getMessage() == "Invalid coordinates."){
+                                    echo '
+                                    <div class="alert alert-danger" role="alert">
+                                        invalid zipcode: Could not get coordinates from zip code
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                }
+                                    
+                            }
+                        } else {
+                            echo '
+                            <div class="alert alert-danger" role="alert">
+                                Please enter 5-digit numerical zip code
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            ';
+                        }
+                    ?>
+                </div>
+                <div class="col-xs-0 col-md-1">
+                </div>
+            </div>
+        </div>
     </body>
 </html>
