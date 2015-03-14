@@ -8,14 +8,12 @@
     </head>
 
     <body>
-        <div class="container">
+        <div class="container-fluid">
             <form class="form-horizontal" action="/php/login.php" method="post">
-                <form class="form-group">
-                        <input style="max-width:280px" name="tb_email" id="email" type="text" class="form-control" placeholder="Email address" autocomplete="off">
-                        <input style="max-width:280px" name="tb_pass" id="pass" type="password" class="form-control" placeholder="Password" autocomplete="off">
-                        <li><a href="/forgot.php">Forgot Password?</a></li>
-                        <button type="submit" name="btn_signin" class="btn btn-primary">Login</button>
-                </form>
+                <input style="max-width:280px" name="tb_email" id="email" type="text" class="form-control" placeholder="Email address" autocomplete="off">
+                <input style="max-width:280px" name="tb_pass" id="pass" type="password" class="form-control" placeholder="Password" autocomplete="off">
+                <button type="submit" name="btn_signin" class="btn btn-primary btn-block">Login</button>
+                <li><a href="/forgot.php">Forgot Password?</a></li>
             </form>
         </div>
         

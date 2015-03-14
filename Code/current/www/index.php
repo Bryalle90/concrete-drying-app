@@ -4,14 +4,21 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<base href="bryalle.duckdns.org">
+		<base href="">
 		<title>Home</title>
+		
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
 		<script src="javascript/highcharts.js"></script>
 		<script src="javascript/exporting.js"></script>
 		<script src ="javascript/GraphFunctions.js"></script>
-		
-		<script src="bootstrap/js/bootstrap.min.js"></script>
+        
+		<!-- Bootstrap core CSS -->
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Bootstrap theme -->
+		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="bootstrap/css/theme.css" rel="stylesheet">
 	</head>
 	<body>
 		<?php
