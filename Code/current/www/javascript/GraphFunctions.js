@@ -48,7 +48,7 @@ function Main(zipCode, metric) {
         atemp = Math.pow(airTemperature, 2.5);
         wspd = 1 + (0.4 * windSpeed);
         evap = (ctemp - (humidPercent * atemp)) * wspd * Math.pow(10, -6)
-        return (evap);
+        return (this.roundToTwo(evap));
     };
     
     this.addToArraysMetric = function(air_temp, humidity, windspeed, concrete_temp, cloud_cover){
@@ -70,23 +70,28 @@ function Main(zipCode, metric) {
     // Conversion functions
     this.convertMphToKph = function(mph){
         conversion_factor = 1.6093439987125;
-        return (mph*conversion_factor);
+        return (this.roundToTwo(mph*conversion_factor));
     };
     
     this.convertKphToMph = function(kph){
         conversion_factor = 0.62137119223733;
-        return (kph*conversion_factor);
+        return (this.roundToTwo(kph*conversion_factor));
     };
     
     this.convertFtoC = function(temp){
         conversion_factor = 5/9;
-        return ((temp-32)*conversion_factor);
+        return (this.roundToTwo((temp-32)*conversion_factor));
     };
     
     this.convertCtoF = function(temp){
         conversion_factor = 9/5;
-        return ((temp*conversion_factor)+32);
+        return (this.roundToTwo((temp*conversion_factor)+32));
     };
+    
+    // round num to two decimals, cutting any trailing zeros
+    this.roundToTwo = function(num) {    
+        return +(Math.round(num + "e+2")  + "e-2");
+    }
  
     // getters/setters
     this.setCity = function(city){
