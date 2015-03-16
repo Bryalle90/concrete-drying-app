@@ -1,74 +1,62 @@
+<?php
+
+class User {
+
 //User.php
 //Class used to interact with the uesr table in our database.
 //by: zach smith
 //last edited: 3/16/15
+	
+	private $dbhandle;	
 
-
-class User {
-
-	//These 3 variables will need to be changed to specific case
-	private $hostname, $username, $password, $dbhandle;
-
-	public function _construct($hostname, $username, $password){
-		$this->hostname = $hostname;
-		$this->username = $username;
-		$this->password = $password;
+	public function _construct(){
 	}
 
 	//connect to the database
 	public function connectdb(){			
-		$dbhandle = mysql_connect($hostname, $username, $password)
-			OR die("Unable to connect to MySQL");
-		//output to confirm connection
-		echo "Connected to MySQL<br>";
-		
-		$selected = mysql_select_db("Account", $dbhandle)
-			OR die("Could not select");
+		$this->dbhandle = mysql_connect('localhost', 'root', '');
+					
+		$selected = mysql_select_db("Account", $this->dbhandle);
 	}
 
 	//inserts a new user to the table
-	public function addUser($userID, $email, $userPass, $isAdmin){
-		$sql = "INSERT INTO user (userID, email, userPass, isAdmin)
-		VALUES ($userID, $email, $userPass, $isAdmin)";
-
-		if($dbhandle->query($sql) === TRUE) {
-			//output to confirm insertion
-			echo "New user added successfully";
-		} else {
-			echo "Error: " . $sql . "<br>" . $dbhandle->error;
-		}
+	public function addUser($userID, $name, $currentNumberOfNotifications, $email, $userPass, $isAdmin){
+		$sql = "INSERT INTO user (userID, name, currentNumberOfNotifications, email, userPass, isAdmin)
+		VALUES ('$userID', '$name', '$currentNumberOfNotifications', '$email', '$userPass', '$isAdmin')";
+		mysql_query($sql);		
 	}
 
 	//delete user from table
 	public function deleteUser($userID){		
-		$sql = "DELETE FROM user WHERE userID = $userID";
-		$dbhandle->query($sql);
+		$sql = "DELETE FROM user WHERE userID = '$userID'";
+		mysql_query($sql);
 	}
 
 	//changes the users name in the table
 	public function changeName($userID, $name){
-		$sql = "UPDATE user SET name = $name WHERE userID = $userID";
-		$dbhandle->query($sql);
+		$sql = "UPDATE user SET name = '$name' WHERE userID = '$userID'";
+		mysql_query($sql);
 	}
 
 	//changes the users email in the table
-	public function changeName($userID, $email){
-		$sql = "UPDATE user SET email = $email WHERE userID = $userID";
-		$dbhandle->query($sql);
+	public function changeEmail($userID, $email){
+		$sql = "UPDATE user SET email = '$email' WHERE userID = '$userID'";
+		mysql_query($sql);
 	}
 
 	//changes the users password in the table
-	public function changeName($userID, $password){
-		$sql = "UPDATE user SET password = $password WHERE userID = $userID";
-		$dbhandle->query($sql);
+	public function changePassword($userID, $password){
+		$sql = "UPDATE user SET userPass = '$password' WHERE userID = '$userID'";
+		mysql_query($sql);
 	}	
+	
 
 	//checks to see if user is admin and return true of false
 	public function isUserAdmin($userID){
-		$sql = "SELECT isAdmin FROM user WHERE userID = $userID";
-		$result = $dphandle->query($sql);
+		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
 
-		if($result == 'y'){
+		if($result == 'y' || $result == 'Y'){
 			return TRUE;
 		} else {
 			return FALSE;
@@ -76,33 +64,33 @@ class User {
 	}
 
 	public function getName($userID){
-		$sql = "SELECT name FROM user WHERE userID = $userID";
-		$result = $dphandle->query($sql);
-		return $results;
+		$sql = "SELECT name FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		return $result;
 	}
 
 	public function getCurrentNumberOfNotifications($userID){
-		$sql = "SELECT currentNumberOfNotifications FROM user WHERE userID = $userID";
-		$result = $dphandle->query($sql);
-		return $results;
+		$sql = "SELECT currentNumberOfNotifications FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		return $result;
 	}
 
 	public function getEmail($userID){
-		$sql = "SELECT email FROM user WHERE userID = $userID";
-		$result = $dphandle->query($sql);
-		return $results;
+		$sql = "SELECT email FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		return $result;
 	}
 
 	public function getUserPass($userID){
-		$sql = "SELECT userPass FROM user WHERE userID = $userID";
-		$result = $dphandle->query($sql);
-		return $results;
+		$sql = "SELECT userPass FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		return $result;
 	}
 
 	public function getIsAdmin($userID){
-		$sql = "SELECT isAdmin FROM user WHERE userID = $userID";
-		$result = $dphandle->query($sql);
-		return $results;
+		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		return $result;
 	}
 
 	//checks to see if email and password match and return userID if they do, returns NULL if not
@@ -133,3 +121,5 @@ class User {
 	}
 
 }
+
+?>
