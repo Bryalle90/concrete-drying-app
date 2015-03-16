@@ -124,18 +124,29 @@
                                 $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
                                 
                                 // get info about zip code (try multiple times because it is unreliable)
-                                $i = 0;
-                                while(!isset($zipinfo) && $i < 1){
+                                $zipinfo = Null;
+                                for($i=0; $i < 5 && $zipinfo == Null; $i++)
                                     $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
-                                    $i++;
+                                if($zipinfo != Null){
+                                    $city = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
+                                    $state = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
+                                    if($state != 'GU')
+                                        $tz = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
+                                    else
+                                        $tz = "Chamorro";
+                                } else {
+                                    $city = Null;
+                                    $state = Null;
+                                    $tz = Null;
+                                    echo '
+                                    <div class="alert alert-danger" role="alert">
+                                        error: request for zip info timed out, please try again
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
                                 }
-                                $city = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
-                                $state = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
-                                if($state != 'GU')
-                                    $tz = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
-                                else
-                                    $tz = "Chamorro";
-                                    
+                                
+                                
                                 // fill in zip info
                                 ?>
                                 <script>
