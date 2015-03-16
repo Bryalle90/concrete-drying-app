@@ -5,4 +5,3 @@ CREATE TABLE futureNotifications (
 	futureDate smalldatetime,
 	PRIMARY KEY(futureID)
 );
-INSERT INTO project VALUES(1, 1, 2015-3-15 03:00:00);

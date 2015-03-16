@@ -1,9 +1,10 @@
 USE Account;
 CREATE TABLE user (
 	userID int UNIQUE NOT NULL,
+	name varchar(40),
+	currentNumberOfNotifications int,
 	email varchar(254),
 	userPass varchar(40),
 	isAdmin char(1),
 	PRIMARY KEY(userID)
 );
-INSERT INTO user VALUES(1, 'zachsmi@siue.edu', '1234', 'y'); 

@@ -2,7 +2,11 @@ USE Account:
 CREATE TABLE weather (
 	projectID int NOT NULL,
 	evapRate double,
+	cloudCoverage double,
+	airTemp double,
+	concTemp double,
+	humidity double,
+	windSpeed double,
 	time smalldatetime,
 	PRIMARY KEY(projectID)
 );
-INSERT INTO weather(1, 0.512, 2015-2-20 03:00:00);

@@ -1,0 +1,6 @@
+USE Account;
+CREATE TABLE userProjectLookup (
+	userID int NOT NULL,
+	projectID int UNIQUE NOT NULL,
+	PRIMARY KEY(projectID)
+);
