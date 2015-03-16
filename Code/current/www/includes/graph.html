@@ -9,13 +9,13 @@ Desc: This file generates the graph
 
 <!--Add Notfication Button. onSubmit check to make sure it is the orginal data -->
 
-<div id="NotficationButton">
-	<button type = "button" id = "NotficationButton">Add Notifcation</button>
-	
-</div>
+
+
+
+
 
 <!--Container that the chart is in -->
-<div id="container" style = "height:430px; auto" ></div>
+<div id="container"></div>
 <script>
 	
 $(function ()
@@ -245,7 +245,7 @@ $(function ()
 					fontSize: '13px'
 				},
 			},
-			
+			/*
 			plotLines: [{
 				color: 'black',
 				dashStyle: 'longdash',
@@ -264,6 +264,7 @@ $(function ()
 				}
 				
 			}]
+			*/
 		},
 		
 
@@ -537,7 +538,8 @@ $(function ()
 		series: [
 		{
 			name: 'Evaporation Rate',
-			data: evapArray
+			data: evapArray,
+			lineWidth: 3
 		}],
 
 		//Exporting options. Added "Options" text next to export button.
@@ -548,6 +550,45 @@ $(function ()
 				contextButton:
 				{
 					text: "Options",
+				},
+				
+				customButton:
+				{
+					onclick: function ()
+					{
+						var chartN = $('#container').highcharts();
+						chartN.series[1].hide();
+
+					},
+					text: 'Reset Graph',
+					buttonOptions:
+					{
+						theme:
+						{
+							'stoke-width': 3,
+							stroke: 'black',
+							border: 3,
+							states: {
+								hover:
+								{
+									fill: '#bada55'	
+								},
+								select: {
+									stroke: '#039',
+									fill: '#bada55'
+								}
+							}
+						}
+						
+					}
+				},
+				newCustomButton:
+				{
+					onclick: function ()
+					{
+						alert("Does nothing right now");
+					},
+					text: 'Add Notification'
 				}
 			}
 		}
@@ -591,9 +632,19 @@ $(function ()
 		//calculate evaprate for metric 
 		
 		//Update chart
-		chart.series[0].data[i].update(evapArray[i]);
-		chart.series[0].update(chart.series[0].data[i].options);
-		$('#ResetButton').html("<br> <button id = 'ResetButton'> Reset Graph</button>");
+		chart.addSeries({
+			
+			data: evapArray,
+			dashStyle: 'dot',
+			radius: 2,
+			lineWidth: 2
+			
+		}, false);
+		chart.redraw();
+		
+		//chart.series[0].data[i].update(evapArray[i]);
+		//chart.series[0].update(chart.series[0].data[i].options);
+		//$('#ResetButton').html("<button id = 'ResetButton'> Reset Graph</button>");
 		isOriginalGraph = false;
 		//chart.tooltip.refresh(chart.series[0].points[i]);
 		}
@@ -601,8 +652,8 @@ $(function ()
 	$("#ResetButton").click(function()
 	{
 		
-		var chart = $('#container').highcharts();
-		
+		var chartN = $('#container').highcharts();
+		chartN.redraw();
 		for (var ii = 0; ii < arrayLength; ii++)
 		{
 			evapArray[ii] = originalEvapArray[ii];
@@ -611,15 +662,24 @@ $(function ()
 			
 			//Update chart
 			
-			chart.series[0].data[ii].update(evapArray[ii]);
-			chart.series[0].update(chart.series[0].data[ii].options);
+			//chartN.series[0].data[ii].update(evapArray[ii]);
+			//chartN.series[0].update(chartN.series[0].data[ii].options);
 			//chart.tooltip.refresh(chart.series[0].points[ii]);
 		}
 		
 		//chart.series[0].setData(originalEvapArray)
 			//	alert("asdf");
 
+		chartN.redraw();
 		isOriginalGraph = true;
+	});
+	
+	$("#NotficationButton").click(function()
+	{
+		if (isOriginalGraph == false)
+		{
+			alert("Graph must be reset before adding a notifcaiton");
+		}
 	});
 });
 </script>
@@ -631,7 +691,7 @@ $(function ()
 	Here update chart to orginal 
 -->
 </div>
-<div id="ResetButton"></div>
+
 
 
 
