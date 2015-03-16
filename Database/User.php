@@ -1,7 +1,7 @@
 //User.php
 //Class used to interact with the uesr table in our database.
 //by: zach smith
-//last edited: 3/3/15
+//last edited: 3/16/15
 
 
 class User {
@@ -39,20 +39,29 @@ class User {
 		}
 	}
 
-	//checks to see if email and password match and return userID if they do, returns NULL if not
-	public function isUser($email, $userPass){
-		$sql = "SELECT userID FROM user WHERE email = $email AND userPass = $userPass";
-		$result = $dphandle->query($sql);
-		
-		if($result == NULL){
-			//output for testing
-			echo "No such email and password combination exist.";
-			return $result;
-		} else {
-			return $result;
-		}
-
+	//delete user from table
+	public function deleteUser($userID){		
+		$sql = "DELETE FROM user WHERE userID = $userID";
+		$dbhandle->query($sql);
 	}
+
+	//changes the users name in the table
+	public function changeName($userID, $name){
+		$sql = "UPDATE user SET name = $name WHERE userID = $userID";
+		$dbhandle->query($sql);
+	}
+
+	//changes the users email in the table
+	public function changeName($userID, $email){
+		$sql = "UPDATE user SET email = $email WHERE userID = $userID";
+		$dbhandle->query($sql);
+	}
+
+	//changes the users password in the table
+	public function changeName($userID, $password){
+		$sql = "UPDATE user SET password = $password WHERE userID = $userID";
+		$dbhandle->query($sql);
+	}	
 
 	//checks to see if user is admin and return true of false
 	public function isUserAdmin($userID){
@@ -66,12 +75,57 @@ class User {
 		}
 	}
 
-	//gets the number of entries in the database(used to set next id)
-	public function count(){
-		$sql = "SELECT COUNT(*) FROM user";
+	public function getName($userID){
+		$sql = "SELECT name FROM user WHERE userID = $userID";
 		$result = $dphandle->query($sql);
-		return $result;
+		return $results;
 	}
+
+	public function getCurrentNumberOfNotifications($userID){
+		$sql = "SELECT currentNumberOfNotifications FROM user WHERE userID = $userID";
+		$result = $dphandle->query($sql);
+		return $results;
+	}
+
+	public function getEmail($userID){
+		$sql = "SELECT email FROM user WHERE userID = $userID";
+		$result = $dphandle->query($sql);
+		return $results;
+	}
+
+	public function getUserPass($userID){
+		$sql = "SELECT userPass FROM user WHERE userID = $userID";
+		$result = $dphandle->query($sql);
+		return $results;
+	}
+
+	public function getIsAdmin($userID){
+		$sql = "SELECT isAdmin FROM user WHERE userID = $userID";
+		$result = $dphandle->query($sql);
+		return $results;
+	}
+
+	//checks to see if email and password match and return userID if they do, returns NULL if not
+	//public function isUser($email, $userPass){
+	//	$sql = "SELECT userID FROM user WHERE email = $email AND userPass = $userPass";
+	//	$result = $dphandle->query($sql);
+	//	
+	//	if($result == NULL){
+	//		//output for testing
+	//		echo "No such email and password combination exist.";
+	//		return $result;
+	//	} else {
+	//		return $result;
+	//	}
+	//
+	//}
+
+	//gets the number of entries in the database(used to set next id)
+	//public function count(){
+	//	$sql = "SELECT COUNT(*) FROM user";
+	//	$result = $dphandle->query($sql);
+	//	return $result;
+	//}
 
 	//close the connection
 	public function _destruct(){
