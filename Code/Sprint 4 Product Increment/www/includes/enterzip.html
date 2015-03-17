@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    </head>
+
+    <body>
+        <div align="center">
+            <form class="form-inline" action="/index.php" method="get">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            Metric
+                            <input name="metric" type="checkbox">
+                        </span>
+                        <label class="sr-only" for="zipinput">Zip Code</label>
+                        <input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Go!</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
