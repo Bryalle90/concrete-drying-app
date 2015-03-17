@@ -1,16 +1,15 @@
 <?php
 
-class User {
-
 //User.php
 //Class used to interact with the uesr table in our database.
 //by: zach smith
 //last edited: 3/16/15
+
+class User {
 	
 	private $dbhandle;	
 
-	public function _construct(){
-	}
+	public function _construct(){}
 
 	//connect to the database
 	public function connectdb(){			
@@ -21,8 +20,8 @@ class User {
 
 	//inserts a new user to the table
 	public function addUser($userID, $name, $currentNumberOfNotifications, $email, $userPass, $isAdmin){
-		$sql = "INSERT INTO user (userID, name, currentNumberOfNotifications, email, userPass, isAdmin)
-		VALUES ('$userID', '$name', '$currentNumberOfNotifications', '$email', '$userPass', '$isAdmin')";
+		$sql = "INSERT INTO user (name, currentNumberOfNotifications, email, userPass, isAdmin)
+		VALUES ('$name', '$currentNumberOfNotifications', '$email', '$userPass', '$isAdmin')";
 		mysql_query($sql);		
 	}
 
@@ -55,6 +54,8 @@ class User {
 	public function isUserAdmin($userID){
 		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+		
+		$result = mysql_result($result, 0);
 
 		if($result == 'y' || $result == 'Y'){
 			return TRUE;
@@ -66,30 +67,35 @@ class User {
 	public function getName($userID){
 		$sql = "SELECT name FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+		$result = mysql_result($result, 0);
 		return $result;
 	}
 
 	public function getCurrentNumberOfNotifications($userID){
 		$sql = "SELECT currentNumberOfNotifications FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+		$result = mysql_result($result, 0);
 		return $result;
 	}
 
 	public function getEmail($userID){
 		$sql = "SELECT email FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+		$result = mysql_result($result, 0);
 		return $result;
 	}
 
 	public function getUserPass($userID){
 		$sql = "SELECT userPass FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+		$result = mysql_result($result, 0);
 		return $result;
 	}
 
 	public function getIsAdmin($userID){
 		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+		$result = mysql_result($result, 0);
 		return $result;
 	}
 
