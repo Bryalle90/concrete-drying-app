@@ -11,6 +11,8 @@
 		<script src="bootstrap/js/bootstrap.min.js"></script>
 		<script src="javascript/highcharts.js"></script>
 		<script src="javascript/exporting.js"></script>
+		<script src="javascript/grouped-categories.js"></script>
+
 		<script src ="javascript/GraphFunctions.js"></script>
         
 		<!-- Bootstrap core CSS -->
@@ -23,8 +25,7 @@
 	<body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-xs-0 col-md-1">
-                </div>
+                <div class="col-xs-0 col-md-1"></div>
                 <div class="col-xs-12 col-md-10">
                     <?php
                     $ZIPPATTERN = "/\b\d{5}\b/"; // usa zip code regex
@@ -123,10 +124,8 @@
                                 // http://webservicex.net/uszip.asmx
                                 $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
                                 
-                                // get info about zip code (try multiple times because it is unreliable)
-                                $zipinfo = Null;
-                                for($i=0; $i < 5 && $zipinfo == Null; $i++)
-                                    $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
+                                // get info about zip code
+                                $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
                                 if($zipinfo != Null){
                                     $city = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
                                     $state = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
@@ -155,8 +154,8 @@
                                 main.setTimezone(<?=json_encode($tz)?>);
                                 </script>
                                 <?php
-                                
-                                // draw graph
+				
+				   // draw graph
                                 include $_SERVER['DOCUMENT_ROOT']."/includes/graph.html";
                             }
                             catch (\Exception $error){
@@ -180,8 +179,7 @@
                         }
                     ?>
                 </div>
-                <div class="col-xs-0 col-md-1">
-                </div>
+                <div class="col-xs-0 col-md-1"></div>
             </div>
         </div>
     </body>
