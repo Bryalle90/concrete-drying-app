@@ -20,10 +20,10 @@ class Project {
 	}
 	
 	//Adds to project table then adds to project lookup table
-	public function addToProjectTable($projectName, $userID, $zipcode, $timeZone){
+	public function addToProjectTable($projectName, $userID, $zipcode){
 		//project table
-		$sql = "INSERT INTO project (projectName, userID, zipcode, timeZone)
-		VALUES ('$projectName', '$userID', '$zipcode', '$timeZone')";
+		$sql = "INSERT INTO project (projectName, userID, zipcode)
+		VALUES ('$projectName', '$userID', '$zipcode')";
 		mysql_query($sql);	
 		
 		$sql = "SELECT projectID FROM project WHERE projectName = '$projectName' AND userID = '$userID'";
@@ -82,13 +82,6 @@ class Project {
 
 	public function getZipcode($projectID){
 		$sql = "SELECT zipcode FROM project WHERE projectID = '$projectID'";
-		$result = mysql_query($sql);
-		$result = mysql_result($result, 0);
-		return $result;
-	}
-
-	public function getTimeZone($projectID){
-		$sql = "SELECT timeZone FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
 		$result = mysql_result($result, 0);
 		return $result;

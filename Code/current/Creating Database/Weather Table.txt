@@ -1,7 +1,7 @@
 USE Account;
 CREATE TABLE weather (
 	weatherID int UNIQUE NOT NULL AUTO_INCREMENT,
-	projectID int NOT NULL,
+	zipcode int NOT NULL,
 	evapRate double,
 	cloudCoverage double,
 	airTemp double,

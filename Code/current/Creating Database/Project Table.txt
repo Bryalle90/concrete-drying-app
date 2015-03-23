@@ -4,6 +4,5 @@ CREATE TABLE project (
 	projectName varchar(40),
 	userID int NOT NULL,
 	zipcode int,
-	timeZone varchar(10),
 	PRIMARY KEY(projectID)
 );
