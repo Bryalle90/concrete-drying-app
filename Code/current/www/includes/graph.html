@@ -221,13 +221,13 @@ $(function () {
 	var seven = [];
 	zero[0] = hour[0];
 	//Set Labels for x-axis
-	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + hour[0];
+	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + day[0] + " " + hour[0];
 
 	labelDate[0] = hour[0] +", "+ nameOfDay[0];
 	
 	for (var i = 1; i < arrayLength; i++)
 	{
-		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + hour[i];
+		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + day[i] + " " + hour[i];
 		labelDate[i] = hour[i] +", "+ nameOfDay[i];
 	
 		if (nameOfDay[i] == nameOfDay[i-1])
