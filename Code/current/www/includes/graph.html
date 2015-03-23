@@ -11,13 +11,16 @@ Desc: This file generates the graph
 
 <!--Container that the chart is in -->
 
-<div id="container" style="height:60vh; min-height:350px"></div>
+<div id="container" style="height:60vh; min-height:400px"></div>
 <script>
+	var coldWeatherConcTemp = 49;
+	var hotWeatherConcTemp = 85;
 	var numberOfSeries = 1;
 	var concTempArray = main.getConcreteTempArray();
 	var cTempOffset = null;
 	var windOffset = null;
-	
+	var city = main.getCity();
+	var state = main.getState();
 	
 $(function () {
 	
@@ -40,17 +43,15 @@ $(function () {
 	var arrayLength = evapArray.length;
 	var isOrignalGraph = true;
 
-	var city = main.getCity();
-	var state = main.getState();
-	var timezone = main.getTimezone();
+
+	var timezone = 'Local time of ' + city;
 	
 	//These colors are used for the plotbands and tooltip borders
 	var red = 'rgba(255, 0, 0, 0.8)';
 	var yellow = 'rgba(255,255,0,.85)';
 	var green = 'rgba(0, 226, 0, 0.7)';
 	var tmpColor = ''
-	var coldWeatherConcTemp = 49;
-	var hotWeatherConcTemp = 85;
+
 	var lowerBoundConcreteTemp = '';
 	var upperBoundConcreteTemp = '';
 	var lowerBoundWindSpeed = '';
@@ -65,28 +66,12 @@ $(function () {
 	var lowRiskBoundary = 0.15;
 	
 	var pointsSelected = [];
-	/*
-	
-	var me = new Object();
-	me = [];
-	for (i = 0; i< arrayLength; i++){
-		var theName = 
-		me[i].x = evapArray[i];
-		//me.wind = windSpeedArray[0];
-	}
-	
-	console.log(me);
-	*/
-	
-	myArray = [{y: .15, myData: 6}, {y: .2, myData: 9}];
+
 	
 	var insideWindSpeed = []
 	
-	for (i = 0; i< arrayLength; i++)
-	{
-		insideWindSpeed[i] = 1
-	}
-	//alert(myArray);
+
+
 	//Date and time variables
 	var monthname = new Array();
 	monthname[0] = "January";
@@ -124,32 +109,6 @@ $(function () {
 	var temperatureLabel = "";
 	var windLabel = "";
 	var title = city + ', ' + state + ' ' + zipCode;
-	switch (timezone) {
-		case 'P':
-			timezone = '(Pacfic Time Zone)';
-			break;
-		case 'C':
-			timezone = '(Central Time Zone)';
-			break;
-		case 'M':
-			timezone = '(Mountain Time Zone)';
-			break;
-		case 'E':
-			timezone = '(Eastern Time Zone)';
-			break;
-		case 'K':
-			timezone = '(Alaska Time Zone)';
-			break;
-		case 'H':
-			timezone = '(Hawaii-Aleutian Time Zone)';
-			break;
-		case 'A':
-			timezone = '(Atlantic Time Zone)';
-			break;
-		case 'Chamorro':
-			timezone = '(Chamorro Time Zone)';
-			break;
-	}
 	
 	//Add suffixes of labels 
 	//If metric assign metric labels
@@ -165,6 +124,13 @@ $(function () {
 		upperBoundConcreteTemp = 37.2;
 		lowerBoundWindSpeed = 0.0;
 		upperBoundWindSpeed = 56.3;
+		
+	
+	
+		for (i = 0; i< arrayLength; i++)
+		{
+			insideWindSpeed[i] = 1.61;
+		}
 	}
 
 	//else standard
@@ -178,6 +144,12 @@ $(function () {
 		upperBoundConcreteTemp = 130.0;
 		lowerBoundWindSpeed = 0.0;
 		upperBoundWindSpeed = 54.4;
+		
+		for (i = 0; i< arrayLength; i++)
+		{
+			insideWindSpeed[i] = 1;
+		}
+		
 	}
 	
 	document.getElementById("concreteTemp").min = lowerBoundConcreteTemp;
@@ -198,14 +170,16 @@ $(function () {
 		var d = new Date(partsArray[0], ((partsArray[1]) - 1), partsArray[2], partsArray[3], 0, 0, 0);
 
 		//Convert 24 hour time to 12 hour time
+		/*
 		if (hour[i] > 12)
 		{
-			hour[i] = (hour[i] - 12) + ':00 PM';
+			hour[i] = (hour[i] - 12)+ 'PM';// PM';
 		}
 		
 		else if (hour[i] == 0 )
 		{
-			hour[i] = 12 + ':00 AM';
+			hour[i] = 12 + 'AM';
+			//+ ':00 AM';
 		}
 
 		else if (hour[i] == 12)
@@ -216,42 +190,141 @@ $(function () {
 		else
 		{
 			//Subtracting 0 formats date correctly.
-			hour[i] = (hour[i] - 0) + ':00 AM';
+			hour[i] = (hour[i] - 0) + 'AM';
+			//+ ':00 AM';
 		}
-		
+		*/
 		year[i] = d.getFullYear().toString().substr(2,2);
 		nameOfMonth[i] = monthname[d.getMonth()];
 		nameOfDay[i] = weekday[d.getDay()];
 	}
 
-	var subtitle = nameOfMonth[0] + " " + day[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1] + ' ' + timezone ;
+	var subtitle = nameOfMonth[0] + " " + day[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1];
 
 	//Labels for x-axis
 	var labelDate = [];
 	var fullDate = [];
-	var groupedData = [];
-
-	//for(i = 0)
+	groupedLabels = [];
+	d = []
 	
+	var j=0;
+	var x=0;
+	dayName = [];
+	dayName[0] = nameOfDay[0];
+	var zero = [];
+	var one = [];
+	var two = [];
+	var three = [];
+	var four = [];
+	var five = [];
+	var six = [];
+	var seven = [];
+	zero[0] = hour[0];
 	//Set Labels for x-axis
-	for (var i = 0; i < arrayLength; i++)
-	{
-		//alert(i);
-		var j=0;
-		groupedData[i] = [];
-		groupedData[i] = [];
-		groupedData[i][j] = evapArray[i];
-		groupedData[i][j+1] = concTempArray[i];
-		groupedData[i][j+2] = airTempArray[i]
-		//alert(groupedData);
-		
+	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + hour[0];
 
-		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + hour[i] + " " + timezone;
-		
-		labelDate[i] = nameOfDay[i] +" "+ hour[i];
-	}
+	labelDate[0] = hour[0] +", "+ nameOfDay[0];
 	
-	//alert(groupedData[1][1]);
+	for (var i = 1; i < arrayLength; i++)
+	{
+		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + hour[i];
+		labelDate[i] = hour[i] +", "+ nameOfDay[i];
+	
+		if (nameOfDay[i] == nameOfDay[i-1])
+		{
+			x += 1;
+			if (j == 0)
+			{
+				zero[x] = hour[i];
+			}
+			
+			if (j == 1)
+			{
+				one[x] = hour[i];
+			}
+			
+			if (j == 2)
+			{
+				two[x] = hour[i];
+			}
+			
+			if (j == 3)
+			{
+				three[x] = hour[i];
+			}
+			
+			if (j == 4)
+			{
+				four[x] = hour[i];
+			}
+			
+			if (j == 5)
+			{
+				five[x] = hour[i];
+			}
+			
+			if (j == 6)
+			{
+				six[x] = hour[i];
+			}
+			
+			if (j == 7)
+			{
+				seven[x] = hour[i];
+			}
+		}
+		
+		else
+		{
+			x = 0;
+			j += 1;
+			
+			if (j == 0)
+			{
+				zero[0] = hour[i];
+			}
+			
+			if (j == 1)
+			{
+				one[0] = hour[i];
+			}
+			
+			if (j == 2)
+			{
+				two[0] = hour[i];
+			}
+			
+			if (j == 3)
+			{
+				three[0] = hour[i];
+			}
+			
+			if (j == 4)
+			{
+				four[0] = hour[i];
+			}
+			
+			if (j == 5)
+			{
+				five[0] = hour[i];
+			}
+			
+			if (j == 6)
+			{
+				six[0] = hour[i];
+			}
+			
+			if (j == 7)
+			{
+				seven[0] = hour[i];
+			}
+			
+			dayName[j] = nameOfDay[i]; 
+		}
+	
+	
+	}
+
 	//Chart Configuration
 	$('#container').highcharts
 	({
@@ -259,14 +332,15 @@ $(function () {
 		title: 
 		{
 			text: title,
-			 x: 35 //center
+			 x: -40 //center
+			 
 		},
 
 		//Subtitle configuration
 		subtitle:
 		{
 			text: subtitle,
-			x: 35 //center
+			x: -40 //center
 		},
 
 		//Legend configuration OFF
@@ -292,20 +366,61 @@ $(function () {
 		//x-axis configuration
 		xAxis:
 		{
+			title:{
+				text: timezone
+			},
+			
 			//x axis labels
-			categories: [{
-			 name: "Sunday",
-			categories: labelDate
+			categories:
+			[{
+				name: dayName[0],
+				categories: zero
+			},
+			
+			{
+				name: dayName[1],
+				categories: one
+			},
+			
+			{
+				name: dayName[2],
+				categories: two
+			},
+			
+			{
+				name: dayName[3],
+				categories: three
+			},
+			
+			{
+				name: dayName[4],
+				categories: four
+			},
+			
+			{
+				name: dayName[5],
+				categories: five
+			},
+		
+			{
+				name: dayName[6],
+				categories: six
+			},
+
+			{
+				name: dayName[7],
+				categories: seven
 			}],
 			
 			
 			//x axis label configuration
 			labels:
 			{
-				rotation: -45,
+				rotation: 0,
+
 				style:
 				{
-					fontSize: '13px'
+					fontSize: '11px'
 				},
 			},
 			/*
@@ -325,7 +440,6 @@ $(function () {
 						fontWeight: 'bold'
 					}
 				}
-				
 			}]
 			*/
 		},
@@ -404,14 +518,6 @@ $(function () {
 				}
 			}]
 		},
-		
-		
-		
-		
-		
-
-
-    
     
 		//Tooltip Configuration
 		tooltip:
@@ -427,10 +533,13 @@ $(function () {
 			//Tooltip Formatter
 			formatter: function()
 			{
-
-				var newSeries = this.series;
+				wind = [];
+				concreteTemp = [];
+				
+				//var newSeries = this.series;
 				//var index = $.inArray(this.x, labelDate);
-				var index = this.series.index;
+				var index = this.point.series.xData.indexOf(this.point.x);
+				
 				//Sets border color of tooltip
 				// If evap rate is over .2 then Red tooltip border
 				if (this.y > ModerateRiskBoundary)
@@ -450,51 +559,55 @@ $(function () {
 					tmpColor = green;
 				}
 				
-				var s = '<div style= "padding: 10px; border: 3px solid '+tmpColor+';">';
-				s +='<b>'+ fullDate[index] +'</b>';
-				s += '<br/> <b> Evaporation Rate: ' + this.y.toFixed(2) + evaporationRateLabel;
-				s += '<br/>	\u2022 Temperature: ' + airTempArray[index] + temperatureLabel;
-				
-				if (this.series.name == 'Original Data')
+				if (this.series.name == 'Original Prediction')
 				{
-					s += '<br/> \u2022 Concrete Temperature: ' + concTempArray[index]+ temperatureLabel;
-					s += '<br/>	\u2022 Wind: ' + windSpeedArray[index] + windLabel;
+					wind = windSpeedArray;
+					concreteTemp = concTempArray;
 				}
 				
 				else if (this.series.name == 'Inside Wind Speed')
 				{
-					s += '<br/> \u2022 Concrete Temperature: ' + concTempArray[index]+ temperatureLabel;
-					s += '<br/>	\u2022 Wind: ' + insideWindSpeed[index] + windLabel;
-
+					wind = insideWindSpeed;
+					concreteTemp = concTempArray;
 				}
-				
 				else if (this.series.name.length >= 30)
 				{
 					str = this.series.name;
 					newConcreteTemp = str.match(/\d/g);
 					newConcreteTemp = newConcreteTemp.join("");
-					s += '<br/> \u2022 Concrete Temperature: ' + newConcreteTemp + temperatureLabel;
-					
+
 					//Inside
 					if (str.indexOf("Inside") > -1)
+					
 					{
-						//alert(str)
-						s += '<br/>	\u2022 Wind: ' + insideWindSpeed[index] + windLabel;
+						for (var i=0; i <arrayLength; i++)
+						{
+							concreteTemp[i] = newConcreteTemp;
+							wind[i] = insideWindSpeed[i];
+						}
+
 					}
 					
 					//Outside
 					else
 					{
-						//alert(str);
-						s += '<br/>	\u2022 Wind: ' + windSpeedArray[index] + windLabel;
+						//alert('asdfasdf');
+						for (var i=0; i <arrayLength; i++)
+						{
+							concreteTemp[i] = newConcreteTemp;
+							wind[i] = windSpeedArray[i];
+						}
+
 					}
 					
 				}
-
-
 				
-
-				
+				var s = '<div style= "padding: 10px; border: 3px solid '+tmpColor+';">';
+				s +='<b>'+ fullDate[index] +'</b>';
+				s += '<br/> <b> Evaporation Rate: ' + this.y + evaporationRateLabel;
+				s += '<br/>	\u2022 Temperature: ' + airTempArray[index] + temperatureLabel;
+				s += '<br/> \u2022 Concrete Temperature: ' + concreteTemp[index]+ temperatureLabel;
+				s += '<br/>	\u2022 Wind: ' + wind[index] + windLabel;
 				s += '<br/>	\u2022 Relative Humidity: ' + humidityArray[index]+ '%';
 				s += '<br/>	\u2022 Cloud Cover: ' + cloudCoverArray[index] +'%';
 				
@@ -504,25 +617,25 @@ $(function () {
 					//If evaporation rate has a high risk show concrete temperature to go from the high to moderate risk and from high to low risk
 					if (this.y > ModerateRiskBoundary)
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );						
-						suggestedModConcTemp = main.getLowerRiskTemp(ModerateRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );
-						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp.toFixed(0) + temperatureLabel;
-						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
+						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, wind[index], humidityArray[index], airTempArray[index] );						
+						suggestedModConcTemp = main.getLowerRiskTemp(ModerateRiskBoundary, wind[index], humidityArray[index], airTempArray[index] );
+						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp + temperatureLabel;
+						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
 
 					}
 
 					//If evaporationg rate has a moderate risk
 					else if (this.y > lowRiskBoundary)
 					{
-						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, windSpeedArray[index], humidityArray[index], airTempArray[index] );	
-						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
+						suggestedLowConcTemp = main.getLowerRiskTemp(lowRiskBoundary, wind[index], humidityArray[index], airTempArray[index] );	
+						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
 					}
 					
 					//Add hot/cold weather warnings
-					if (concTempArray[index] <= coldWeatherConcTemp) {
+					if (concreteTemp[index] <= coldWeatherConcTemp) {
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting<div>';
 					}
-					else if (concTempArray[index] >= hotWeatherConcTemp) {
+					else if (concreteTemp[index] >= hotWeatherConcTemp) {
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting<div>';
 					}
 				}//end if
@@ -533,34 +646,38 @@ $(function () {
 					//If evaporation rate has a high risk
 					if (this.y > ModerateRiskBoundary)
 					{
-						suggestedLowConcTemp = main.convertFtoC(main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));
-						suggestedModConcTemp = main.convertFtoC(main.getLowerRiskTemp(ModerateRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));			
-						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp.toFixed(0) + temperatureLabel;
-						s+= '<br/> \u2022 Concrete temp needed for low risk airTemp:' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
+						suggestedLowConcTemp = main.convertFtoC(main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(wind[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));
+						suggestedModConcTemp = main.convertFtoC(main.getLowerRiskTemp(ModerateRiskBoundary, main.convertKphToMph(wind[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));			
+						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + suggestedModConcTemp + temperatureLabel;
+						s+= '<br/> \u2022 Concrete temp needed for low risk airTemp:' + suggestedLowConcTemp + temperatureLabel;
 					}
 
 					//If evaporation rate has a moderate risk
 					else if(this.y > lowRiskBoundary )
 					{
-						suggestedLowConcTemp = main.convertFtoC(main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(windSpeedArray[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));
-						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp.toFixed(0) + temperatureLabel;
+						suggestedLowConcTemp = main.convertFtoC(main.getLowerRiskTemp(lowRiskBoundary, main.convertKphToMph(wind[index]), humidityArray[index], main.convertCtoF(airTempArray[index])));
+						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + suggestedLowConcTemp + temperatureLabel;
 					}
 					
 					//Add hot/cold weather warnings
-					if (main.convertCtoF(concTempArray[index]) <= coldWeatherConcTemp) {
+					if (main.convertCtoF(concreteTemp[index]) <= coldWeatherConcTemp) {
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting<div>';
 					}
-					else if (main.convertCtoF(concTempArray[index]) >= hotWeatherConcTemp) {
+					else if (main.convertCtoF(concreteTemp[index]) >= hotWeatherConcTemp) {
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting<div>';
 					}
 					
 				}//end else
 
 				//return tooltip string
+				
 				s+= '</div>'
 				return s;
+				
+				
 			},
 		},
+		
 		
 
 		//Plot Configuration
@@ -573,70 +690,7 @@ $(function () {
 
 				color: 'black',
 				cursor: 'pointer',
-				allowPointSelect: true,
-				
-				//Point Configurations
-				point:
-				{
-					//Event handlers
-					events:
-					{
-						//If a point is selected display form to change concrete temperature
-						select: function ()
-						{
-							/*
-							var chart = $('#container').highcharts();
-							var selectedPointsStr = "";   
-							
-							if (event.accumulate) {
-								pointsSelected.push(this);
-							}
-							else{
-								pointsSelected = [this]                       
-							}
-							$.each(pointsSelected, function(i, value)
-							{
-								selectedPointsStr += "<br>" + value.category;
-							});
-								$('#divForm').html(selectedPointsStr);
-								
-								
-								//selectedPointsStr += "<br>" + selectedPoints[i] + " - Evaporation Rate: <input type='text' style = 'width:35px' name= 'EvapRate' value= "
-								//+ value + " readonly>" +evaporationRateLabel +" &nbsp &nbsp Temperature: <input type='text' style = 'width:25px' name= 'temp' value= "
-								//+ airTempArray[i].toFixed(0)+" readonly>"+ temperatureLabel+"&nbsp &nbsp";
-								//Concrete Temperature: <input type='text' style = 'width:25px' maxlength = '5' name= 'concTemp' id = 'concTemp' value= "
-								//+ concTempArray[i] + " autofocus> "+ temperatureLabel+ "&nbsp &nbsp Wind Speed: <input type='text' style = 'width:25px' name= 'windspd' id = 'windspeed' value= "
-								//+ windSpeedArray[i] + "> " + windLabel +"&nbsp &nbsp Relative Humidity: <input type='text' style = 'width:25px' name= 'humidity' value= "
-								//+ humidityArray[i].toFixed(0) + " readonly>% &nbsp &nbsp Cloud Cover: <input type='text' style = 'width:25px' name= 'cloudCover' value= "
-								//+ cloudCoverArray[i].toFixed(0) + " readonly>%";
-								
-								//+ value.index + ' '+ i;
-								
-								
-								
-							//});
-							
-							//for (selectedPoints)
-							//alert(selectedPointsStr);
-							
-							// $('#report').html(selectedPoints.length - 1);  
-							*/
-							
-							$('#divForm').html
-							(this.category + " -  Evaporation Rate: <input type='text' style = 'width:35px' name= 'EvapRate' value= "
-							+ this.y.toFixed(2) + " readonly>" +evaporationRateLabel +" &nbsp &nbsp Temperature: <input type='text' style = 'width:25px' name= 'temp' value= "
-							+ airTempArray[this.index].toFixed(0) +" readonly>"+ temperatureLabel+"&nbsp &nbsp Concrete Temperature: <input type='number' min = lowerBoundConcreteTemp max = upperBoundConcreteTemp required style = 'width:40px' maxlength = '2' name= 'concTemp' id = 'concTemp' value= "
-							+ concTempArray[this.index] + " autofocus> "+ temperatureLabel+ "&nbsp &nbsp Wind Speed: <input type='number' min = lowerBoundWindSpeed max = upperBoundWindSpeed required style = 'width:40px' maxlength = '2' name= 'windspeed' id = 'windspeed' value= "
-							+ windSpeedArray[this.index] + "> " + windLabel +"&nbsp &nbsp Relative Humidity: <input type='text' style = 'width:25px' name= 'humidity' value= "
-							+ humidityArray[this.index].toFixed(0) + " readonly>% &nbsp &nbsp Cloud Cover: <input type='text' style = 'width:25px' name= 'cloudCover' value= "
-							+ cloudCoverArray[this.index].toFixed(0) + " readonly>%");
-							
-							
-							$('#button').html("<br> <button id = 'button'> Change Concrete Temp/Wind Speed </button>");
-							
-						},
-					},
-				},
+				allowPointSelect: false,
 			},
 		},
 
@@ -647,27 +701,21 @@ $(function () {
 		},
 
 		//Data - Evaporation rates for times
-		series: [
-		{
-			name: 'Original Data',
+		series:
+		[{
+			name: 'Original Prediction',
 			data: evapArray
-   /*
-        data: [{
-            y: 3,
-            myData: 2
-        }, {
-            y: 7,
-            myData: 98
-        }, {
-            y: 1,
-            myData: 7
-        }]
-*/
-			
-			//groupedData,
-			//lineWidth: 3
 		}],
 
+		
+		
+		lang:
+		{
+		    some_key: 'Custom button tooltip text',
+		    add_notif: 'Add Notification Tooltip'
+		    
+		},
+		
 		//Exporting options. Added "Options" text next to export button.
 		exporting:
 		{
@@ -676,6 +724,8 @@ $(function () {
 				contextButton:
 				{
 					text: "Options",
+					_titleKey: 'some_key',
+
 				},
 				
 				customButton:
@@ -687,95 +737,23 @@ $(function () {
 
 					},
 					text: 'Reset Graph',
-					enabled: resetButton,
-					buttonOptions:
-					{
-						theme:
-						{
-							'stoke-width': 3,
-							stroke: 'black',
-							border: 3,
-							states: {
-								hover:
-								{
-									fill: '#bada55'	
-								},
-								select: {
-									stroke: '#039',
-									fill: '#bada55'
-								}
-							}
-						}
-						
-					}
+					enabled: resetButton
+
 				},
 				newCustomButton:
 				{
+					text: 'Add Notification',
+					_titleKey: 'add_notif',
 					onclick: function ()
 					{
 						alert("Does nothing right now");
 					},
-					text: 'Add Notification'
+					
 				}
 			}
 		}
 	});
 
-	//Handles button click when chaniging a concrete temperature for a single point.
-	$("#button").click(function()
-	{
-		
-		var chart = $('#container').highcharts();
-		selectedPoints = chart.getSelectedPoints();
-		i = selectedPoints[0].index; //index of last selected point
-		updatedCTemp = document.getElementById('concTemp').value;
-		updatedWindSpeed = document.getElementById('windspd').value;
-		
-		if (updatedCTemp < lowerBoundConcreteTemp || updatedCTemp  > upperBoundConcreteTemp) {
-			alert ("Concrete Temperature needs to be between " + lowerBoundConcreteTemp + "-" + upperBoundConcreteTemp + "" + temperatureLabel);
-		}
-		
-		else if (updatedWindSpeed < lowerBoundWindSpeed || updatedWindSpeed > upperBoundWindSpeed) {
-			alert("Wind Speed needs to be between " + lowerBoundWindSpeed + "-" + upperBoundWindSpeed + "" + windLabel);
-		}
-		
-		
-		
-		else
-		{
-		//Update index of concTempArray and windSpeedArray with new concrete temperature and windspeed that user entered in form
-		concTempArray[i] = updatedCTemp;
-		windSpeedArray[i] = updatedWindSpeed;
-		//Calculating
-		
-		if (isMetric == false)
-		{
-			evapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], concTempArray[i]);
-		}
-		else
-		{
-			evapArray[i] = main.calculateEvap(main.convertCtoF(airTempArray[i]), humidityArray[i], main.convertKphToMph(windSpeedArray[i]), main.convertCtoF(concTempArray[i]));
-		}
-		//calculate evaprate for metric 
-		
-		//Update chart
-		chart.addSeries({
-			
-			data: evapArray,
-			dashStyle: 'dot',
-			radius: 2,
-			lineWidth: 2
-			
-		}, false);
-		//chart.redraw();
-		
-		//chart.series[0].data[i].update(evapArray[i]);
-		//chart.series[0].update(chart.series[0].data[i].options);
-		//$('#ResetButton').html("<button id = 'ResetButton'> Reset Graph</button>");
-		isOriginalGraph = false;
-		//chart.tooltip.refresh(chart.series[0].points[i]);
-		}
-	});
 	$("#ResetButton").click(function()
 	{
 		
@@ -795,7 +773,6 @@ $(function () {
 		}
 		
 		//chart.series[0].setData(originalEvapArray)
-			//	alert("asdf");
 
 		chartN.redraw();
 		isOriginalGraph = true;
@@ -806,10 +783,35 @@ $(function () {
 		var cTemp = document.getElementById("concreteTemp").value;
 		var inside = document.getElementById("Inside").checked;
 		var outside = document.getElementById("Outside").checked;
-		
 		seriesName = '';
 		newEvapArray = [];
+		eriesColor = 'rgba(1,1,1,1)';
 		var chart = $('#container').highcharts();
+		
+		if (numberOfSeries == 1) {
+			seriesColor = 'rgba(48,156,252,1)';
+		}
+		else if (numberOfSeries == 2) {
+			seriesColor = 'rgba(176,115,7,1)';
+		}
+				else if (numberOfSeries == 3) {
+			seriesColor = 'rgba(237,175,57,1)';
+		}
+				else if (numberOfSeries == 4) {
+			seriesColor = 'rgba(212,52,194,1)';
+		}
+				else if (numberOfSeries == 5) {
+			seriesColor = 'rgba(100,26,252,1)';
+				}
+				else if (numberOfSeries == 6) {
+			seriesColor = 'rgba(251,133,13,1)';
+		}
+				else if (numberOfSeries == 7) {
+			seriesColor = 'rgba(212,129,130,1)';
+		}
+				else {
+			seriesColor = 'rgba(1,1,1,1)';
+		}
 		
 		//If only outside is checked
 		if (inside == false && cTemp == '' && outside == true) {
@@ -820,25 +822,26 @@ $(function () {
 		// Else if inside is checked and empy concrete temp
 		else if (inside && cTemp == '')
 		{
+			//alert ('Inside Wind Speed');
 			seriesName = 'Inside Wind Speed';
 			for (i = 0; i < arrayLength; i++)
-			{	
+			{
+				
 				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], concTempArray[i]);
 			}
 			chart.addSeries({
 				name: seriesName,
 				data: newEvapArray,
-				dashStyle: 'dot',
-				radius: 2,
-				lineWidth: 2
+				color: seriesColor,
+				dashStyle: 'dot'
 			}, false);
 		}
 		
 		//Outisde checked and conc temp filled in
 		else if (inside == false && cTemp != '')
 		{
+			//alert('Outside and conc temp fillled in');
 			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Outside Wind Speed';
-
 			for (i = 0; i < arrayLength; i++)
 			{
 				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], cTemp);
@@ -847,14 +850,14 @@ $(function () {
 			chart.addSeries({
 				name: seriesName,
 				data: newEvapArray,
-				dashStyle: 'dot',
-				radius: 2,
-				lineWidth: 2
+				color: seriesColor,
+				dashStyle: 'dot'
 			}, false);
 		}
 		
 		//Inside true cTemp filled in
 		else if (inside == true && cTemp != '') {
+			//alert('Inside and ctemp filed in');
 			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside Wind Speed';
 			cTempOffset = cTemp.length
 			windOffset = 1;
@@ -867,14 +870,15 @@ $(function () {
 			chart.addSeries({
 				name: seriesName,
 				data: newEvapArray,
-				dashStyle: 'dot',
-				radius: 2,
-				lineWidth: 2
+				color: seriesColor,
+				dashStyle: 'dot'
+				//radius: 2,
+				//lineWidth: 2
 			}, false);
 		}
 		
 		chart.redraw();
-		numberOfSeries += 1
+		numberOfSeries += 1;
 		return false;
 
 	});
