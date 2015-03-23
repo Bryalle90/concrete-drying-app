@@ -54,6 +54,16 @@ class Project {
 		mysql_query($sql);
 
 		//ADD LOGIC TO DELETE PROJECT TABLE ENTRY IF NOT SHARED
+		$sql = "SELECT userID FROM project WHERE projectID = '$projectID'";
+		$result = mysql_query($sql);
+		$result = mysql_result($result, 0);
+		if($result == $userID){
+			$sql = "DELETE FROM project WHERE projectID = '$projectID' AND userID = '$userID'";
+			mysql_query($sql);
+			
+			$sql = "DELETE FROM userProjectLookup WHERE projectID = '$projectID'";
+			mysql_query($sql);
+		}
 	}
 
 	//Return the users projects ids
