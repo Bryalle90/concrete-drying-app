@@ -3,7 +3,7 @@
 //User.php
 //Class used to interact with the uesr table in our database.
 //by: zach smith
-//last edited: 3/16/15
+//last edited: 3/23/15
 
 class User {
 	
@@ -19,7 +19,7 @@ class User {
 	}
 
 	//inserts a new user to the table
-	public function addUser($userID, $name, $currentNumberOfNotifications, $email, $userPass, $isAdmin){
+	public function addUser($name, $currentNumberOfNotifications, $email, $userPass, $isAdmin){
 		$sql = "INSERT INTO user (name, currentNumberOfNotifications, email, userPass, isAdmin)
 		VALUES ('$name', '$currentNumberOfNotifications', '$email', '$userPass', '$isAdmin')";
 		mysql_query($sql);		
@@ -100,26 +100,20 @@ class User {
 	}
 
 	//checks to see if email and password match and return userID if they do, returns NULL if not
-	//public function isUser($email, $userPass){
-	//	$sql = "SELECT userID FROM user WHERE email = $email AND userPass = $userPass";
-	//	$result = $dphandle->query($sql);
-	//	
-	//	if($result == NULL){
-	//		//output for testing
-	//		echo "No such email and password combination exist.";
-	//		return $result;
-	//	} else {
-	//		return $result;
-	//	}
-	//
-	//}
-
-	//gets the number of entries in the database(used to set next id)
-	//public function count(){
-	//	$sql = "SELECT COUNT(*) FROM user";
-	//	$result = $dphandle->query($sql);
-	//	return $result;
-	//}
+	public function isUser($email, $userPass){
+		$sql = "SELECT userID FROM user WHERE email = '$email' AND userPass = '$userPass'";
+		$result = mysql_query($sql);		
+		$result = mysql_result($result, 0);
+		
+		if($result == NULL){
+			//output for testing
+			echo "No such email and password combination exist.";
+			return $result;
+		} else {
+			return $result;
+		}
+	
+	}
 
 	//close the connection
 	public function _destruct(){

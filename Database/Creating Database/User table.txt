@@ -1,6 +1,6 @@
 USE Account;
 CREATE TABLE user (
-	userID int UNIQUE NOT NULL,
+	userID int UNIQUE NOT NULL AUTO_INCREMENT,
 	name varchar(40),
 	currentNumberOfNotifications int,
 	email varchar(254),

@@ -1,5 +1,6 @@
-USE Account:
+USE Account;
 CREATE TABLE weather (
+	weatherID int UNIQUE NOT NULL AUTO_INCREMENT,
 	projectID int NOT NULL,
 	evapRate double,
 	cloudCoverage double,
@@ -7,6 +8,6 @@ CREATE TABLE weather (
 	concTemp double,
 	humidity double,
 	windSpeed double,
-	time smalldatetime,
-	PRIMARY KEY(projectID)
+	weatherTime datetime,
+	PRIMARY KEY(weatherID)
 );

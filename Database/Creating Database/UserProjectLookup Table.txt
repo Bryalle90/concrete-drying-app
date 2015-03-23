@@ -1,6 +1,7 @@
 USE Account;
 CREATE TABLE userProjectLookup (
+	lookupID int UNIQUE NOT NULL AUTO_INCREMENT,
 	userID int NOT NULL,
-	projectID int UNIQUE NOT NULL,
-	PRIMARY KEY(projectID)
+	projectID int NOT NULL,
+	PRIMARY KEY(lookupID)
 );
