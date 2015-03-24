@@ -210,7 +210,7 @@ class DWMLParser
                 break;
             case 'week':
                 $startTimestamp = strtotime('now - 1 day');
-                $endTimestamp   = strtotime('now + 1 week');
+                $endTimestamp   = strtotime('now + 1 week + 2 days');
                 break;
             case 'now':
             default:
