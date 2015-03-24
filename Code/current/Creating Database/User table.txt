@@ -4,7 +4,7 @@ CREATE TABLE user (
 	name varchar(40),
 	currentNumberOfNotifications int,
 	email varchar(254),
-	userPass varchar(40),
+	userPass varchar(80),
 	isAdmin char(1),
 	PRIMARY KEY(userID)
 );

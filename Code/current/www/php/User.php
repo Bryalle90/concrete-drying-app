@@ -5,9 +5,19 @@
 //by: zach smith
 //last edited: 3/23/15
 
+require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
+
 class User {
 	
-	private $dbhandle;	
+	private $dbhandle;
+	
+	private function hashPass($pass){
+		return(password_hash($pass, PASSWORD_BCRYPT, array("cost" => 10)));
+	}
+	
+	private function verifyPass($pass, $hash){
+		return(password_verify($pass, $hash));
+	}
 
 	public function _construct(){}
 
@@ -19,9 +29,10 @@ class User {
 	}
 
 	//inserts a new user to the table
-	public function addUser($name, $currentNumberOfNotifications, $email, $userPass, $isAdmin){
+	public function addUser($name, $email, $userPass, $isAdmin){
+        $hashedPass = $this->hashPass($userPass);
 		$sql = "INSERT INTO user (name, currentNumberOfNotifications, email, userPass, isAdmin)
-		VALUES ('$name', '$currentNumberOfNotifications', '$email', '$userPass', '$isAdmin')";
+		VALUES ('$name', 0, '$email', '$hashedPass', '$isAdmin')";
 		mysql_query($sql);		
 	}
 

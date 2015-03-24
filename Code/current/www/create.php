@@ -32,6 +32,7 @@
                         header("Location: /index.php");
                         
                     include_once $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
+                    include $_SERVER['DOCUMENT_ROOT']."/php/user.php";
                     
                     if(isset($_POST['btn_create'])){
                         if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){
@@ -39,13 +40,17 @@
                                 if ($_POST['tb_pass'] == $_POST['tb_pass2']){
                                     // hash password
                                     // add email and password hash to user database
+                                    $userdb = new User();
+                                    $userdb->connectdb();
+                                    $name = 
+                                    $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
                                     echo '
                                     <div class="alert alert-success" role="alert">
                                         Your account has been created and an email has been sent to verify your address
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                     ';
-                                } else { // passwords did not match when creating account
+                                } else { // passwords did not match
                                     echo '
                                     <div class="alert alert-danger" role="alert">
                                         Passwords do not match
@@ -65,6 +70,12 @@
                     ?>
                     
                     <form class="form-horizontal" action="/create.php" method="post">
+                        <div class="form-group">
+                            <label for="tb_email" class="col-sm-2 control-label">Display Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="tb_name" value="<?=(isset($_POST['tb_name']) ? $_POST['tb_name'] : "")?>" placeholder="Display Name">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="tb_email" class="col-sm-2 control-label">Email</label>
                             <div class="col-sm-10">
