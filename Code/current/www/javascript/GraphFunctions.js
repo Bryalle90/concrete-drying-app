@@ -38,7 +38,7 @@ function Main(zipCode, metric) {
         wspd = 1 + (0.4 * windSpeed);
         lim = limit*Math.pow(10,6);
         lowerTemp = Math.pow((lim/wspd) + humidPercent * atemp, 0.4)
-        return (Math.round(lowerTemp));
+        return (lowerTemp);
     };
 
     // calculates evaporation rate for one point in time
@@ -48,7 +48,7 @@ function Main(zipCode, metric) {
         atemp = Math.pow(airTemperature, 2.5);
         wspd = 1 + (0.4 * windSpeed);
         evap = (ctemp - (humidPercent * atemp)) * wspd * Math.pow(10, -6)
-        return (this.roundToTwo(evap));
+        return (evap);
     };
     
     this.addToArraysMetric = function(air_temp, humidity, windspeed, concrete_temp, cloud_cover){
@@ -70,27 +70,29 @@ function Main(zipCode, metric) {
     // Conversion functions
     this.convertMphToKph = function(mph){
         conversion_factor = 1.6093439987125;
-        return (this.roundToTwo(mph*conversion_factor));
+        return (mph*conversion_factor);
     };
     
     this.convertKphToMph = function(kph){
         conversion_factor = 0.62137119223733;
-        return (this.roundToTwo(kph*conversion_factor));
+        return (kph*conversion_factor);
     };
     
     this.convertFtoC = function(temp){
         conversion_factor = 5/9;
-        return (this.roundToTwo((temp-32)*conversion_factor));
+        return ((temp-32)*conversion_factor);
     };
     
     this.convertCtoF = function(temp){
         conversion_factor = 9/5;
-        return (this.roundToTwo((temp*conversion_factor)+32));
+        return ((temp*conversion_factor)+32);
     };
     
-    // round num to two decimals, cutting any trailing zeros
-    this.roundToTwo = function(num) {    
-        return +(Math.round(num + "e+2")  + "e-2");
+    // round 'num' to 'amt', cutting any trailing zeros
+    this.round = function(num, amt) { 
+        str1 = "e+"+amt;
+        str2 = "e-"+amt;
+        return +(Math.round(num + str1)  + str2);
     }
  
     // getters/setters
