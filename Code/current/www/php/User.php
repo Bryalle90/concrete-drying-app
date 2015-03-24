@@ -109,21 +109,24 @@ class User {
 		$result = mysql_result($result, 0);
 		return $result;
 	}
+    
+    public function verifyLogin($email, $userPass){
+        $id = $this->isUser($email);
+        if($id != Null){
+            $hash = $this->getUserPass($id);
+            if($this->verifyPass($userPass, $hash))
+                return ($id);
+        }
+        return(Null);
+    }
 
 	//checks to see if email and password match and return userID if they do, returns NULL if not
-	public function isUser($email, $userPass){
-		$sql = "SELECT userID FROM user WHERE email = '$email' AND userPass = '$userPass'";
+	public function isUser($email){
+		$sql = "SELECT userID FROM user WHERE email = '$email'";
 		$result = mysql_query($sql);		
 		$result = mysql_result($result, 0);
 		
-		if($result == NULL){
-			//output for testing
-			echo "No such email and password combination exist.";
-			return $result;
-		} else {
-			return $result;
-		}
-	
+        return($result);
 	}
 
 	//close the connection
