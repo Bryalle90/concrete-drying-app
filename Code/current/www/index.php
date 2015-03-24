@@ -12,8 +12,7 @@
 		<script src="javascript/highcharts.js"></script>
 		<script src="javascript/exporting.js"></script>
 		<script src="javascript/grouped-categories.js"></script>
-
-		<script src ="javascript/GraphFunctions.js"></script>
+		<script src="javascript/GraphFunctions.js"></script>
         
 		<!-- Bootstrap core CSS -->
 		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -25,8 +24,8 @@
 	<body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-xs-0 col-md-1"></div>
-                <div class="col-xs-12 col-md-10">
+                <div class="col-xs-0 col-md-0 col-lg-0"></div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
                     <?php
                     $ZIPPATTERN = "/\b\d{5}\b/"; // usa zip code regex
                     
@@ -115,7 +114,7 @@
                                     // fill arrays with weather data
                                     ?>
                                     <script>
-                                    main.fillArrays(<?=$aTemp?>, <?php echo json_encode($time) ?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
+                                    main.fillArrays(<?=$aTemp?>, <?=json_encode($time)?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
                                     </script>
                                     <?php
                                 }
@@ -155,7 +154,7 @@
                                 </script>
                                 <?php
 				
-				   // draw graph
+                                // draw graph
                                 include $_SERVER['DOCUMENT_ROOT']."/includes/graph.html";
                             }
                             catch (\Exception $error){
@@ -179,7 +178,7 @@
                         }
                     ?>
                 </div>
-                <div class="col-xs-0 col-md-1"></div>
+                <div class="col-xs-0 col-md-0 col-lg-0"></div>
             </div>
         </div>
     </body>
