@@ -43,22 +43,19 @@
                     if(isset($_GET['zip']))
                         // if the zip code provided is valid
                         if (preg_match($ZIPPATTERN, $_GET['zip'])){
-                            $ziplist = array($_GET['zip']);
                             
-                            $isMetric = 0;
-                            if (isset($_GET['metric']))
-                                $isMetric = 1;
+                            $isMetric = $_GET['unit'] == "Metric" ? 1 : 0;
                             
                             // instantiate graph helper class
                             ?>
                             <script>
-                            main = new Main(<?=json_encode($ziplist[0])?>, <?=$isMetric?>);
+                            main = new Main(<?=json_encode($_GET['zip'])?>, <?=$isMetric?>);
                             </script>
                             <?php
                             
                             try{
                                 $weatherService = new Noaa((int)$_GET['zip']);
-                                $weatherService->update();
+                                $weatherService->forceUpdate(); // will be $weatherService->getWeatherData();
                             
                                 $time_layout = $weatherService->getTimeLayout();
                                 $hourly_temp = $weatherService->getHourlyAirTemp();
@@ -87,7 +84,7 @@
                                 $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
                                 
                                 // get info about zip code
-                                $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $ziplist[0]));
+                                $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $_GET['zip']));
                                 if($zipinfo != Null){
                                     $city = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
                                     $state = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
@@ -130,12 +127,6 @@
                                     ';
                                 }
                             }
-
-                            $testObject = new Weather();
-                            $testObject->connectdb();
-                            echo '<pre>';
-                            print_r($testObject->getWindSpeed(62258));
-                            echo '</pre>';
                         } else {
                             echo '
                             <div class="alert alert-danger" role="alert">

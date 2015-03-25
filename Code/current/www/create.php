@@ -99,10 +99,8 @@
                                 <input type="password" class="form-control" name="tb_pass2" placeholder="*******">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-0 col-sm-4"></div>
-                            <button class="btn btn-primary col-xs-12 col-sm-4" type="submit" name="btn_create">Create Account</button>
-                            <div class="col-xs-0 col-sm-4"></div>
+                        <div align="center" class="row">
+                            <button class="btn btn-primary" type="submit" name="btn_create">Create Account</button>
                         </div>
                     </form>
                 </div>

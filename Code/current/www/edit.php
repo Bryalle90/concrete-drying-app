@@ -154,11 +154,11 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-xs-offset-0 col-sm-offset-2 col-xs-8">
+                        <div class="col-xs-offset-0 col-sm-offset-2 col-xs-6">
                             <button class="btn btn-primary" type="submit" name="btn_edit">Submit</button>
                         </div>
                         
-                        <div class="col-sm-2">
+                        <div class="col-sm-4" align="right">
                             <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#delModal">Delete Account</button>
                         </div>
                         <!-- Delete Account Modal -->
