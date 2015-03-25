@@ -14,6 +14,7 @@
 			$_SESSION['id'] = $userID;
 			$_SESSION['user'] = $userdb->getName($userID);
 			$_SESSION['email'] = $userdb->getEmail($userID);
+			$_SESSION['admin'] = $userdb->isUserAdmin($userID);
         }
 	}
 	if(!isset($_SESSION['user'])){
