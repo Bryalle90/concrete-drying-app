@@ -44,52 +44,67 @@ class Weather {
 	
 	//get evapRate
 	public function getEvapRate($zipcode, $weatherTime){
-		$sql = "SELECT evapRate FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[$row['weatherTime']] = $row['evapRate'];
+        }
+		return $array;
 	}
 	
 	//get cloudCoverage
 	public function getCloudCoverage($zipcode, $weatherTime){
-		$sql = "SELECT cloudCoverage FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[$row['weatherTime']] = $row['cloudCoverage'];
+        }
+		return $array;
 	}
 	
 	//get airTemp
 	public function getAirTemp($zipcode, $weatherTime){
-		$sql = "SELECT airTemp FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[$row['weatherTime']] = $row['airTemp'];
+        }
+		return $array;
 	}
 	
 	//get concTemp
 	public function getConcTemp($zipcode, $weatherTime){
-		$sql = "SELECT concTemp FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[$row['weatherTime']] = $row['concTemp'];
+        }
+		return $array;
 	}
 	
 	//get humidity
 	public function getHumidity($zipcode, $weatherTime){
-		$sql = "SELECT humidity FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[$row['weatherTime']] = $row['humidity'];
+        }
+		return $array;
 	}
 	
 	//get windSpeed
