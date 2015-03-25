@@ -34,8 +34,8 @@
                     include_once $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
                     include $_SERVER['DOCUMENT_ROOT']."/php/user.php";
                     
-                    if(isset($_POST['btn_create'])){
-                        if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){
+                    if(isset($_POST['btn_create'])){ // if the create button was pressed
+                        if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
                             $userdb = new User();
                             $userdb->connectdb();
                             if($userdb->isUser($_POST['tb_email']) == Null){ // email not already used

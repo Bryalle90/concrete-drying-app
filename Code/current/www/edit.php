@@ -55,12 +55,28 @@
                         ';
                     }
                     if($_POST['tb_newPass'] != ""){
-                        if($_POST['tb_pass'] != "" || $_POST['tb_pass2'] != ""){
-                            if($_POST['tb_pass'] == $_POST['tb_pass2'] && $userdb->verifyLogin($_SESSION['email'], $_POST['tb_pass']) == $_SESSION['id']){
-                                $userdb->changePassword($_SESSION['id'], $_POST['tb_newPass']);
+                        if($_POST['tb_pass'] != "" && $_POST['tb_pass2'] != ""){
+                            if($_POST['tb_pass'] == $_POST['tb_pass2']){
+                                if($userdb->verifyLogin($_SESSION['email'], $_POST['tb_pass']) == $_SESSION['id']){
+                                    $userdb->changePassword($_SESSION['id'], $_POST['tb_newPass']);
+                                    echo '
+                                    <div class="alert alert-success" role="alert">
+                                        Your password has been changed
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                } else {
+                                    echo '
+                                    <div class="alert alert-danger" role="alert">
+                                        Your password was not correct
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                }
+                            } else {
                                 echo '
-                                <div class="alert alert-success" role="alert">
-                                    Your password has been changed
+                                <div class="alert alert-danger" role="alert">
+                                    The old passwords did not match
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 </div>
                                 ';
@@ -73,6 +89,37 @@
                             </div>
                             ';
                         }
+                    }
+                }
+                if(isset($_POST['btn_delete'])){
+                    if($_POST['tb_delpass'] != "" && $_POST['tb_delpass2'] != ""){
+                        if($_POST['tb_delpass'] == $_POST['tb_delpass2']){
+                            if($userdb->verifyLogin($_SESSION['email'], $_POST['tb_delpass']) == $_SESSION['id']){
+                                $userdb->deleteUser($_SESSION['id']);
+                                header("Location: /php/logout.php");
+                            } else {
+                                echo '
+                                <div class="alert alert-danger" role="alert">
+                                    Your password was not correct
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                ';
+                            }
+                        } else {
+                            echo '
+                            <div class="alert alert-danger" role="alert">
+                                Passwords did not match
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            ';
+                        }
+                    } else {
+                        echo '
+                        <div class="alert alert-danger" role="alert">
+                            You must enter your password to delete your account
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        ';
                     }
                 }
                 include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
@@ -107,13 +154,50 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-sm-offset-2 col-sm-10">
+                        <div class="col-xs-offset-0 col-sm-offset-2 col-xs-8">
                             <button class="btn btn-primary" type="submit" name="btn_edit">Submit</button>
                         </div>
+                        
+                        <div class="col-sm-2">
+                            <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#delModal">Delete Account</button>
+                        </div>
+                        <!-- Delete Account Modal -->
+                        <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form class="form-horizontal" action="/edit.php" method="post">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="delModalLabel">Are you sure you want to delete your account?</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        
+                                            <div class="form-group row">
+                                                <label for="tb_pass" class="col-sm-3 control-label">Password</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" class="form-control" name="tb_delpass" placeholder="*******">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="tb_pass2" class="col-sm-3 control-label">Retype Password</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" class="form-control" name="tb_delpass2" placeholder="*******">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-danger" type="submit" name="btn_delete">I'm sure</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>
-            
         </div>
     </body>
 </html>
