@@ -55,7 +55,7 @@
                             
                             try{
                                 $weatherService = new Noaa((int)$_GET['zip']);
-                                $weatherService->forceUpdate(); // will be $weatherService->getWeatherData();
+                                $weatherService->getWeatherData();
                             
                                 $time_layout = $weatherService->getTimeLayout();
                                 $hourly_temp = $weatherService->getHourlyAirTemp();

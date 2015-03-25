@@ -31,6 +31,19 @@ class Weather {
 		$sql = "DELETE FROM weather WHERE weatherID = '$weatherID'";
 		mysql_query($sql);
 	}
+    
+    public function clearZip($zipcode){
+        $query = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
+        $result = mysql_query($query);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[] = $row['weatherID'];
+        }
+        foreach($array as $id)
+            $this->deleteWeather($id);
+    }
 	
 	//get weatherID
 	public function getWeatherID($zipcode, $weatherTime){
@@ -43,7 +56,7 @@ class Weather {
 	}
 	
 	//get evapRate
-	public function getEvapRate($zipcode, $weatherTime){
+	public function getEvapRate($zipcode){
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
@@ -56,7 +69,7 @@ class Weather {
 	}
 	
 	//get cloudCoverage
-	public function getCloudCoverage($zipcode, $weatherTime){
+	public function getCloudCoverage($zipcode){
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
@@ -69,7 +82,7 @@ class Weather {
 	}
 	
 	//get airTemp
-	public function getAirTemp($zipcode, $weatherTime){
+	public function getAirTemp($zipcode){
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
@@ -82,7 +95,7 @@ class Weather {
 	}
 	
 	//get concTemp
-	public function getConcTemp($zipcode, $weatherTime){
+	public function getConcTemp($zipcode){
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
@@ -95,7 +108,7 @@ class Weather {
 	}
 	
 	//get humidity
-	public function getHumidity($zipcode, $weatherTime){
+	public function getHumidity($zipcode){
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
@@ -116,6 +129,19 @@ class Weather {
         $array = array();
         while ($row = mysql_fetch_array($result)) {
             $array[$row['weatherTime']] = $row['windSpeed'];
+        }
+		return $array;
+	}
+	
+	//get timeArray
+	public function getTimeArray($zipcode){
+		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
+		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[] = $row['weatherTime'];
         }
 		return $array;
 	}
