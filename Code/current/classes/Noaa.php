@@ -1,8 +1,8 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
-include $_SERVER['DOCUMENT_ROOT'].'/php/Weather.php';
-include $_SERVER['DOCUMENT_ROOT'].'/php/ZipUpdate.php';
+include 'Weather.php';
+include 'ZipUpdate.php';
 
 class Noaa{
     private $zipcode;

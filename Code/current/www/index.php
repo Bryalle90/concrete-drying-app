@@ -38,7 +38,7 @@
                         
                     // require libraries
                     require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/php/Noaa.php');
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/Noaa.php');
                         
                     if(isset($_GET['zip']))
                         // if the zip code provided is valid

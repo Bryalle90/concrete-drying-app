@@ -28,7 +28,7 @@
                 // send user to index if not logged in
                 if(!isset($_SESSION['user']))
                     header("Location: /login_page.php");
-                include $_SERVER['DOCUMENT_ROOT']."/php/user.php";
+                include $_SERVER['DOCUMENT_ROOT']."/../classes/user.php";
                 
                 $userdb = new User();
                 $userdb->connectdb();

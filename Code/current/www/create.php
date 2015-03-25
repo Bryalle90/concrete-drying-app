@@ -32,7 +32,7 @@
                         header("Location: /index.php");
                         
                     include_once $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
-                    include $_SERVER['DOCUMENT_ROOT']."/php/user.php";
+                    include $_SERVER['DOCUMENT_ROOT']."/../classes/user.php";
                     
                     if(isset($_POST['btn_create'])){ // if the create button was pressed
                         if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
