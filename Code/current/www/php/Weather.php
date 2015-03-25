@@ -34,93 +34,110 @@ class Weather {
 	
 	//get weatherID
 	public function getWeatherID($zipcode, $weatherTime){
-		$sql = "SELECT weatherID FROM weather WHERE zipcode = '$zipcode' AND weahterTime = '$weatherTime'";
+		$sql = "SELECT weatherID FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
 	
 	//get evapRate
 	public function getEvapRate($zipcode, $weatherTime){
-		$sql = "SELECT evapRate FROM weather WHERE zipcode = '$zipcode' AND weahterTime = '$weatherTime'";
+		$sql = "SELECT evapRate FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
 	
 	//get cloudCoverage
 	public function getCloudCoverage($zipcode, $weatherTime){
-		$sql = "SELECT cloudCoverage FROM weather WHERE zipcode = '$zipcode' AND weahterTime = '$weatherTime'";
+		$sql = "SELECT cloudCoverage FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
 	
 	//get airTemp
 	public function getAirTemp($zipcode, $weatherTime){
-		$sql = "SELECT airTemp FROM weather WHERE zipcode = '$zipcode' AND weahterTime = '$weatherTime'";
+		$sql = "SELECT airTemp FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
 	
 	//get concTemp
 	public function getConcTemp($zipcode, $weatherTime){
-		$sql = "SELECT concTemp FROM weather WHERE zipcode = '$zipcode' AND weahterTime = '$weatherTime'";
+		$sql = "SELECT concTemp FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
 	
 	//get humidity
 	public function getHumidity($zipcode, $weatherTime){
-		$sql = "SELECT humidity FROM weather WHERE zipcode = '$zipcode' AND weahterTime = '$weatherTime'";
+		$sql = "SELECT humidity FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
 	
 	//get windSpeed
-	public function getWindSpeed($zipcode, $weatherTime){
-		$sql = "SELECT windSpeed FROM weather WHERE zipcode = '$zipcode' AND weahterTime = '$weatherTime'";
+	public function getWindSpeed($zipcode){
+		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
-		$result = mysql_result($result, 0);
-		return $result;
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
+        $array = array();
+        while ($row = mysql_fetch_array($result)) {
+            $array[$row['weatherTime']] = $row['windSpeed'];
+        }
+		return $array;
 	}
 	
 	//changes the evapRate
-	public function changeEvapRate($zipcode, $weatherTime, $evapRate){
-		$sql = "UPDATE weather SET evapRate = '$evapRate' WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+	public function changeEvapRate($weatherID, $evapRate){
+		$sql = "UPDATE weather SET evapRate = '$evapRate' WHERE weatherID = '$weatherID'";
 		mysql_query($sql);
 	}
 	
 	//changes the cloudCoverage
-	public function changeCloudCoverage($zipcode, $weatherTime, $cloudCoverage){
-		$sql = "UPDATE weather SET cloudCoverage = '$cloudCoverage' WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+	public function changeCloudCoverage($weatherID, $cloudCoverage){
+		$sql = "UPDATE weather SET cloudCoverage = '$cloudCoverage' WHERE weatherID = '$weatherID'";
 		mysql_query($sql);
 	}
 	
 	//changes the airTemp
-	public function changeAirTemp($zipcode, $weatherTime, $airTemp){
-		$sql = "UPDATE weather SET airTemp = '$airTemp' WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+	public function changeAirTemp($weatherID, $airTemp){
+		$sql = "UPDATE weather SET airTemp = '$airTemp' WHERE weatherID = '$weatherID'";
 		mysql_query($sql);
 	}
 	
 	//changes the concTemp
-	public function changeConcTemp($zipcode, $weatherTime, $concTemp){
-		$sql = "UPDATE weather SET concTemp = '$concTemp' WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+	public function changeConcTemp($weatherID, $concTemp){
+		$sql = "UPDATE weather SET concTemp = '$concTemp' WHERE weatherID = '$weatherID'";
 		mysql_query($sql);
 	}
 	
 	//changes the humidity
-	public function changeHumidity($zipcode, $weatherTime, $humidity){
-		$sql = "UPDATE weather SET humidity = '$humidity' WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+	public function changeHumidity($weatherID, $humidity){
+		$sql = "UPDATE weather SET humidity = '$humidity' WHERE weatherID = '$weatherID'";
 		mysql_query($sql);
 	}
 	
 	//changes the windSpeed
-	public function changeWindSpeed($zipcode, $weatherTime, $windSpeed){
-		$sql = "UPDATE weather SET windSpeed = '$windSpeed' WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
+	public function changeWindSpeed($weatherID, $windSpeed){
+		$sql = "UPDATE weather SET windSpeed = '$windSpeed' WHERE weatherID = '$weatherID'";
 		mysql_query($sql);
 	}
 

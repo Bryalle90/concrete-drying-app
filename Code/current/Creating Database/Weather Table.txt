@@ -8,6 +8,6 @@ CREATE TABLE weather (
 	concTemp double,
 	humidity double,
 	windSpeed double,
-	weatherTime datetime,
+	weatherTime varchar(16),
 	PRIMARY KEY(weatherID)
 );

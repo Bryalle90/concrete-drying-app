@@ -31,11 +31,6 @@
                     
                     // start session
                     session_start();
-                    
-                    // if user is logged in
-                    $loggedin = 0;
-                    if (isset($_SESSION['user']))
-                        $loggedin = 1;
                 
                     // show top nav bar and zipcode input
                     include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
@@ -43,7 +38,7 @@
                         
                     // require libraries
                     require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/php/Noaa.php');
                         
                     if(isset($_GET['zip']))
                         // if the zip code provided is valid
@@ -54,22 +49,6 @@
                             if (isset($_GET['metric']))
                                 $isMetric = 1;
                             
-                            // create new soap client
-                            // http://graphical.weather.gov/xml/
-                            $soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
-
-                            // get lon and lat from zip code
-                            $LatLonList = $soapclient->call('LatLonListZipCode',$ziplist,
-                                                           'uri:DWMLgen',
-                                                           'uri:DWMLgen/LatLonListZipCode');
-
-                            // parse lon and let from response
-                            $latlon = new SimpleXMLElement($LatLonList);
-                            $latlon = explode(',', $latlon->latLonList[0]);
-                            
-                            // use simpleNWS to get weather info from lon/lat
-                            $simpleNWS = new SimpleNWS(floatval($latlon[0]), floatval($latlon[1]));
-                            
                             // instantiate graph helper class
                             ?>
                             <script>
@@ -78,38 +57,22 @@
                             <?php
                             
                             try{
-                                // request a forecast (getCurrentConditions(), getForecastForToday() or getForecastForWeek())
-                                $forecast = $simpleNWS->getForecastForWeek();
-                                $time_layouts = $forecast->getTimeLayouts();
-                                $hourly_temp = $forecast->getHourlyRecordedTemperature();
-                                $hourly_humidity = $forecast->getHourlyHumidity();
-                                $hourly_windspeed = $forecast->getHourlyWindSpeed();
-                                $hourly_cloudcover = $forecast->getHourlyCloudCover();
-                    
-                                // get the third time layout (Every 3 hours out to 72 hours, Every 6 hours out to 168 hours)
-                                $i = 0;
-                                foreach($time_layouts as $key => $value){
-                                    if ($i == 2)
-                                        $k = $key;
-                                    $i++;
-                                }
+                                $weatherService = new Noaa((int)$_GET['zip']);
+                                $weatherService->update();
+                            
+                                $time_layout = $weatherService->getTimeLayout();
+                                $hourly_temp = $weatherService->getHourlyAirTemp();
+                                $hourly_concTemp = $weatherService->getHourlyConcTemp();
+                                $hourly_humidity = $weatherService->getHourlyHumidity();
+                                $hourly_windspeed = $weatherService->getHourlyWindSpeed();
+                                $hourly_cloudcover = $weatherService->getHourlyCloudCover();
                                 
-                                // fill the javascript weather arrays with values from simpleNWS
-                                foreach($time_layouts[$k] as $time){
+                                foreach($time_layout as $time){
                                     $aTemp = $hourly_temp[$time];
+                                    $cTemp = $hourly_concTemp[$time];
                                     $hum = $hourly_humidity[$time];
                                     $wSpd = $hourly_windspeed[$time];
                                     $cCover = $hourly_cloudcover[$time];
-                                    
-                                    // predict concrete temperature based on air temperature 
-                                    if($aTemp < 30)
-                                        $cTemp = 40;
-                                    elseif($aTemp < 55)
-                                        $cTemp = $hourly_temp[$time] + 10;
-                                    elseif($aTemp < 85)
-                                        $cTemp = $hourly_temp[$time] + 5;
-                                    else
-                                        $cTemp = $hourly_temp[$time];
                                     
                                     // fill arrays with weather data
                                     ?>
@@ -118,7 +81,7 @@
                                     </script>
                                     <?php
                                 }
-                                
+                            
                                 // create new soap client to get city, state, and timezone
                                 // http://webservicex.net/uszip.asmx
                                 $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
@@ -144,7 +107,6 @@
                                     ';
                                 }
                                 
-                                
                                 // fill in zip info
                                 ?>
                                 <script>
@@ -153,11 +115,12 @@
                                 main.setTimezone(<?=json_encode($tz)?>);
                                 </script>
                                 <?php
-				
+                
                                 // draw graph
                                 include $_SERVER['DOCUMENT_ROOT']."/includes/graph.html";
+                                
                             }
-                            catch (\Exception $error){
+                            catch (Exception $error){
                                 if( $error->getMessage() == "Invalid coordinates."){
                                     echo '
                                     <div class="alert alert-danger" role="alert">
@@ -166,8 +129,13 @@
                                     </div>
                                     ';
                                 }
-                                    
                             }
+
+                            $testObject = new Weather();
+                            $testObject->connectdb();
+                            echo '<pre>';
+                            print_r($testObject->getWindSpeed(62258));
+                            echo '</pre>';
                         } else {
                             echo '
                             <div class="alert alert-danger" role="alert">
