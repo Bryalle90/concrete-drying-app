@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<base href="">
-		<title>Edit Account</title>
+		<title>Create Account</title>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="bootstrap/js/bootstrap.min.js"></script>
@@ -21,8 +21,8 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-xs-0 col-sm-2 col-md-3 col-lg-3"></div>
-                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+                <div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>
+                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
                 
                     <?php
                     session_start();
@@ -36,13 +36,10 @@
                     
                     if(isset($_POST['btn_create'])){
                         if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){
-                            // if($_POST['newEmail'] not in database already)
+                            $userdb = new User();
+                            $userdb->connectdb();
+                            if($userdb->isUser($_POST['tb_email']) == Null){
                                 if ($_POST['tb_pass'] == $_POST['tb_pass2']){
-                                    // hash password
-                                    // add email and password hash to user database
-                                    $userdb = new User();
-                                    $userdb->connectdb();
-                                    $name = 
                                     $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
                                     echo '
                                     <div class="alert alert-success" role="alert">
@@ -58,6 +55,14 @@
                                     </div>
                                     ';
                                 }
+                            } else {
+                                echo '
+                                <div class="alert alert-danger" role="alert">
+                                    Email address is already in use
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                ';
+                            }
                         } else { // some fields are empty
                             echo '
                             <div class="alert alert-danger" role="alert">
@@ -68,37 +73,40 @@
                         }
                     }
                     ?>
-                    
-                    <form class="form-horizontal" action="/create.php" method="post">
-                        <div class="form-group">
-                            <label for="tb_email" class="col-sm-2 control-label">Display Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="tb_name" value="<?=(isset($_POST['tb_name']) ? $_POST['tb_name'] : "")?>" placeholder="Display Name">
-                            </div>
+                    <form class="form-horizontal col-sm-12" action="/create.php" method="post">
+                        <div class="form-group row">
+                            <label for="tb_name" class="control-label">Display Name</label>
+                            <input type="text" class="form-control" name="tb_name" value="<?=(isset($_POST['tb_name']) ? $_POST['tb_name'] : "")?>" placeholder="Display Name">
                         </div>
-                        <div class="form-group">
-                            <label for="tb_email" class="col-sm-2 control-label">Email</label>
-                            <div class="col-sm-10">
+                        <div class="form-group row">
+                            <label for="tb_email" class="control-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">*</span>
                                 <input type="email" class="form-control" name="tb_email" value="<?=(isset($_POST['tb_email']) ? $_POST['tb_email'] : "")?>" placeholder="Email Address">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tb_pass" class="col-sm-2 control-label">Password</label>
-                            <div class="col-sm-10">
+                        <div class="form-group row">
+                            <label for="tb_pass" class="control-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">*</span>
                                 <input type="password" class="form-control" name="tb_pass" placeholder="*******">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tb_pass2" class="col-sm-2 control-label">Retype Password</label>
-                            <div class="col-sm-10">
+                        <div class="form-group row">
+                            <label for="tb_pass2" class="control-label">Retype Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">*</span>
                                 <input type="password" class="form-control" name="tb_pass2" placeholder="*******">
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit" name="btn_create">Create Account</button>
+                        <div class="row">
+                            <div class="col-xs-0 col-sm-4"></div>
+                            <button class="btn btn-primary col-xs-12 col-sm-4" type="submit" name="btn_create">Create Account</button>
+                            <div class="col-xs-0 col-sm-4"></div>
+                        </div>
                     </form>
-                    
                 </div>
-                <div class="col-xs-0 col-sm-2 col-md-3 col-lg-3"></div>
+                <div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>
             </div>
         </div>
     </body>
