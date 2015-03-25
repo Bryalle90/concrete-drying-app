@@ -123,10 +123,12 @@ class User {
 	//checks to see if email and password match and return userID if they do, returns NULL if not
 	public function isUser($email){
 		$sql = "SELECT userID FROM user WHERE email = '$email'";
-		$result = mysql_query($sql);		
-		$result = mysql_result($result, 0);
+		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
+        $id = mysql_result($result, 0);
 		
-        return($result);
+        return($id);
 	}
 
 	//close the connection

@@ -38,7 +38,7 @@
                         if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){
                             $userdb = new User();
                             $userdb->connectdb();
-                            if($userdb->isUser($_POST['tb_email']) == Null){
+                            if($userdb->isUser($_POST['tb_email']) == Null){ // email not already used
                                 if ($_POST['tb_pass'] == $_POST['tb_pass2']){
                                     $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
                                     echo '
