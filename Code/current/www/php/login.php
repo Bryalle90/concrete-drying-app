@@ -11,7 +11,9 @@
 			session_destroy();
 			session_start();
             
+			$_SESSION['id'] = $userID;
 			$_SESSION['user'] = $userdb->getName($userID);
+			$_SESSION['email'] = $userdb->getEmail($userID);
         }
 	}
 	if(!isset($_SESSION['user'])){

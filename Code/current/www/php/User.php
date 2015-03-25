@@ -56,7 +56,8 @@ class User {
 
 	//changes the users password in the table
 	public function changePassword($userID, $password){
-		$sql = "UPDATE user SET userPass = '$password' WHERE userID = '$userID'";
+        $hashedPass = $this->hashPass($password);
+		$sql = "UPDATE user SET userPass = '$hashedPass' WHERE userID = '$userID'";
 		mysql_query($sql);
 	}	
 	
@@ -65,7 +66,8 @@ class User {
 	public function isUserAdmin($userID){
 		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
-		
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 
 		if($result == 'y' || $result == 'Y'){
@@ -78,6 +80,8 @@ class User {
 	public function getName($userID){
 		$sql = "SELECT name FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
@@ -85,6 +89,8 @@ class User {
 	public function getCurrentNumberOfNotifications($userID){
 		$sql = "SELECT currentNumberOfNotifications FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
@@ -92,6 +98,8 @@ class User {
 	public function getEmail($userID){
 		$sql = "SELECT email FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
@@ -99,6 +107,8 @@ class User {
 	public function getUserPass($userID){
 		$sql = "SELECT userPass FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
@@ -106,6 +116,8 @@ class User {
 	public function getIsAdmin($userID){
 		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}
