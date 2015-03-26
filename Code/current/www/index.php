@@ -38,7 +38,10 @@
                         
                     // require libraries
                     require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/Noaa.php');
+                    
+                    // require classes
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/WeatherService.php');
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DataService.php');
                         
                     if(isset($_GET['zip']))
                         // if the zip code provided is valid
@@ -54,7 +57,13 @@
                             <?php
                             
                             try{
-                                $weatherService = new Noaa((int)$_GET['zip']);
+                                $dataService = new DataService((int)$_GET['zip']);
+                                $city = $dataService->getCity();
+                                $state = $dataService->getState();
+                                $lat = $dataService->getLat();
+                                $lon = $dataService->getLon();
+                                
+                                $weatherService = new WeatherService((int)$_GET['zip'], $lat, $lon);
                                 $weatherService->getWeatherData();
                             
                                 $time_layout = $weatherService->getTimeLayout();
@@ -78,38 +87,12 @@
                                     </script>
                                     <?php
                                 }
-                            
-                                // create new soap client to get city, state, and timezone
-                                // http://webservicex.net/uszip.asmx
-                                $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
-                                
-                                // get info about zip code
-                                $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $_GET['zip']));
-                                if($zipinfo != Null){
-                                    $city = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
-                                    $state = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
-                                    if($state != 'GU')
-                                        $tz = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['TIME_ZONE'];
-                                    else
-                                        $tz = "Chamorro";
-                                } else {
-                                    $city = Null;
-                                    $state = Null;
-                                    $tz = Null;
-                                    echo '
-                                    <div class="alert alert-danger" role="alert">
-                                        error: request for zip info timed out, please try again
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    </div>
-                                    ';
-                                }
                                 
                                 // fill in zip info
                                 ?>
                                 <script>
                                 main.setCity(<?=json_encode($city)?>);
                                 main.setState(<?=json_encode($state)?>);
-                                main.setTimezone(<?=json_encode($tz)?>);
                                 </script>
                                 <?php
                 
@@ -121,7 +104,7 @@
                                 if( $error->getMessage() == "Invalid coordinates."){
                                     echo '
                                     <div class="alert alert-danger" role="alert">
-                                        invalid zipcode: Could not get coordinates from zip code
+                                        invalid zipcode: Could not get coordinates for zip code
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                     ';

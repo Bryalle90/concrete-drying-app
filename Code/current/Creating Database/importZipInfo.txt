@@ -1,0 +1,17 @@
+USE Account;
+CREATE TABLE zipinfo (
+	zipcode int NOT NULL,
+	city varchar(40),
+	state varchar(40),
+	latitude float,
+	longitude float,
+	PRIMARY KEY(zipcode)
+);
+
+USE Account;
+LOAD DATA LOCAL INFILE 'D:/web server/Creating Database/zipcode_city_state_lat_long.csv'
+INTO TABLE zipinfo
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;

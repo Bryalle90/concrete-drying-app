@@ -4,7 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php')
 include 'Weather.php';
 include 'ZipUpdate.php';
 
-class Noaa{
+class WeatherService{
     private $zipcode;
     private $latitude;
     private $longitude;
@@ -16,18 +16,9 @@ class Noaa{
     private $hourly_cloudcover;
     private $hourly_evap;
 
-    public function __construct($zip){
-        $ziplist = array($zip);
-        
-        // get the longitude and latitude for a zipcode
-        $soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
-        
-        $LatLonList = $soapclient->call('LatLonListZipCode', $ziplist, 'uri:DWMLgen', 'uri:DWMLgen/LatLonListZipCode');
-        $latlon = new SimpleXMLElement($LatLonList);
-        $latlon = explode(',', $latlon->latLonList[0]);
-        
-        $this->latitude = $latlon[0];
-        $this->longitude = $latlon[1];
+    public function __construct($zip, $lat, $lon){
+        $this->latitude = $lat;
+        $this->longitude = $lon;
         $this->zipcode = $zip;
     }
     
