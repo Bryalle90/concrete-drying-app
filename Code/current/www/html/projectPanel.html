@@ -1,9 +1,29 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title"><?=$title?></h3>
+        <h1 class="panel-title"><?=$project['name']?></h1>
     </div>
     <div class="panel-body">
-        <?=$content?>
+        <table class="table">
+            <tr>
+                <td>Zip Code</td>
+                <td><?=$project['zip']?></td>
+            </tr>
+            <tr>
+                <td>Owner</td>
+                <td><?=$userdb->getName($project['ownerID'])?></td>
+            </tr>
+            <tr>
+                <td>Users</td>
+                <td>
+                    <?php
+                    foreach($project['userIDs'] as $userID){
+                        echo $userdb->getName($userID);
+                        echo '<br>';
+                    }
+                    ?>
+                </td>
+            </tr>
+        </table>
     </div>
     <div class="panel-footer">
         <button class="btn btn-primary btn-sm" type="button">View</button>

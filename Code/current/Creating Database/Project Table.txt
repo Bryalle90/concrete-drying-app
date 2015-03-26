@@ -4,6 +4,7 @@ CREATE TABLE project (
 	projectName varchar(40),
 	ownerID int NOT NULL,
 	zipcode int,
+	unit varchar(1),
 	endTime varchar(16),
 	PRIMARY KEY(projectID)
 );

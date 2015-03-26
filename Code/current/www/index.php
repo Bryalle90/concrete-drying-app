@@ -57,15 +57,18 @@
                             <?php
                             
                             try{
+                                // get city, state, lon, lat from zip code
                                 $dataService = new DataService((int)$_GET['zip']);
                                 $city = $dataService->getCity();
                                 $state = $dataService->getState();
                                 $lat = $dataService->getLat();
                                 $lon = $dataService->getLon();
                                 
+                                // using lon and lat, get weather data
                                 $weatherService = new WeatherService((int)$_GET['zip'], $lat, $lon);
                                 $weatherService->getWeatherData();
                             
+                                // fill javascript arrays with weather data for the graph
                                 $time_layout = $weatherService->getTimeLayout();
                                 $hourly_temp = $weatherService->getHourlyAirTemp();
                                 $hourly_concTemp = $weatherService->getHourlyConcTemp();
@@ -80,7 +83,6 @@
                                     $wSpd = $hourly_windspeed[$time];
                                     $cCover = $hourly_cloudcover[$time];
                                     
-                                    // fill arrays with weather data
                                     ?>
                                     <script>
                                     main.fillArrays(<?=$aTemp?>, <?=json_encode($time)?>, <?=$hum?>, <?=$wSpd?>, <?=$cTemp?>, <?=$cCover?>);
@@ -88,7 +90,7 @@
                                     <?php
                                 }
                                 
-                                // fill in zip info
+                                // fill in city and state
                                 ?>
                                 <script>
                                 main.setCity(<?=json_encode($city)?>);

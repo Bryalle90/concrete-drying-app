@@ -1,5 +1,5 @@
 <?php
-    include $_SERVER['DOCUMENT_ROOT']."/php/user.php";
+    include $_SERVER['DOCUMENT_ROOT']."/../classes/user.php";
 	// if user tried to log in
 	if(isset($_POST['btn_signin']) && $_POST['tb_email'] != "" && $_POST['tb_pass'] != ""){
 		$userdb = new User();
