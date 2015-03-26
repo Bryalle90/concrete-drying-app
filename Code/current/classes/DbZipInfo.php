@@ -1,9 +1,11 @@
 <?php
-class ZipInfo {
+class DbZipInfo {
 
 	private $dbhandle;	
 
-	public function _construct(){}
+	public function __construct(){
+        $this->connectdb();
+    }
 
 	//connect to the database
 	public function connectdb(){			
@@ -89,8 +91,12 @@ class ZipInfo {
 	}
 
 	//close the connection
-	public function _destruct(){
+	public function disconnectdb(){
 		mysql_close($dbhandle);
+	}
+
+	public function _destruct(){
+		$this->disconnectdb();
 	}
 }
 

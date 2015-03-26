@@ -32,12 +32,12 @@
                         header("Location: /index.php");
                         
                     include_once $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
-                    include $_SERVER['DOCUMENT_ROOT']."/../classes/user.php";
+                    include $_SERVER['DOCUMENT_ROOT']."/../classes/DbUser.php";
                     
                     if(isset($_POST['btn_create'])){ // if the create button was pressed
                         if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
-                            $userdb = new User();
-                            $userdb->connectdb();
+                            $userdb = new DbUser();
+                            
                             if($userdb->isUser($_POST['tb_email']) == Null){ // email not already used
                                 if ($_POST['tb_pass'] == $_POST['tb_pass2']){
                                     $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');

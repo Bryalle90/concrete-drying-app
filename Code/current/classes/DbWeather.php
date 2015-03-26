@@ -6,11 +6,13 @@
 //last edited: 2/23/15
 
 
-class Weather {
+class DbWeather {
 
 	private $dbhandle;	
 
-	public function _construct(){}
+	public function __construct(){
+        $this->connectdb();
+    }
 
 	//connect to the database
 	public function connectdb(){			
@@ -183,8 +185,12 @@ class Weather {
 	}
 
 	//close the connection
-	public function _destruct(){
+	public function disconnectdb(){
 		mysql_close($dbhandle);
+	}
+
+	public function _destruct(){
+		$this->disconnectdb();
 	}
 }
 

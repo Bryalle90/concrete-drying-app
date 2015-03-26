@@ -1,9 +1,9 @@
 <?php
-    include $_SERVER['DOCUMENT_ROOT']."/../classes/user.php";
+    include $_SERVER['DOCUMENT_ROOT']."/../classes/DbUser.php";
 	// if user tried to log in
 	if(isset($_POST['btn_signin']) && $_POST['tb_email'] != "" && $_POST['tb_pass'] != ""){
-		$userdb = new User();
-        $userdb->connectdb();
+		$userdb = new DbUser();
+        
         $userID = $userdb->verifyLogin($_POST['tb_email'], $_POST['tb_pass']);
         if($userID != Null){
             session_start();

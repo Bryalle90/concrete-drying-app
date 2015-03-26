@@ -7,7 +7,7 @@
 
 require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
 
-class User {
+class DbUser {
 	
 	private $dbhandle;
 	
@@ -19,7 +19,9 @@ class User {
 		return(password_verify($pass, $hash));
 	}
 
-	public function _construct(){}
+	public function __construct(){
+        $this->connectdb();
+    }
 
 	//connect to the database
 	public function connectdb(){			
@@ -144,8 +146,12 @@ class User {
 	}
 
 	//close the connection
-	public function _destruct(){
+	public function disconnectdb(){
 		mysql_close($dbhandle);
+	}
+
+	public function _destruct(){
+		$this->disconnectdb();
 	}
 
 }

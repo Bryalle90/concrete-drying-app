@@ -1,10 +1,10 @@
-//ChangeInStateNotification.php
-//Class used to interact with the cisNotification table in our database.
+//FutureNotifcations.php
+//Class used to interact with the futureNotification table in our database.
 //by: zach smith
 //last edited: 2/2/15
 
 
-class ChangeInStateNotification {
+class DbFutureNotifications{
 
 	//These 3 variables will need to be changed to specific case
 	private $hostname, $username, $password, $dbhandle;
@@ -27,6 +27,7 @@ class ChangeInStateNotification {
 	}
 
 	
+
 	//close the connection
 	public function _destruct(){
 		mysql_close($dbhandle);

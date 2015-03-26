@@ -51,12 +51,10 @@
                     </div>
                         <?php
                         
-                        require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/Project.php');
-                        require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/User.php');
-                        $projectdb = new Project();
-                        $projectdb->connectdb();
-                        $userdb = new User();
-                        $userdb->connectdb();
+                        require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
+                        require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbUser.php');
+                        $projectdb = new DbProject();
+                        $userdb = new DbUser();
                         
                         $projects = $projectdb->getProjects($_SESSION['id']);
                         

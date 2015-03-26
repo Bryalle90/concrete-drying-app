@@ -5,12 +5,14 @@
 //by: zach smith
 //last edited: 3/23/15
 
-class Project {
+class DbProject {
 
 	//These 3 variables will need to be changed to specific case
 	private $dbhandle;
 
-	public function _construct(){}
+	public function __construct(){
+        $this->connectdb();
+    }
 
 	//connect to the database
 	public function connectdb(){			
@@ -155,8 +157,12 @@ class Project {
 	}
 
 	//close the connection
-	public function _destruct(){
+	public function disconnectdb(){
 		mysql_close($dbhandle);
+	}
+
+	public function _destruct(){
+		$this->disconnectdb();
 	}
 
 }

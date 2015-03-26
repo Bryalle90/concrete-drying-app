@@ -28,10 +28,9 @@
                 // send user to index if not logged in
                 if(!isset($_SESSION['user']))
                     header("Location: /login_page.php");
-                include $_SERVER['DOCUMENT_ROOT']."/../classes/user.php";
+                include $_SERVER['DOCUMENT_ROOT']."/../classes/DbUser.php";
                 
-                $userdb = new User();
-                $userdb->connectdb();
+                $userdb = new DbUser();
                 
                 if(isset($_POST['btn_edit'])){ // if the edit button was pressed
                     if($_POST['tb_name'] != ""){
