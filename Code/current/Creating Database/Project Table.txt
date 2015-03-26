@@ -2,7 +2,8 @@ USE Account;
 CREATE TABLE project (
 	projectID int UNIQUE NOT NULL AUTO_INCREMENT,
 	projectName varchar(40),
-	userID int NOT NULL,
+	ownerID int NOT NULL,
 	zipcode int,
+	endTime varchar(16),
 	PRIMARY KEY(projectID)
 );

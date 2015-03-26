@@ -53,9 +53,9 @@ class DataService{
             $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $_GET['zip']));
             if($zipinfo != Null && $zipinfo['GetInfoByZIPResult'] != Null && 
                         $zipinfo['GetInfoByZIPResult']['NewDataSet'] != Null && 
-                        $zipinfo['GetInfoByZIPResult']['Table'] != Null && 
-                        $zipinfo['GetInfoByZIPResult']['Table']['CITY'] != Null && 
-                        $zipinfo['GetInfoByZIPResult']['Table']['STATE'] != Null)
+                        $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table'] != Null && 
+                        $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'] != Null && 
+                        $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'] != Null)
             {
                 $city = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['CITY'];
                 $state = $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table']['STATE'];
