@@ -1,6 +1,5 @@
 USE Account;
 CREATE TABLE weather (
-	weatherID int UNIQUE NOT NULL AUTO_INCREMENT,
 	zipcode int NOT NULL,
 	evapRate double,
 	cloudCoverage double,
@@ -9,5 +8,5 @@ CREATE TABLE weather (
 	humidity double,
 	windSpeed double,
 	weatherTime varchar(16),
-	PRIMARY KEY(weatherID)
+	PRIMARY KEY(zipcode, weatherTime)
 );

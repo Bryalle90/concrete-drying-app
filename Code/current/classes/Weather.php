@@ -44,16 +44,16 @@ class Weather {
         foreach($array as $id)
             $this->deleteWeather($id);
     }
-	
-	//get weatherID
-	public function getWeatherID($zipcode, $weatherTime){
-		$sql = "SELECT weatherID FROM weather WHERE zipcode = '$zipcode' AND weatherTime = '$weatherTime'";
-		$result = mysql_query($sql);
-        if (!$result || !mysql_num_rows($result))
-            return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
-	}
+    
+    public function checkZipTime($zip, $time){
+        $zip = (int)$zip;
+		$query = "SELECT * FROM weather WHERE zipcode = '$zip' AND weatherTime = '$time'";
+		$result = mysql_query($query);
+        $num_rows = mysql_num_rows($result);
+        if($num_rows == 0)
+            return false;
+		return true;
+    }
 	
 	//get evapRate
 	public function getEvapRate($zipcode){

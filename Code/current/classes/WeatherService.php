@@ -1,5 +1,4 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
 include 'Weather.php';
 include 'ZipUpdate.php';
@@ -45,8 +44,8 @@ class WeatherService{
             $this->hourly_concTemp[$time] = $cTemp;
                 
             $evap = $this->calcEvap($cTemp, $hum, $aTemp, $wSpd);
-            $wID = $weatherdb->getWeatherID($this->zipcode, $time);
-            if($wID != Null){
+            
+            if($weatherdb->checkZipTime($this->zipcode, $time)){
                 $weatherdb->changeEvapRate($wID, $evap);
                 $weatherdb->changeCloudCoverage($wID, $cCover);
                 $weatherdb->changeAirTemp($wID, $aTemp);
