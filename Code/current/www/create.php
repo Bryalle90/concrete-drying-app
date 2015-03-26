@@ -31,7 +31,7 @@
                     if(isset($_SESSION['user']))
                         header("Location: /index.php");
                         
-                    include_once $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
+                    include_once $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
                     include $_SERVER['DOCUMENT_ROOT']."/../classes/user.php";
                     
                     if(isset($_POST['btn_create'])){ // if the create button was pressed

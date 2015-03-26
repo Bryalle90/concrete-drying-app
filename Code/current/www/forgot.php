@@ -26,7 +26,7 @@
         if(isset($_SESSION['user']))
             header("Location: /index.php");
             
-        include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
+        include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
         ?>
             <div class="container-fluid">
                 <div class="col-xs-0 col-sm-2 col-md-3 col-lg-3"></div>
@@ -47,9 +47,11 @@
                                 <div class="input-group">
                                     <div class="input-group-addon">*</div>
                                     <input type="text" class="form-control" name="tb_forgotEmail" placeholder="email@address.com" autocomplete="off" style="background-attachment: scroll; background-position: 100% 50%; background-repeat: no-repeat;">
+                                    <span class="input-group-btn">
+                                        <button type="submit" name="btn_forgotSubmit" class="btn btn-primary">Submit</button>
+                                    </span>
                                 </div>
                             </div>
-                            <button type="submit" name="btn_forgotSubmit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>
                 </div>

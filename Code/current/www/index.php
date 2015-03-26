@@ -33,8 +33,8 @@
                     session_start();
                 
                     // show top nav bar and zipcode input
-                    include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
-                    include $_SERVER['DOCUMENT_ROOT']."/includes/enterzip.html";
+                    include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
+                    include $_SERVER['DOCUMENT_ROOT']."/html/enterzip.html";
                         
                     // require libraries
                     require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
@@ -114,7 +114,7 @@
                                 <?php
                 
                                 // draw graph
-                                include $_SERVER['DOCUMENT_ROOT']."/includes/graph.html";
+                                include $_SERVER['DOCUMENT_ROOT']."/html/graph.html";
                                 
                             }
                             catch (Exception $error){

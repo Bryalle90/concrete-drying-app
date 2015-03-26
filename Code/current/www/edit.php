@@ -122,7 +122,7 @@
                         ';
                     }
                 }
-                include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
+                include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
                 ?>
                 <form class="form-horizontal" action="/edit.php" method="post">
                     <div class="form-group row">

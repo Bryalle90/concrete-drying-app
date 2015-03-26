@@ -26,7 +26,7 @@
         if(!isset($_SESSION['user']))
             header("Location: /index.php");
             
-        include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
+        include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
         ?>
         
         <div class="container-fluid">
@@ -39,7 +39,7 @@
                         $content = "Panel Content ".$i;
                         
                         echo '<div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">';
-                        include $_SERVER['DOCUMENT_ROOT']."/includes/projectPanel.html";
+                        include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel.html";
                         echo '</div>';
                     }
                     ?>

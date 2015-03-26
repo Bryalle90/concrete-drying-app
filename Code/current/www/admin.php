@@ -32,7 +32,7 @@
                 if(!$_SESSION['admin'])
                     header("Location: /index.php");
                 
-                include $_SERVER['DOCUMENT_ROOT']."/includes/navbar.html";
+                include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
             ?>
             </div>
         </div>
