@@ -1,7 +1,7 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
-include 'Weather.php';
-include 'ZipUpdate.php';
+include 'DbWeather.php';
+include 'DbZipUpdate.php';
 
 class WeatherService{
     private $zipcode;
@@ -23,8 +23,7 @@ class WeatherService{
     
     // pushes current class values to the weather table
     private function pushToDB(){        
-        $weatherdb = new Weather();
-        $weatherdb->connectdb();
+        $weatherdb = new DbWeather();
         
         foreach($this->time_layout as $time){
             $aTemp = $this->hourly_temp[$time];
@@ -59,8 +58,7 @@ class WeatherService{
     }
     
     private function pullFromDB(){
-        $weatherdb = new Weather();
-        $weatherdb->connectdb();
+        $weatherdb = new DbWeather();
 
         $this->time_layout = $weatherdb->getTimeArray($this->zipcode);
         $this->hourly_temp = $weatherdb->getAirTemp($this->zipcode);
@@ -109,10 +107,8 @@ class WeatherService{
     }
     
     public function getWeatherData(){    
-        $updatedb = new ZipUpdate();
-        $updatedb->connectdb();
-        $weatherdb = new Weather();
-        $weatherdb->connectdb();
+        $updatedb = new DbZipUpdate();
+        $weatherdb = new DbWeather();
         
         $timeUpdated = date($updatedb->getLastUpdated($this->zipcode));
         $timeNow = date('Y-m-d H:i:s', strtotime('now'));
