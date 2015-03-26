@@ -46,12 +46,12 @@ class WeatherService{
             $evap = $this->calcEvap($cTemp, $hum, $aTemp, $wSpd);
             
             if($weatherdb->checkZipTime($this->zipcode, $time)){
-                $weatherdb->changeEvapRate($wID, $evap);
-                $weatherdb->changeCloudCoverage($wID, $cCover);
-                $weatherdb->changeAirTemp($wID, $aTemp);
-                $weatherdb->changeConcTemp($wID, $cTemp);
-                $weatherdb->changeHumidity($wID, $hum);
-                $weatherdb->changeWindSpeed($wID, $wSpd);
+                $weatherdb->changeEvapRate($this->zipcode, $time, $evap);
+                $weatherdb->changeCloudCoverage($this->zipcode, $time, $cCover);
+                $weatherdb->changeAirTemp($this->zipcode, $time, $aTemp);
+                $weatherdb->changeConcTemp($this->zipcode, $time, $cTemp);
+                $weatherdb->changeHumidity($this->zipcode, $time, $hum);
+                $weatherdb->changeWindSpeed($this->zipcode, $time, $wSpd);
             } else {
                 $weatherdb->addWeather($this->zipcode, $evap, $cCover, $aTemp, $cTemp, $hum, $wSpd, $time);
             }

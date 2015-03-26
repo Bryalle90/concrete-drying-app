@@ -27,8 +27,8 @@ class Weather {
 	}
 
 	//delete weather from table
-	public function deleteWeather($weatherID){		
-		$sql = "DELETE FROM weather WHERE weatherID = '$weatherID'";
+	public function deleteWeather($zip, $time){		
+		$sql = "DELETE FROM weather WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
     
@@ -39,10 +39,10 @@ class Weather {
             return(Null);
         $array = array();
         while ($row = mysql_fetch_array($result)) {
-            $array[] = $row['weatherID'];
+            $array['weatherTime'] = $row['zipcode'];
         }
-        foreach($array as $id)
-            $this->deleteWeather($id);
+        foreach($array as $zip => $time)
+            $this->deleteWeather($zip, $time);
     }
     
     public function checkZipTime($zip, $time){
@@ -147,38 +147,38 @@ class Weather {
 	}
 	
 	//changes the evapRate
-	public function changeEvapRate($weatherID, $evapRate){
-		$sql = "UPDATE weather SET evapRate = '$evapRate' WHERE weatherID = '$weatherID'";
+	public function changeEvapRate($zip, $time, $evapRate){
+		$sql = "UPDATE weather SET evapRate = '$evapRate' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the cloudCoverage
-	public function changeCloudCoverage($weatherID, $cloudCoverage){
-		$sql = "UPDATE weather SET cloudCoverage = '$cloudCoverage' WHERE weatherID = '$weatherID'";
+	public function changeCloudCoverage($zip, $time, $cloudCoverage){
+		$sql = "UPDATE weather SET cloudCoverage = '$cloudCoverage' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the airTemp
-	public function changeAirTemp($weatherID, $airTemp){
-		$sql = "UPDATE weather SET airTemp = '$airTemp' WHERE weatherID = '$weatherID'";
+	public function changeAirTemp($zip, $time, $airTemp){
+		$sql = "UPDATE weather SET airTemp = '$airTemp' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the concTemp
-	public function changeConcTemp($weatherID, $concTemp){
-		$sql = "UPDATE weather SET concTemp = '$concTemp' WHERE weatherID = '$weatherID'";
+	public function changeConcTemp($zip, $time, $concTemp){
+		$sql = "UPDATE weather SET concTemp = '$concTemp' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the humidity
-	public function changeHumidity($weatherID, $humidity){
-		$sql = "UPDATE weather SET humidity = '$humidity' WHERE weatherID = '$weatherID'";
+	public function changeHumidity($zip, $time, $humidity){
+		$sql = "UPDATE weather SET humidity = '$humidity' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the windSpeed
-	public function changeWindSpeed($weatherID, $windSpeed){
-		$sql = "UPDATE weather SET windSpeed = '$windSpeed' WHERE weatherID = '$weatherID'";
+	public function changeWindSpeed($zip, $time, $windSpeed){
+		$sql = "UPDATE weather SET windSpeed = '$windSpeed' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 
