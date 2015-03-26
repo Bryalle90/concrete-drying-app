@@ -53,10 +53,10 @@
                         </div>
                         ';
                     }
-                    if($_POST['tb_newPass'] != ""){
-                        if($_POST['tb_pass'] != "" && $_POST['tb_pass2'] != ""){
-                            if($_POST['tb_pass'] == $_POST['tb_pass2']){
-                                if($userdb->verifyLogin($_SESSION['email'], $_POST['tb_pass']) == $_SESSION['id']){
+                    if($_POST['tb_newPass'] != "" || $_POST['tb_newPass2'] != ""){
+                        if($_POST['tb_pass'] != ""){
+                            if($userdb->verifyLogin($_SESSION['email'], $_POST['tb_pass']) == $_SESSION['id']){
+                                if($_POST['tb_newPass'] == $_POST['tb_newPass2']){
                                     $userdb->changePassword($_SESSION['id'], $_POST['tb_newPass']);
                                     echo '
                                     <div class="alert alert-success" role="alert">
@@ -67,7 +67,7 @@
                                 } else {
                                     echo '
                                     <div class="alert alert-danger" role="alert">
-                                        Your password was not correct
+                                        Your new password did not match
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                     ';
@@ -75,7 +75,7 @@
                             } else {
                                 echo '
                                 <div class="alert alert-danger" role="alert">
-                                    The old passwords did not match
+                                    The old password was incorrect
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 </div>
                                 ';
@@ -83,7 +83,7 @@
                         } else {
                             echo '
                             <div class="alert alert-danger" role="alert">
-                                You must enter your old password to change it to the new password
+                                You must enter your old password to change it
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             </div>
                             ';
@@ -141,15 +141,15 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="tb_pass2" class="col-sm-2 control-label">Retype Old Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" name="tb_pass2" placeholder="*******">
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label for="tb_newPass" class="col-sm-2 control-label">New Password</label>
                         <div class="col-sm-10">
                             <input type="password" class="form-control" name="tb_newPass" placeholder="*******">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="tb_newPass2" class="col-sm-2 control-label">Retype New Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="tb_newPass2" placeholder="*******">
                         </div>
                     </div>
                     <div class="form-group row">
