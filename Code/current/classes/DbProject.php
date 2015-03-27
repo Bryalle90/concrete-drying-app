@@ -25,7 +25,7 @@ class DbProject {
 	public function addToProjectTable($projectName, $ownerID, $zipcode, $time, $unit){
         
 		//project table
-		$sql = "INSERT INTO project (projectName, ownerID, zipcode, endTime, unit)
+		$sql = "INSERT INTO project (projectName, ownerID, zipcode, addedTime, unit)
 		VALUES ('$projectName', '$ownerID', '$zipcode', '$time', '$unit')";
 		mysql_query($sql);	
 		
@@ -61,7 +61,7 @@ class DbProject {
 	}
 
 	public function changeProjectTime($projectID, $time){
-		$sql = "UPDATE project SET endTime = '$time' WHERE projectID = '$projectID'";
+		$sql = "UPDATE project SET addedTime = '$time' WHERE projectID = '$projectID'";
 		mysql_query($sql);
 	}
 
@@ -151,7 +151,7 @@ class DbProject {
 	}
 
 	public function getTime($projectID){
-		$sql = "SELECT endTime FROM project WHERE projectID = '$projectID'";
+		$sql = "SELECT addedTime FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
 		$result = mysql_result($result, 0);
 		return $result;

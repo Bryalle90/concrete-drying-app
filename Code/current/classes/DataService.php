@@ -1,6 +1,6 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
-include 'ZipInfo.php';
+include 'DbZipInfo.php';
 
 class DataService{
     
@@ -13,21 +13,18 @@ class DataService{
     public function __construct($zip){
         $this->zipcode = $zip;
         
-        $infodb = new ZipInfo();
-        $infodb->connectdb();
+        $infodb = new DbZipInfo();
         
         if(!$infodb->checkZip($this->zipcode))
             $this->forceUpdate();
         $this->city = $infodb->getCity($zip);
         $this->state = $infodb->getState($zip);
         $this->latitude = $infodb->getLat($zip);
-        $this->longitude = $infodb->getLon($zip);
-        
+        $this->longitude = $infodb->getLon($zip);        
     }
     
     public function forceUpdate(){
-        $infodb = new ZipInfo();
-        $infodb->connectdb();
+        $infodb = new DbZipInfo();
         
         // get the longitude and latitude for a zipcode
         $soapclient = new nusoap_client('http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php?wsdl');
