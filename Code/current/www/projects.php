@@ -16,6 +16,12 @@
 		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
+        
+        <style>
+            .project-panels > .row > .col-md-4:nth-child(3n+1) {
+                clear: both;
+            }
+        </style>
     </head>
 
     <body>
@@ -30,44 +36,48 @@
             include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
             ?>
             <div class="row">
-                <div class="col-xs-0 col-sm-0 col-md-1 col-lg-2"></div>
-                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-                    <div class="col-xs-12" align="center">
-                        <form class="form-inline" action="/php/addProject.php" method="post">
-                            <div class="form-group">
-                                <select name="unit" class="form-control">
-                                    <option>Standard</option>
-                                    <option>Metric</option>
-                                </select>
-                                <div class="input-group">
-                                    <label class="sr-only" for="zipinput">Zip Code</label>
-                                    <input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="submit" name="btn_add">Add Project</button>
-                                    </span>
+                <div class="col-xs-offset-0 col-xs-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+                    <div class="row">
+                        <div class="col-xs-12" align="center">
+                            <form class="form-inline" action="/php/addProject.php" method="post">
+                                <div class="form-group">
+                                    <select name="unit" class="form-control">
+                                        <option>Standard</option>
+                                        <option>Metric</option>
+                                    </select>
+                                    <div class="input-group">
+                                        <label class="sr-only" for="zipinput">Zip Code</label>
+                                        <input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit" name="btn_add">Add Project</button>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                        <?php
-                        
-                        require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
-                        require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbUser.php');
-                        $projectdb = new DbProject();
-                        $userdb = new DbUser();
-                        
-                        $projects = $projectdb->getProjects($_SESSION['id']);
-                        
-                        if($projects != Null){
-                            foreach($projects as $project){                        
-                                echo '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">';
-                                include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel.html";
-                                echo '</div>';
+                    <div class="project-panels">
+                        <div class="row">
+                            <?php
+                            
+                            require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
+                            require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbUser.php');
+                            $projectdb = new DbProject();
+                            $userdb = new DbUser();
+                            
+                            $projects = $projectdb->getProjects($_SESSION['id']);
+                            
+                            if($projects != Null){
+                                foreach($projects as $pID => $project){                        
+                                    echo '<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+                                    include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel.html";
+                                    echo '</div>';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
                     </div>
-                <div class="col-xs-0 col-sm-0 col-md-1 col-lg-2"></div>
+                </div>
             </div>
         </div>
     </body>

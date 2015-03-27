@@ -26,8 +26,14 @@
         </table>
     </div>
     <div class="panel-footer">
-        <button class="btn btn-primary btn-sm" type="button">View</button>
-        <button class="btn btn-default btn-sm" type="button">Edit</button>
-        <button class="btn btn-danger btn-sm" type="button">Remove</button>
+        <div class="row">
+            <div class="col-xs-7">
+                <button class="btn btn-primary btn-sm" type="button" id="<?=$pID?>" onclick="alert(this.id)">View</button>
+                <button class="btn btn-default btn-sm" type="button">Edit</button>
+            </div>
+            <div class="col-xs-5" align="right">
+                <button class="btn btn-danger btn-sm" type="button">Remove</button>
+            </div>
+        </div>
     </div>
 </div>
