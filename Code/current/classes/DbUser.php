@@ -134,7 +134,7 @@ class DbUser {
         return(Null);
     }
 
-	//checks to see if email and password match and return userID if they do, returns NULL if not
+	//checks to see if email exists and return userID if they do, returns NULL if not
 	public function isUser($email){
 		$sql = "SELECT userID FROM user WHERE email = '$email'";
 		$result = mysql_query($sql);

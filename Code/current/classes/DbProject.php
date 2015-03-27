@@ -81,6 +81,24 @@ class DbProject {
 		}
 	}
     
+    public function checkProject($projectID){
+		$query = "SELECT * FROM project WHERE projectID = '$projectID'";
+		$result = mysql_query($query);
+        
+        if (!$result || mysql_num_rows($result) == 0)
+            return(false);
+        return(true);        
+    }
+    
+    public function isUserInProject($projectID, $userID){
+		$query = "SELECT * FROM userProjectLookup WHERE projectID = '$projectID' AND userID = '$userID'";
+		$result = mysql_query($query);
+        
+        if (!$result || mysql_num_rows($result) == 0)
+            return(false);
+        return(true);        
+    }
+    
     public function getUsersOfProject($projectID){
         $query = "SELECT * FROM userProjectLookup WHERE projectID = '$projectID'";
 		$result = mysql_query($query);

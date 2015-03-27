@@ -47,7 +47,7 @@ class DataService{
         // http://webservicex.net/uszip.asmx
         $soapclient = new nusoap_client('http://www.webservicex.net/uszip.asmx?WSDL', true);
         try{
-            $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $_GET['zip']));
+            $zipinfo = $soapclient->call('GetInfoByZIP', array('USZip' => $this->zipcode));
             if($zipinfo != Null && $zipinfo['GetInfoByZIPResult'] != Null && 
                         $zipinfo['GetInfoByZIPResult']['NewDataSet'] != Null && 
                         $zipinfo['GetInfoByZIPResult']['NewDataSet']['Table'] != Null && 
