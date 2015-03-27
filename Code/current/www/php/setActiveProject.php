@@ -5,7 +5,7 @@
     
     if(isset($_SESSION['id'])){
         $projectdb = new DbProject();
-        if($_SESSION['id'] == $projectdb->getOwner($_POST['pID'])){
+        if($projectdb->isUserInProject($_POST['pID'], $_SESSION['id'])){
             $_SESSION['activeProject'] = $_POST['pID'];
             echo $_POST['pID'];
         }
