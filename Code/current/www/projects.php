@@ -31,7 +31,7 @@
             
             // send user to index if not logged in
             if(!isset($_SESSION['id']))
-                header("Location: /index.php");
+                header("Location: /login_page.php");
                 
             include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
             ?>

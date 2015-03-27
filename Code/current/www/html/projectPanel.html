@@ -32,8 +32,37 @@
                 <button class="btn btn-default btn-sm" type="button" id="<?=$pID?>" onclick="alert(this.id)">Edit</button>
             </div>
             <div class="col-xs-5" align="right">
-                <button class="btn btn-danger btn-sm" type="button" id="<?=$pID?>" onclick="removeProject(this.id)"><?=$project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
+                <button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target="#delModal"><?=$project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
             </div>
+
+            
+            <!-- Delete Account Modal -->
+            <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="delModalLabel">Are you sure you want to <?=$project['ownerID'] == $_SESSION['id'] ? 'delete' : 'leave'?> this project?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <?php
+                                if($project['ownerID'] == $_SESSION['id'])
+                                    echo 'This will remove the project for you and any other users associated with this project';
+                                else
+                                    echo 'This will remove you from the project. You will no longer be notified about anything from this project.';
+                            ?>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" type="submit" name="btn_delete" id="<?=$pID?>" onclick="removeProject(this.id)">I'm sure</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
         </div>
     </div>
 </div>
