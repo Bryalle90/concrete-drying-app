@@ -9,11 +9,11 @@
         $city = $dataService->getCity();
         $state = $dataService->getState();
         
-        $title = $city.', '.$state;
-        
-        $projectdb = new DbProject();
-        
-        $projectdb->addToProjectTable($title, $_SESSION['id'], (int)$_POST['zip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['unit']);
+        if($city != Null && $state != Null){
+            $title = $_POST['nameInput'] == '' ? $city.', '.$state : $_POST['nameInput'];
+            $projectdb = new DbProject();
+            $projectdb->addToProjectTable($title, $_SESSION['id'], (int)$_POST['zip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['unit']);
+        }
     }
     
     header ("Location: /../projects.php");

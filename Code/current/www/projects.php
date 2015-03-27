@@ -41,16 +41,18 @@
                         <div class="col-xs-12" align="center">
                             <form class="form-inline" action="/php/addProject.php" method="post">
                                 <div class="form-group">
-                                    <select name="unit" class="form-control">
-                                        <option>Standard</option>
-                                        <option>Metric</option>
-                                    </select>
-                                    <div class="input-group">
-                                        <label class="sr-only" for="zipinput">Zip Code</label>
-                                        <input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="submit" name="btn_add">Add Project</button>
-                                        </span>
+                                    <div class="row">
+                                        <label class="sr-only" for="nameInput">Project Name</label>
+                                        <input style="min-width:200px" name="nameInput" id="nameInput" type="text" class="form-control" placeholder="Project Name">
+                                        <select name="unit" class="form-control">
+                                            <option>Standard</option>
+                                            <option>Metric</option>
+                                        </select>
+                                        <div class="input-group">
+                                            <label class="sr-only" for="zipinput">Zip Code</label>
+                                            <input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="Zip Code">
+                                        </div>
+                                        <button class="btn btn-primary" type="submit" name="btn_add">Add Project</button>
                                     </div>
                                 </div>
                             </form>
@@ -74,7 +76,7 @@
                                     echo '</div>';
                                 }
                             }
-                            ?>
+                            ?>                            
                         </div>
                     </div>
                 </div>

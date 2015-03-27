@@ -68,13 +68,10 @@ class DbProject {
 	//Deletes project from the lookuptable if it is shared, but deletes the project from both the 
 	//lookuptable and the project table if user owns project
 	public function deleteProject($projectID, $userID){
-		$query = "DELETE FROM userProjectLookup WHERE projectID = '$projectID' AND ownerID = '$ownerID'";
+		$query = "DELETE FROM userProjectLookup WHERE projectID = '$projectID' AND userID = '$userID'";
 		mysql_query($query);
 
-		//ADD LOGIC TO DELETE PROJECT TABLE ENTRY IF NOT SHARED
-		$query = "SELECT ownerID FROM project WHERE projectID = '$projectID'";
-		$result = mysql_query($query);
-		$ownerID = mysql_result($result, 0);
+		$ownerID = $this->getOwner($projectID);
 		if($ownerID == $userID){
 			$sql = "DELETE FROM project WHERE projectID = '$projectID'";
 			mysql_query($sql);
@@ -137,10 +134,10 @@ class DbProject {
 	}
 
 	public function getOwner($projectID){
-		$sql = "SELECT ownerID FROM project WHERE projectID = '$projectID'";
-		$result = mysql_query($sql);
-		$result = mysql_result($result, 0);
-		return $result;
+		$query = "SELECT ownerID FROM project WHERE projectID = '$projectID'";
+		$result = mysql_query($query);
+		$ownerID = mysql_result($result, 0);
+		return $ownerID;
 	}
 
 	public function getUnit($projectID){

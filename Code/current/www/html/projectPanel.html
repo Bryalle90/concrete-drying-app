@@ -28,12 +28,34 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-xs-7">
-                <button class="btn btn-primary btn-sm" type="button" id="<?=$pID?>" onclick="alert(this.id)">View</button>
-                <button class="btn btn-default btn-sm" type="button">Edit</button>
+                <button class="btn btn-primary btn-sm" type="button" id="<?=$pID?>" onclick="viewProject(this.id)">View</button>
+                <button class="btn btn-default btn-sm" type="button" id="<?=$pID?>" onclick="alert(this.id)">Edit</button>
             </div>
             <div class="col-xs-5" align="right">
-                <button class="btn btn-danger btn-sm" type="button">Remove</button>
+                <button class="btn btn-danger btn-sm" type="button" id="<?=$pID?>" onclick="removeProject(this.id)"><?=$project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
             </div>
         </div>
     </div>
 </div>
+<script>
+function removeProject(projectID) {
+    $.ajax({
+        type: "POST",
+        url: '/php/delProject.php',
+        data: { projectID: projectID },
+        success: function(data) {
+            location.replace("/projects.php");
+        }
+    });
+}
+function viewProject(projectID) {
+    $.ajax({
+        type: "POST",
+        url: '/php/viewProject.php',
+        data: { projectID: projectID },
+        success: function(data) {
+            location.replace('/index.php'+data);
+        }
+    });
+}
+</script>
