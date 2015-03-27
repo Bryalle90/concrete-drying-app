@@ -2,6 +2,7 @@ USE Account;
 CREATE TABLE project (
 	projectID int UNIQUE NOT NULL AUTO_INCREMENT,
 	projectName varchar(40),
+	location varchar(40),
 	ownerID int NOT NULL,
 	zipcode int,
 	unit varchar(1),

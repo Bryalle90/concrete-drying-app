@@ -10,9 +10,10 @@
         $state = $dataService->getState();
         
         if($city != Null && $state != Null){
-            $title = $_POST['nameInput'] == '' ? $city.', '.$state : $_POST['nameInput'];
+            $location = $city.', '.$state;
+            $title = $_POST['nameInput'] == '' ? $location : $_POST['nameInput'];
             $projectdb = new DbProject();
-            $projectdb->addToProjectTable($title, $_SESSION['id'], (int)$_POST['zip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['unit']);
+            $projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['zip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['unit']);
         }
     }
     

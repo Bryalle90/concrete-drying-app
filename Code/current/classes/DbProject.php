@@ -22,11 +22,11 @@ class DbProject {
 	}
 	
 	//Adds to project table then adds to project lookup table
-	public function addToProjectTable($projectName, $ownerID, $zipcode, $time, $unit){
+	public function addToProjectTable($projectName, $location, $ownerID, $zipcode, $time, $unit){
         
 		//project table
-		$sql = "INSERT INTO project (projectName, ownerID, zipcode, addedTime, unit)
-		VALUES ('$projectName', '$ownerID', '$zipcode', '$time', '$unit')";
+		$sql = "INSERT INTO project (projectName, location, ownerID, zipcode, addedTime, unit)
+		VALUES ('$projectName', '$location', '$ownerID', '$zipcode', '$time', '$unit')";
 		mysql_query($sql);	
 		
 		$sql = "SELECT projectID FROM project WHERE projectName = '$projectName' AND ownerID = '$ownerID'";
@@ -118,6 +118,7 @@ class DbProject {
         foreach($projectIDarray as $pID){
             $projects[$pID]['zip'] = $this->getZipcode($pID);
             $projects[$pID]['name'] = $this->getName($pID);
+            $projects[$pID]['location'] = $this->getLocation($pID);
             $projects[$pID]['ownerID'] = $this->getOwner($pID);
             $projects[$pID]['userIDs'] = $this->getUsersOfProject($pID);
         }
@@ -139,6 +140,13 @@ class DbProject {
 
 	public function getName($projectID){
 		$sql = "SELECT projectName FROM project WHERE projectID = '$projectID'";
+		$result = mysql_query($sql);
+		$result = mysql_result($result, 0);
+		return $result;
+	}
+
+	public function getLocation($projectID){
+		$sql = "SELECT location FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
 		$result = mysql_result($result, 0);
 		return $result;
