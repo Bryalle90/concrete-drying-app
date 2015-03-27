@@ -31,7 +31,8 @@ class DbProject {
 		
 		$sql = "SELECT projectID FROM project WHERE projectName = '$projectName' AND ownerID = '$ownerID'";
 		$result = mysql_query($sql);
-		$projectID = mysql_result($result, 0);
+        $numRows = mysql_num_rows($result);
+		$projectID = mysql_result($result, $numRows-1);
 
 		//userProjectLookup table
 		$this->addUserToSharedProject($projectID, $ownerID);	
