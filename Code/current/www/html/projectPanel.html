@@ -6,7 +6,7 @@
         <table class="table">
             <tr>
                 <td>Zip Code</td>
-                <td><?=$project['zip']?></td>
+                <td><?=str_pad($project['zip'], 5, '0', STR_PAD_LEFT)?></td>
             </tr>
             <tr>
                 <td>Owner</td>
