@@ -3,8 +3,8 @@
     
     session_start();
     
-    if(isset($_POST['projectID'])){
-        $projectdb = new DbProject();
-        $projectdb->deleteProject($_POST['projectID'], $_SESSION['id']);
+    $projectdb = new DbProject();
+    if(isset($_SESSION['id']) && $projectdb->getOwner($_SESSION['activeProject']) == $_SESSION['id']){
+        $projectdb->deleteProject($_SESSION['activeProject'], $_SESSION['id']);
     }
 ?>
