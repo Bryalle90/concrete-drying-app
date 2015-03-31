@@ -33,19 +33,12 @@ class DbWeather {
 		$sql = "DELETE FROM weather WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
-    
-    public function clearZip($zipcode){
-        $query = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
-        $result = mysql_query($query);
-        if (!$result || !mysql_num_rows($result))
-            return(Null);
-        $array = array();
-        while ($row = mysql_fetch_array($result)) {
-            $array['weatherTime'] = $row['zipcode'];
-        }
-        foreach($array as $zip => $time)
-            $this->deleteWeather($zip, $time);
-    }
+
+	//delete weather from table
+	public function clearZip($zip){		
+		$sql = "DELETE FROM weather WHERE zipcode = '$zip'";
+		mysql_query($sql);
+	}
     
     public function checkZipTime($zip, $time){
         $zip = (int)$zip;

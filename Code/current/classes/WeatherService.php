@@ -128,7 +128,6 @@ class WeatherService{
             $seconds = strtotime($timeNow) - strtotime($timeUpdated);
             $hours = $seconds / 60 /  60;
             if($hours >= 1.00){ // zip was updated over an hour ago
-                $weatherdb->clearZip($this->zipcode);
                 $updatedb->update($this->zipcode, $timeNow);
                 try{
                     $this->forceUpdate();
