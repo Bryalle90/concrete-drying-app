@@ -55,6 +55,11 @@ class DbProject {
 		mysql_query($sql);
 	}
 
+	public function changeProjectLocation($projectID, $loc){
+		$sql = "UPDATE project SET location = '$loc' WHERE projectID = '$projectID'";
+		mysql_query($sql);
+	}
+
 	public function changeProjectUnit($projectID, $unit){
 		$sql = "UPDATE project SET unit = '$unit' WHERE projectID = '$projectID'";
 		mysql_query($sql);

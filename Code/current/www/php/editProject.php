@@ -16,6 +16,7 @@
             $state = $dataService->getState();
             
             if($city != Null && $state != Null){
+                $projectdb->changeProjectLocation($_SESSION['activeProject'], $city.', '.$state);
                 $projectdb->changeProjectZip($_SESSION['activeProject'], $_POST['newZip']);
             } else {
                 echo 'not able to change zipcode';

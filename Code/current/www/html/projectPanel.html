@@ -49,11 +49,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="delModalLabel">Are you sure you want to <?=$project['ownerID'] == $_SESSION['id'] ? 'delete' : 'leave'?> this project?</h4>
+                <h4 class="modal-title" id="delModalLabel">Are you sure you want to <?=$projectdb->getOwner($_SESSION['activeProject']) == $_SESSION['id'] ? 'delete' : 'leave'?> this project?</h4>
             </div>
             <div class="modal-body">
                 <?php
-                    if($project['ownerID'] == $_SESSION['id'])
+                    if($projectdb->getOwner($_SESSION['activeProject']) == $_SESSION['id'])
                         echo 'This will remove the project for you and any other users associated with this project';
                     else
                         echo 'This will remove you from the project. You will no longer be notified about anything from this project.';
