@@ -24,7 +24,7 @@ class WeatherService{
     // pushes current class values to the weather table
     private function pushToDB(){        
         $weatherdb = new DbWeather();
-        
+
         foreach($this->time_layout as $time){
             $aTemp = $this->hourly_temp[$time];
             $hum = $this->hourly_humidity[$time];
@@ -84,6 +84,9 @@ class WeatherService{
         catch (Exception $error){
             throw $error;
         }
+        
+        $weatherdb = new DbWeather();
+        $weatherdb->clearZip($this->zipcode);
         
         $forecast = $simpleNWS->getForecastForWeek();
         
