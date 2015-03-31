@@ -24,7 +24,8 @@ class WeatherService{
     // pushes current class values to the weather table
     private function pushToDB(){        
         $weatherdb = new DbWeather();
-        
+        $weatherdb->deleteWeather($this->zipcode);
+
         foreach($this->time_layout as $time){
             $aTemp = $this->hourly_temp[$time];
             $hum = $this->hourly_humidity[$time];

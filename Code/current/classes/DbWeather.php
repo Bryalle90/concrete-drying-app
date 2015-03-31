@@ -29,8 +29,8 @@ class DbWeather {
 	}
 
 	//delete weather from table
-	public function deleteWeather($zip, $time){		
-		$sql = "DELETE FROM weather WHERE zipcode = '$zip' AND weatherTime = '$time'";
+	public function deleteWeather($zip){		
+		$sql = "DELETE FROM weather WHERE zipcode = '$zip'";
 		mysql_query($sql);
 	}
     
