@@ -43,7 +43,7 @@
                     require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/WeatherService.php');
                     require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DataService.php');
                         
-                    if(isset($_GET['zip']))
+                    if(isset($_GET['zip']) && isset($_GET['unit']))
                         // if the zip code provided is valid
                         if (preg_match($ZIPPATTERN, $_GET['zip'])){
                             
