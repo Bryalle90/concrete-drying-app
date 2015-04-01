@@ -66,7 +66,7 @@
                 };
                 
                 this.editProject = function () {
-                    var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="text" name="edit" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /><input type="hidden" name="newName" value="'+document.getElementById("editName-"+this.index).value+'" /><input type="hidden" name="newZip" value="'+document.getElementById("editZip-"+this.index).value+'" /></form>');
+                    var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="hidden" name="edit" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /><input type="hidden" name="newName" value="'+document.getElementById("editName-"+this.index).value+'" /><input type="hidden" name="newZip" value="'+document.getElementById("editZip-"+this.index).value+'" /></form>');
                     $('body').append(formElement);
                     $(formElement).submit();
                     
@@ -106,26 +106,35 @@
                         <?php
                 
                         if(isset($_POST['btn_addProject'])){
-                            $dataService = new DataService((int)$_POST['newProjectZip']);
-                            $city = $dataService->getCity();
-                            $state = $dataService->getState();
-                            
-                            if($city != Null && $state != Null){
-                                $location = $city.', '.$state;
-                                $title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
-                                $projectdb = new DbProject();
-                                $projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['newProjectUnit']);
+                            if($_POST['newProjectZip'] != ""){
+                                $dataService = new DataService((int)$_POST['newProjectZip']);
+                                $city = $dataService->getCity();
+                                $state = $dataService->getState();
                                 
-                                echo '
-                                <div class="alert alert-success" role="alert">
-                                    Your new project has been added!
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                </div>
-                                ';
+                                if($city != Null && $state != Null){
+                                    $location = $city.', '.$state;
+                                    $title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
+                                    $projectdb = new DbProject();
+                                    $projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['newProjectUnit']);
+                                    
+                                    echo '
+                                    <div class="alert alert-success" role="alert">
+                                        Your new project has been added!
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                } else {
+                                    echo '
+                                    <div class="alert alert-danger" role="alert">
+                                        invalid zipcode: Could not get coordinates for zip code
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                }
                             } else {
                                 echo '
                                 <div class="alert alert-danger" role="alert">
-                                    invalid zipcode: Could not get coordinates for zip code
+                                    You must enter a zip code to create a project
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 </div>
                                 ';
@@ -150,12 +159,18 @@
                                 ';
                             }
                         }
-                        
                         if(isset($_POST['edit'])){
                             $projectdb = new DbProject();
                             if($projectdb->getOwner($_POST['projectID']) == $_SESSION['id']){
-                                if($_POST['newName'] != '')
+                                if($_POST['newName'] != ''){
                                     $projectdb->changeProjectName($_POST['projectID'], $_POST['newName']);
+                                    echo '
+                                    <div class="alert alert-success" role="alert">
+                                        The name for your project has been changed
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                }
                                 if($_POST['newZip'] != ''){
                                     
                                     $dataService = new DataService((int)$_POST['newZip']);
@@ -165,6 +180,13 @@
                                     if($city != Null && $state != Null){
                                         $projectdb->changeProjectLocation($_POST['projectID'], $city.', '.$state);
                                         $projectdb->changeProjectZip($_POST['projectID'], $_POST['newZip']);
+                                        
+                                        echo '
+                                        <div class="alert alert-success" role="alert">
+                                            The zip code for your project has been changed
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        ';
                                     } else {
                                         echo '
                                         <div class="alert alert-danger" role="alert">
@@ -239,7 +261,10 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="newProjectZip" class="control-label">Zip Code</label>
-                                    <input name="newProjectZip" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">*</span>
+                                        <input name="newProjectZip" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="newProjectUnit" class="control-label">Unit</label>
