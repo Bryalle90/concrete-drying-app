@@ -32,11 +32,11 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-xs-7">
-                <button class="btn btn-primary btn-sm" type="button" id="<?=$pID?>" onclick="viewProject(this.id)">View</button>
-                <button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#editModal" id="<?=$pID?>" onclick="setProjectID(this.id)">Edit</button>
+                <button class="btn btn-primary btn-sm" type="button" id="btn_pview" onclick="pPanels[<?=$index?>].viewProject()">View</button>
+                <button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#editModal-<?=$index?>" id="btn_pedit" onclick="setProjectID(this.id)">Edit</button>
             </div>
             <div class="col-xs-5" align="right">
-                <button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target="#delModal" id="<?=$pID?>" onclick="setProjectID(this.id)"><?=$project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
+                <button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target="#delModal-<?=$index?>"><?=$project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
             </div>
         </div>
     </div>
@@ -44,23 +44,23 @@
 
             
 <!-- Delete Project Modal -->
-<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+<div class="modal fade" id="delModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="delModalLabel">Are you sure you want to <?=$projectdb->getOwner($_SESSION['activeProject']) == $_SESSION['id'] ? 'delete' : 'leave'?> this project?</h4>
+                <h4 class="modal-title" id="delModalLabel">Are you sure you want to <?=$project['ownerID'] == $_SESSION['id'] ? 'delete' : 'leave'?> this project?</h4>
             </div>
             <div class="modal-body">
                 <?php
-                    if($projectdb->getOwner($_SESSION['activeProject']) == $_SESSION['id'])
+                    if($project['ownerID'] == $_SESSION['id'])
                         echo 'This will remove the project for you and any other users associated with this project';
                     else
                         echo 'This will remove you from the project. You will no longer be notified about anything from this project.';
                 ?>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" type="submit" name="btn_delete" onclick="removeProject()">I'm sure</button>
+                <button class="btn btn-danger" type="button" id="btn_delete" onclick="pPanels[<?=$index?>].removeProject()">I'm sure</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -68,7 +68,7 @@
 </div>
 
 <!-- Edit Project Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="editModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -79,23 +79,23 @@
                 <div class="form-group row">
                     <label for="tb_name" class="col-sm-3 control-label">Project Name</label>
                     <div class="col-sm-9">
-                        <input id="editName" type="text" class="form-control" placeholder="">
+                        <input id="editName-<?=$index?>" type="text" class="form-control" placeholder="">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="zipinput" class="col-sm-3 control-label">Zip Code</label>
                     <div class="col-sm-9">
-                        <input id="editZip" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="">
+                        <input id="editZip-<?=$index?>" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-xs-7" align="left">
-                        <button class="btn btn-info" type="submit" data-toggle="modal" data-target="#addUserModal">Add User</button>
+                        <button class="btn btn-info" type="button" data-toggle="modal" data-target="#addUserModal-<?=$index?>">Add User</button>
                     </div>
                     <div class="col-xs-5" align="right">
-                        <button class="btn btn-primary" type="submit" name="btn_edit" onclick="editProject()">Save</button>
+                        <button class="btn btn-primary" type="button" name="btn_edit" onclick="pPanels[<?=$index?>].editProject()">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
 </div>
 
 <!-- Add User Project Modal -->
-<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="addUserModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -114,70 +114,16 @@
             </div>
             <div class="modal-body">
                 <div class="form-group row">
-                    <label for="tb_name" class="col-sm-3 control-label">User Email</label>
+                    <label for="addUserEmail" class="col-sm-3 control-label">User Email</label>
                     <div class="col-sm-9">
-                        <input id="addUserEmail" type="email" class="form-control" placeholder="Email address" autocomplete="off">
+                        <input id="addUserEmail-<?=$index?>" type="email" class="form-control" placeholder="Email address" autocomplete="off">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" type="submit" name="btn_addUser" onclick="addUserToProject()">Add User</button>
+                <button class="btn btn-primary" type="button" name="btn_addUser" onclick="pPanels[<?=$index?>].addUserToProject()">Add User</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-function removeProject() {
-    $.ajax({
-        type: "POST",
-        url: '/php/delProject.php',
-        data: { },
-        success: function(data) {
-            if(data){ alert(data); }
-            location.replace("/projects.php");
-        }
-    });
-}
-function viewProject(projectID) {
-    setProjectID(projectID);
-    $.ajax({
-        type: "POST",
-        url: '/php/viewProject.php',
-        data: { },
-        success: function(data) {
-            location.replace('/index.php'+data);
-        }
-    });
-}
-function editProject() {
-    $.ajax({
-        type: "POST",
-        url: '/php/editProject.php',
-        data: { newName: document.getElementById("editName").value, newZip: document.getElementById("editZip").value },
-        success: function(data) {
-            if(data){ alert(data); }
-            location.replace("/projects.php");
-        }
-    });
-}
-function addUserToProject() {
-    $.ajax({
-        type: "POST",
-        url: '/php/addUserToProject.php',
-        data: { email: document.getElementById("addUserEmail").value },
-        success: function(data) {
-            if(data){ alert(data); }
-            document.getElementById("addUserEmail").value = "";
-        }
-    });
-}
-function setProjectID(projectID) {
-    $.ajax({
-        type: "POST",
-        url: '/php/setActiveProject.php',
-        data: { pID: projectID }
-    });
-}
-</script>
