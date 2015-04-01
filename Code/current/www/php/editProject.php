@@ -6,9 +6,9 @@
     
     $projectdb = new DbProject();
     
-    if(isset($_SESSION['id']) && $projectdb->getOwner($_SESSION['activeProject']) == $_SESSION['id']){
+    if(isset($_SESSION['id']) && $projectdb->getOwner($_POST['projectID']) == $_SESSION['id']){
         if($_POST['newName'] != '')
-            $projectdb->changeProjectName($_SESSION['activeProject'], $_POST['newName']);
+            $projectdb->changeProjectName($_POST['projectID'], $_POST['newName']);
         if($_POST['newZip'] != ''){
             
             $dataService = new DataService((int)$_POST['newZip']);
@@ -16,8 +16,8 @@
             $state = $dataService->getState();
             
             if($city != Null && $state != Null){
-                $projectdb->changeProjectLocation($_SESSION['activeProject'], $city.', '.$state);
-                $projectdb->changeProjectZip($_SESSION['activeProject'], $_POST['newZip']);
+                $projectdb->changeProjectLocation($_POST['projectID'], $city.', '.$state);
+                $projectdb->changeProjectZip($_POST['projectID'], $_POST['newZip']);
             } else {
                 echo 'not able to change zipcode';
             }

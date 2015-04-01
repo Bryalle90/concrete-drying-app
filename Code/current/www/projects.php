@@ -17,11 +17,63 @@
 		<!-- Custom styles for this template -->
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
         
-        <style>
-            .project-panels > .row > .col-md-4:nth-child(3n+1) {
-                clear: both;
+        <script>
+            function ProjPanel(pID) {
+                this.projectID = pID;
+                
+                this.getProjectID = function() {
+                    return this.projectID;
+                };
+                
+                this.viewProject = function (projectID) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/php/viewProject.php',
+                        data: { projectID: this.projectID },
+                        success: function(data) {
+                            location.replace('/index.php'+data);
+                        }
+                    });
+                };
+                
+                this.addUserToProject = function (index) {
+                    var element = "addUserEmail-"+index;
+                    $.ajax({
+                        type: "POST",
+                        url: '/php/addUserToProject.php',
+                        data: { projectID: this.projectID, email: document.getElementById(element).value },
+                        success: function(data) {
+                            if(data){ alert(data); }
+                            document.getElementById("addUserEmail").value = "";
+                        }
+                    });
+                };
+                
+                this.editProject = function () {
+                    $.ajax({
+                        type: "POST",
+                        url: '/php/editProject.php',
+                        data: { projectID: this.projectID, newName: document.getElementById("editName").value, newZip: document.getElementById("editZip").value },
+                        success: function(data) {
+                            if(data){ alert(data); }
+                            location.replace("/projects.php");
+                        }
+                    });
+                };
+                
+                this.removeProject = function () {
+                    $.ajax({
+                        type: "POST",
+                        url: '/php/delProject.php',
+                        data: { projectID: this.projectID },
+                        success: function(data) {
+                            if(data){ alert(data); }
+                            location.replace("/projects.php");
+                        }
+                    });
+                };
             }
-        </style>
+        </script>
     </head>
 
     <body>
@@ -58,8 +110,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="project-panels">
-                        <div class="row">
+                    <div class="project-panels row">
                             <?php
                             
                             require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
@@ -69,15 +120,32 @@
                             
                             $projects = $projectdb->getProjects($_SESSION['id']);
                             
+                            ?>
+                            <script>
+                            pPanels = new Array();
+                            </script>
+                            <?php
+                            
+                            $index = 0;
+                                    
                             if($projects != Null){
-                                foreach($projects as $pID => $project){                        
-                                    echo '<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
+                                foreach($projects as $pID => $project){
+                                    
+                                    ?>
+                                    <script>
+                                    pPanel = new ProjPanel(<?=$pID?>);
+                                    pPanels.push(pPanel);
+                                    </script>
+                                    <?php
+                                    
+                                    echo '<div class="col-xs-12 col-sm-6 col-md-4">';
                                     include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel.html";
                                     echo '</div>';
+                                    
+                                    $index++;
                                 }
                             }
-                            ?>                            
-                        </div>
+                            ?>   
                     </div>
                 </div>
             </div>
