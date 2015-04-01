@@ -29,8 +29,10 @@
                 if(!isset($_SESSION['user']))
                     header("Location: /login_page.php");
                 include $_SERVER['DOCUMENT_ROOT']."/../classes/DbUser.php";
+                include $_SERVER['DOCUMENT_ROOT']."/../classes/DbProject.php";
                 
                 $userdb = new DbUser();
+                $projectdb = new DbProject();
                 
                 if(isset($_POST['btn_edit'])){ // if the edit button was pressed
                     if($_POST['tb_name'] != ""){
@@ -94,6 +96,10 @@
                     if($_POST['tb_delpass'] != "" && $_POST['tb_delpass2'] != ""){
                         if($_POST['tb_delpass'] == $_POST['tb_delpass2']){
                             if($userdb->verifyLogin($_SESSION['email'], $_POST['tb_delpass']) == $_SESSION['id']){
+                                $projects = $projectdb->getProjectIDs($_SESSION['id']);
+                                foreach($projects as $proj){
+                                    $projectdb->deleteProject($proj, $_SESSION['id']);
+                                }
                                 $userdb->deleteUser($_SESSION['id']);
                                 header("Location: /php/logout.php");
                             } else {
