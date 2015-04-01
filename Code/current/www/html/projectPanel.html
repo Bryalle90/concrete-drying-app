@@ -3,7 +3,7 @@
         <h1 class="panel-title"><b><?=$project['name']?></b></h1>
     </div>
     <div class="panel-body">
-        <table class="table">
+        <table class="table" style="margin-bottom: 0px">
             <tr>
                 <td><b>Location</b></td>
                 <td><?=$project['location']?></td>
@@ -16,6 +16,7 @@
                 <td><b>Owner</b></td>
                 <td><?=$userdb->getName($project['ownerID'])?></td>
             </tr>
+            </tr>
             <tr>
                 <td><b>Users</b></td>
                 <td>
@@ -25,6 +26,7 @@
                         echo '<br>';
                     }
                     ?>
+                    <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#addUserModal-<?=$index?>">Add User</button>
                 </td>
             </tr>
         </table>
@@ -32,8 +34,8 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-xs-7">
-                <button class="btn btn-primary btn-sm" type="button" id="btn_pview" onclick="pPanels[<?=$index?>].viewProject()">View</button>
-                <button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#editModal-<?=$index?>" id="btn_pedit" onclick="setProjectID(this.id)">Edit</button>
+                <button class="btn btn-info btn-sm" type="button" onclick="pPanels[<?=$index?>].viewProject()">View</button>
+                <button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#editModal-<?=$index?>">Edit</button>
             </div>
             <div class="col-xs-5" align="right">
                 <button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target="#delModal-<?=$index?>"><?=$project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
@@ -69,34 +71,47 @@
 
 <!-- Edit Project Modal -->
 <div class="modal fade" id="editModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="delModalLabel">Edit Project</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group row">
-                    <label for="tb_name" class="col-sm-3 control-label">Project Name</label>
-                    <div class="col-sm-9">
-                        <input id="editName-<?=$index?>" type="text" class="form-control" placeholder="">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content container-fluid">
+            <form class="form-horizontal" action=none>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="delModalLabel">Edit Project</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="editName-<?=$index?>" class="control-label">Project Name</label>
+                                <input id="editName-<?=$index?>" type="text" class="form-control" placeholder="<?=$project['name']?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="editZip-<?=$index?>" class="control-label">Zip Code</label>
+                                <input id="editZip-<?=$index?>" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="<?=$project['zip']?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="editUnit-<?=$index?>" class="control-label">Unit</label>
+                                <select id="editUnit-<?=$index?>" class="form-control">
+                                    <?php
+                                    if($project['unit'] == 'S'){
+                                        echo '<option>Standard</option>';
+                                        echo '<option>Metric</option>';
+                                    } else {
+                                        echo '<option>Metric</option>';
+                                        echo '<option>Standard</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="zipinput" class="col-sm-3 control-label">Zip Code</label>
-                    <div class="col-sm-9">
-                        <input id="editZip-<?=$index?>" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="row">
-                    <div class="col-xs-7" align="left">
-                        <button class="btn btn-info" type="button" data-toggle="modal" data-target="#addUserModal-<?=$index?>">Add User</button>
-                    </div>
-                    <div class="col-xs-5" align="right">
-                        <button class="btn btn-primary" type="button" name="btn_edit" onclick="pPanels[<?=$index?>].editProject()">Save</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-xs-12" align="right">
+                            <button class="btn btn-primary" type="button" name="btn_edit" onclick="pPanels[<?=$index?>].editProject()">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,22 +122,22 @@
 <!-- Add User Project Modal -->
 <div class="modal fade" id="addUserModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="delModalLabel">Add User</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group row">
-                    <label for="addUserEmail" class="col-sm-3 control-label">User Email</label>
-                    <div class="col-sm-9">
+        <div class="modal-content container-fluid">
+            <form class="form-inline" action=none>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="delModalLabel">Add User</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="addUserEmail-<?=$index?>" class="col-sm-3 control-label">User Email</label>
                         <input id="addUserEmail-<?=$index?>" type="email" class="form-control" placeholder="Email address" autocomplete="off">
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" type="button" name="btn_addUser" onclick="pPanels[<?=$index?>].addUserToProject()">Add User</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" name="btn_addUser" onclick="pPanels[<?=$index?>].addUserToProject()">Add User</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>

@@ -66,7 +66,7 @@
                 };
                 
                 this.editProject = function () {
-                    var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="hidden" name="edit" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /><input type="hidden" name="newName" value="'+document.getElementById("editName-"+this.index).value+'" /><input type="hidden" name="newZip" value="'+document.getElementById("editZip-"+this.index).value+'" /></form>');
+                    var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="hidden" name="edit" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /><input type="hidden" name="newName" value="'+document.getElementById("editName-"+this.index).value+'" /><input type="hidden" name="newZip" value="'+document.getElementById("editZip-"+this.index).value+'" /><input type="hidden" name="newUnit" value="'+document.getElementById("editUnit-"+this.index).value+'" /></form>');
                     $('body').append(formElement);
                     $(formElement).submit();
                     
@@ -196,6 +196,15 @@
                                         ';
                                     }
                                 }
+                                if($projectdb->getUnit($_POST['projectID']) != $_POST['newUnit']){
+                                    $projectdb->changeProjectUnit($_POST['projectID'], $_POST['newUnit']);
+                                    echo '
+                                    <div class="alert alert-success" role="alert">
+                                        The unit for your project has been changed
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                }
                             } else {
                                 echo '
                                 <div class="alert alert-danger" role="alert">
@@ -229,7 +238,7 @@
                                 </script>
                                 <?php
                                 
-                                echo '<div class="col-xs-12 col-sm-6 col-md-4">';
+                                echo '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">';
                                 include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel.html";
                                 echo '</div>';
                                 
@@ -278,10 +287,10 @@
                     </div>
                     <div class="modal-footer">
                         <div class="row">
-                            <div class="col-xs-6" align="left">
+                            <div class="col-xs-7" align="left">
                                 <button class="btn btn-primary" type="submit" name="btn_addProject">Add Project</button>
                             </div>
-                            <div class="col-xs-6" align="right">
+                            <div class="col-xs-5" align="right">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>

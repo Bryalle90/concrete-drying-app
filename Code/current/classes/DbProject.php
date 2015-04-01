@@ -126,6 +126,7 @@ class DbProject {
             $projects[$pID]['location'] = $this->getLocation($pID);
             $projects[$pID]['ownerID'] = $this->getOwner($pID);
             $projects[$pID]['userIDs'] = $this->getUsersOfProject($pID);
+            $projects[$pID]['unit'] = $this->getUnit($pID);
         }
         return $projects;
     }
