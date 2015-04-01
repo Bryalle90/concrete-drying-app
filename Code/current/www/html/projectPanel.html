@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
     <div class="panel-heading" align="center">
         <h1 class="panel-title"><b><?=$project['name']?></b></h1>
     </div>
@@ -73,7 +73,7 @@
 <div class="modal fade" id="editModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content container-fluid">
-            <form class="form-horizontal" action=none>
+            <form class="form-horizontal" action="">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="delModalLabel">Edit Project</h4>
@@ -114,19 +114,19 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- Add User Project Modal -->
-<div class="modal fade" id="addUserModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="addUserModal-<?=$index?>" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content container-fluid">
-            <form class="form-inline" action=none>
+            <form class="form-inline" action="">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="delModalLabel">Add User</h4>
+                    <h4 class="modal-title" id="addUserModalLabel">Add User</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
@@ -138,7 +138,7 @@
                     <button class="btn btn-primary" type="button" name="btn_addUser" onclick="pPanels[<?=$index?>].addUserToProject()">Add User</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
