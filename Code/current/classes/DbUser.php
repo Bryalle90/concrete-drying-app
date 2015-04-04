@@ -1,128 +1,128 @@
 <?php
 
-//User.php
-//Class used to interact with the uesr table in our database.
-//by: zach smith
-//last edited: 3/23/15
-
 require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
 
 class DbUser {
-	
-	private $dbhandle;
-	
-	private function hashPass($pass){
-		return(password_hash($pass, PASSWORD_BCRYPT, array("cost" => 10)));
-	}
-	
-	private function verifyPass($pass, $hash){
-		return(password_verify($pass, $hash));
-	}
+    
+    private $dbhandle;
 
-	public function __construct(){
+    private $HOST = 'localhost';
+    private $ACCOUNT = 'root';
+    private $PASSWORD = '';
+    private $DATABASE = 'Account';
+    
+    private function hashPass($pass){
+        return(password_hash($pass, PASSWORD_BCRYPT, array("cost" => 10)));
+    }
+    
+    private function verifyPass($pass, $hash){
+        return(password_verify($pass, $hash));
+    }
+
+    public function __construct(){
         $this->connectdb();
     }
 
-	//connect to the database
-	public function connectdb(){			
-		$this->dbhandle = mysql_connect('localhost', 'root', '');
-					
-		$selected = mysql_select_db("Account", $this->dbhandle);
-	}
+    //connect to the database
+    public function connectdb(){            
+        $this->dbhandle = mysql_connect($this->HOST, $this->ACCOUNT, $this->PASSWORD);
+                    
+        $selected = mysql_select_db($this->DATABASE, $this->dbhandle);
+    }
 
-	//inserts a new user to the table
-	public function addUser($name, $email, $userPass, $isAdmin){
+    //inserts a new user to the table
+    public function addUser($name, $email, $userPass, $isAdmin){
         $hashedPass = $this->hashPass($userPass);
-		$sql = "INSERT INTO user (name, currentNumberOfNotifications, email, userPass, isAdmin)
-		VALUES ('$name', 0, '$email', '$hashedPass', '$isAdmin')";
-		mysql_query($sql);		
-	}
+        $sql = "INSERT INTO user (name, currentNumberOfNotifications, email, userPass, isAdmin)
+        VALUES ('$name', 0, '$email', '$hashedPass', '$isAdmin')";
+        mysql_query($sql);      
+    }
 
-	//delete user from table
-	public function deleteUser($userID){		
-		$sql = "DELETE FROM user WHERE userID = '$userID'";
-		mysql_query($sql);
-	}
+    //delete user from table
+    public function deleteUser($userID){        
+        $sql = "DELETE FROM user WHERE userID = '$userID'";
+        mysql_query($sql);
+    }
 
-	//changes the users name in the table
-	public function changeName($userID, $name){
-		$sql = "UPDATE user SET name = '$name' WHERE userID = '$userID'";
-		mysql_query($sql);
-	}
+    //changes the users name in the table
+    public function changeName($userID, $name){
+        $sql = "UPDATE user SET name = '$name' WHERE userID = '$userID'";
+        mysql_query($sql);
+    }
 
-	//changes the users email in the table
-	public function changeEmail($userID, $email){
-		$sql = "UPDATE user SET email = '$email' WHERE userID = '$userID'";
-		mysql_query($sql);
-	}
+    //changes the users email in the table
+    public function changeEmail($userID, $email){
+        $sql = "UPDATE user SET email = '$email' WHERE userID = '$userID'";
+        mysql_query($sql);
+    }
 
-	//changes the users password in the table
-	public function changePassword($userID, $password){
+    //changes the users password in the table
+    public function changePassword($userID, $password){
         $hashedPass = $this->hashPass($password);
-		$sql = "UPDATE user SET userPass = '$hashedPass' WHERE userID = '$userID'";
-		mysql_query($sql);
-	}	
-	
+        $sql = "UPDATE user SET userPass = '$hashedPass' WHERE userID = '$userID'";
+        mysql_query($sql);
+    }   
+    
 
-	//checks to see if user is admin and return true of false
-	public function isUserAdmin($userID){
-		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
-		$result = mysql_query($sql);
+    //checks to see if user is admin and return true of false
+    public function isUserAdmin($userID){
+        $sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
+        $result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
+        $result = mysql_result($result, 0);
 
-		if($result == 'y' || $result == 'Y'){
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+        if($result == 'y' || $result == 'Y'){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
-	public function getName($userID){
-		$sql = "SELECT name FROM user WHERE userID = '$userID'";
-		$result = mysql_query($sql);
+    public function getName($userID){
+        $sql = "SELECT name FROM user WHERE userID = '$userID'";
+        $result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
-	}
+        $result = mysql_result($result, 0);
+        return $result;
+    }
 
-	public function getCurrentNumberOfNotifications($userID){
-		$sql = "SELECT currentNumberOfNotifications FROM user WHERE userID = '$userID'";
-		$result = mysql_query($sql);
+    public function getCurrentNumberOfNotifications($userID){
+        $sql = "SELECT currentNumberOfNotifications FROM user WHERE userID = '$userID'";
+        $result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
-	}
+        $result = mysql_result($result, 0);
+        return $result;
+    }
 
-	public function getEmail($userID){
-		$sql = "SELECT email FROM user WHERE userID = '$userID'";
-		$result = mysql_query($sql);
+    public function getEmail($userID){
+        $sql = "SELECT email FROM user WHERE userID = '$userID'";
+        $result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
-	}
+        $result = mysql_result($result, 0);
+        return $result;
+    }
 
-	public function getUserPass($userID){
-		$sql = "SELECT userPass FROM user WHERE userID = '$userID'";
-		$result = mysql_query($sql);
+    public function getUserPass($userID){
+        $sql = "SELECT userPass FROM user WHERE userID = '$userID'";
+        $result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
-	}
+        $result = mysql_result($result, 0);
+        return $result;
+    }
 
-	public function getIsAdmin($userID){
-		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
-		$result = mysql_query($sql);
+    public function getIsAdmin($userID){
+        $sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
+        $result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
-		$result = mysql_result($result, 0);
-		return $result;
-	}
+        $result = mysql_result($result, 0);
+        return $result;
+    }
     
     public function verifyLogin($email, $userPass){
         $id = $this->isUser($email);
@@ -134,25 +134,25 @@ class DbUser {
         return(Null);
     }
 
-	//checks to see if email exists and return userID if they do, returns NULL if not
-	public function isUser($email){
-		$sql = "SELECT userID FROM user WHERE email = '$email'";
-		$result = mysql_query($sql);
+    //checks to see if email exists and return userID if they do, returns NULL if not
+    public function isUser($email){
+        $sql = "SELECT userID FROM user WHERE email = '$email'";
+        $result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
         $id = mysql_result($result, 0);
-		
+        
         return($id);
-	}
+    }
 
-	//close the connection
-	public function disconnectdb(){
-		mysql_close($dbhandle);
-	}
+    //close the connection
+    public function disconnectdb(){
+        mysql_close($dbhandle);
+    }
 
-	public function _destruct(){
-		$this->disconnectdb();
-	}
+    public function _destruct(){
+        $this->disconnectdb();
+    }
 
 }
 
