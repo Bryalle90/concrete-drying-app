@@ -441,16 +441,16 @@ class ForecastModel
     {
             $aggregateData = array();
 
-            $aggregateData['recorded_temperature'] = $this->_averageValues($date, $timeInterval, $this->_hourlyRecordedTemperature);
-            $aggregateData['apparent_temperature'] = $this->_averageValues($date, $timeInterval, $this->_hourlyApparentTemperature);
+            //$aggregateData['recorded_temperature'] = $this->_averageValues($date, $timeInterval, $this->_hourlyRecordedTemperature);
+            //$aggregateData['apparent_temperature'] = $this->_averageValues($date, $timeInterval, $this->_hourlyApparentTemperature);
             // $aggregateData['precipitation']        = $this->_averageValues($date, $timeInterval, $this->_hourlyPrecipitation);
             // $aggregateData['snow_amount']          = $this->_averageValues($date, $timeInterval, $this->_hourlySnowAmount);
             $aggregateData['cloud_coverage']       = $this->_averageValues($date, $timeInterval, $this->_hourlyCloudCover);
-            $aggregateData['wind_speed']           = $this->_averageValues($date, $timeInterval, $this->_hourlyWindSpeed);
+            //$aggregateData['wind_speed']           = $this->_averageValues($date, $timeInterval, $this->_hourlyWindSpeed);
             $aggregateData['humidity']             = $this->_averageValues($date, $timeInterval, $this->_hourlyHumidity);
             $aggregateData['weather_conditions']   = $this->_averageWeatherConditions($date, $timeInterval);
             $aggregateData['sky_condition']        = $this->_getSkyCondition($aggregateData['cloud_coverage'], $daylight);
-            $aggregateData['description']          = $this->_getDescription($aggregateData['sky_condition'], $aggregateData['weather_conditions']);
+            //$aggregateData['description']          = $this->_getDescription($aggregateData['sky_condition'], $aggregateData['weather_conditions']);
 
             return $aggregateData;
     }

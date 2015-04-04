@@ -209,7 +209,7 @@ class DWMLParser
                 $endTimestamp   = strtotime('tomorrow');
                 break;
             case 'week':
-                $startTimestamp = strtotime('now - 1 day');
+                $startTimestamp = strtotime('now - 2 days');
                 $endTimestamp   = strtotime('now + 1 week + 2 days');
                 break;
             case 'now':
@@ -507,6 +507,8 @@ class DWMLParser
 
         // weather conditions
         $weather = $parameters->weather;
+        if(!$weather)
+            throw new Exception('Invalid coordinates.');
 
         // get the time layout for the weather conditions
         $layout = strval($weather->attributes()->{'time-layout'});
@@ -539,7 +541,7 @@ class DWMLParser
 
 
         // organize the raw weather data by day, in a ready-to-use format
-        $this->_forecast->organizeWeatherData();
+        //$this->_forecast->organizeWeatherData();
     }
 
 
