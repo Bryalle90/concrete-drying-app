@@ -106,7 +106,7 @@
                                 if( $error->getMessage() == "Invalid coordinates."){
                                     echo '
                                     <div class="alert alert-danger" role="alert">
-                                        invalid zipcode: Could not get coordinates for zip code
+                                        Invalid zipcode: Could not get data for zip code
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                     ';

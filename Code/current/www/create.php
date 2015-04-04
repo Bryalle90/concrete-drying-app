@@ -18,7 +18,7 @@
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
     </head>
 
-    <body>
+    <body style="background-color: #DBDBDB">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>

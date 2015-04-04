@@ -17,13 +17,10 @@
 		<!-- Custom styles for this template -->
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
         <style>
-            .project-panels > .col-md-4:nth-child(3n+1) {
-                clear: both;
-            }
             .btn-xl {
                 padding: 18px 28px;
                 font-size: 32px; //change this to your desired size
-                line-height: normal;
+                line-height: small;
                 -webkit-border-radius: 8px;
                    -moz-border-radius: 8px;
                         border-radius: 8px;
@@ -78,43 +75,43 @@
                     $(formElement).submit();
                 };
             }
+            $(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            });
         </script>
     </head>
 
-    <body>
+    <body style="background-color: #DBDBDB">
         <div class="container-fluid">
-            <?php
-            session_start();
-            
-            // send user to index if not logged in
-            if(!isset($_SESSION['id']))
-                header("Location: /login_page.php");
-                
-            include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
-            require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DataService.php');
-            require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
-            require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbUser.php');
-            ?>
             <div class="row">
                 <div class="col-xs-offset-0 col-xs-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
-                    <div class="addbtn row">
-                        <div class="col-xs-12" align="center">
-                            <button class="btn btn-primary btn-xl" type="button" data-toggle="modal" data-target="#newProjectModal">Add Project</button>
-                        </div>
-                    </div>
-                    <div class="project-panels row">
-                        <?php
-                
-                        if(isset($_POST['btn_addProject'])){
-                            if($_POST['newProjectZip'] != ""){
-                                $dataService = new DataService((int)$_POST['newProjectZip']);
-                                $city = $dataService->getCity();
-                                $state = $dataService->getState();
+                    <?php
+                    session_start();
+                    
+                    // send user to index if not logged in
+                    if(!isset($_SESSION['id']))
+                        header("Location: /login_page.php");
+                        
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DataService.php');
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/WeatherService.php');
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
+                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbUser.php');
                                 
-                                if($city != Null && $state != Null){
+                    $projectdb = new DbProject();
+                    $userdb = new DbUser();
+                        
+                    if(isset($_POST['btn_addProject'])){
+                        if($_POST['newProjectZip'] != ""){
+                            $dataService = new DataService((int)$_POST['newProjectZip']);
+                            $city = $dataService->getCity();
+                            $state = $dataService->getState();
+                            
+                            if($city != Null && $state != Null){
+                                $weatherService = new WeatherService($_POST['newProjectZip'], $dataService->getLat(), $dataService->getLon());
+                                try{
+                                    $weatherService->getWeatherData();
                                     $location = $city.', '.$state;
                                     $title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
-                                    $projectdb = new DbProject();
                                     $projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['newProjectUnit']);
                                     
                                     echo '
@@ -123,129 +120,140 @@
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                     ';
+                                }
+                                catch (Exception $error){
+                                    echo '
+                                    <div class="alert alert-danger" role="alert">
+                                        invalid zipcode: Could not get data for zip code
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
+                                }
+                            } else {
+                                echo '
+                                <div class="alert alert-danger" role="alert">
+                                    invalid zipcode: Could not get coordinates for zip code
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                ';
+                            }
+                        } else {
+                            echo '
+                            <div class="alert alert-danger" role="alert">
+                                You must enter a zip code to create a project
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            ';
+                        }
+                    }
+                    if(isset($_POST['remove'])){
+                        if($projectdb->isUserInProject($_POST['projectID'], $_SESSION['id'])){
+                            $projectdb->deleteProject($_POST['projectID'], $_SESSION['id']);
+                            echo '
+                            <div class="alert alert-success" role="alert">
+                                Your project has been removed!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            ';
+                        } else {
+                            echo '
+                            <div class="alert alert-danger" role="alert">
+                                error: you are not in the project
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            ';
+                        }
+                    }
+                    if(isset($_POST['edit'])){
+                        if($projectdb->getOwner($_POST['projectID']) == $_SESSION['id']){
+                            if($_POST['newName'] != ''){
+                                $projectdb->changeProjectName($_POST['projectID'], $_POST['newName']);
+                                echo '
+                                <div class="alert alert-success" role="alert">
+                                    The name for your project has been changed
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                ';
+                            }
+                            if($_POST['newZip'] != ''){
+                                
+                                $dataService = new DataService((int)$_POST['newZip']);
+                                $city = $dataService->getCity();
+                                $state = $dataService->getState();
+                                
+                                if($city != Null && $state != Null){
+                                    $projectdb->changeProjectLocation($_POST['projectID'], $city.', '.$state);
+                                    $projectdb->changeProjectZip($_POST['projectID'], $_POST['newZip']);
+                                    
+                                    echo '
+                                    <div class="alert alert-success" role="alert">
+                                        The zip code for your project has been changed
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    ';
                                 } else {
                                     echo '
                                     <div class="alert alert-danger" role="alert">
-                                        invalid zipcode: Could not get coordinates for zip code
+                                        error: unable to get coordinates from zip code
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                     ';
                                 }
-                            } else {
-                                echo '
-                                <div class="alert alert-danger" role="alert">
-                                    You must enter a zip code to create a project
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                </div>
-                                ';
                             }
-                        }
-                        if(isset($_POST['remove'])){
-                            $projectdb = new DbProject();
-                            if($projectdb->isUserInProject($_POST['projectID'], $_SESSION['id'])){
-                                $projectdb->deleteProject($_POST['projectID'], $_SESSION['id']);
+                            if($projectdb->getUnit($_POST['projectID']) != $_POST['newUnit'][0]){
+                                $projectdb->changeProjectUnit($_POST['projectID'], $_POST['newUnit']);
                                 echo '
                                 <div class="alert alert-success" role="alert">
-                                    Your project has been removed!
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                </div>
-                                ';
-                            } else {
-                                echo '
-                                <div class="alert alert-danger" role="alert">
-                                    error: you are not in the project
+                                    The unit for your project has been changed
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 </div>
                                 ';
                             }
+                        } else {
+                            echo '
+                            <div class="alert alert-danger" role="alert">
+                                error: only the owner of the project can edit
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            ';
                         }
-                        if(isset($_POST['edit'])){
-                            $projectdb = new DbProject();
-                            if($projectdb->getOwner($_POST['projectID']) == $_SESSION['id']){
-                                if($_POST['newName'] != ''){
-                                    $projectdb->changeProjectName($_POST['projectID'], $_POST['newName']);
-                                    echo '
-                                    <div class="alert alert-success" role="alert">
-                                        The name for your project has been changed
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    </div>
-                                    ';
-                                }
-                                if($_POST['newZip'] != ''){
-                                    
-                                    $dataService = new DataService((int)$_POST['newZip']);
-                                    $city = $dataService->getCity();
-                                    $state = $dataService->getState();
-                                    
-                                    if($city != Null && $state != Null){
-                                        $projectdb->changeProjectLocation($_POST['projectID'], $city.', '.$state);
-                                        $projectdb->changeProjectZip($_POST['projectID'], $_POST['newZip']);
-                                        
-                                        echo '
-                                        <div class="alert alert-success" role="alert">
-                                            The zip code for your project has been changed
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        ';
-                                    } else {
-                                        echo '
-                                        <div class="alert alert-danger" role="alert">
-                                            error: unable to get coordinates from zip code
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        ';
-                                    }
-                                }
-                                if($projectdb->getUnit($_POST['projectID']) != $_POST['newUnit']){
-                                    $projectdb->changeProjectUnit($_POST['projectID'], $_POST['newUnit']);
-                                    echo '
-                                    <div class="alert alert-success" role="alert">
-                                        The unit for your project has been changed
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    </div>
-                                    ';
-                                }
-                            } else {
-                                echo '
-                                <div class="alert alert-danger" role="alert">
-                                    error: only the owner of the project can edit
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                </div>
-                                ';
-                            }
-                        }
-                        
-                        $projectdb = new DbProject();
-                        $userdb = new DbUser();
-                        
+                    }
+                    
+                    $_SESSION['numProjects'] = count($projectdb->getProjects($_SESSION['id']));
+                    include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
+                    ?>
+                    <div class="addbtn row">
+                        <div class="col-xs-12" align="center">
+                            <?php
+                            // if there are no projects we show a button with a popup telling the user to add one
+                            if($_SESSION['numProjects'] > 0)
+                                echo '<button class="btn btn-primary btn-xl" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project">Add Project</button>';
+                            else
+                                echo '<button class="btn btn-primary btn-xl popover-show" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project" data-trigger="focus" data-container="body" data-content="You have no projects, click here to add one" data-placement="bottom">Add Project</button>';
+                            ?>
+                            <script>$(function () { $('.popover-show').popover('show');});</script>
+                        </div>
+                    </div>
+                    <script>pPanels = new Array();</script>
+                    <div class="panel-group col-xs-12 col-sm-offset-2 col-sm-8" id="accordion3" role="tablist" aria-multiselectable="false">
+                        <?php
                         $projects = $projectdb->getProjects($_SESSION['id']);
                         
-                        ?>
-                        <script>
-                        pPanels = new Array();
-                        </script>
-                        <?php
-                        
-                        $index = 0;
-                                
-                        if($projects != Null){
+                        if($projects){
+                            $index = 0;
+                            echo '';
                             foreach($projects as $pID => $project){
-                                
                                 ?>
                                 <script>
-                                pPanel = new ProjPanel(<?=$pID?>,<?=$index?>);
-                                pPanels.push(pPanel);
+                                    pPanel = new ProjPanel(<?=$pID?>,<?=$index?>);
+                                    pPanels.push(pPanel);
                                 </script>
                                 <?php
-                                
-                                echo '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">';
-                                include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel.html";
-                                echo '</div>';
-                                
+                                include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel3.html";
                                 $index++;
                             }
                         }
-                        ?>   
+                        ?>
                     </div>
                 </div>
             </div>

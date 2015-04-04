@@ -18,7 +18,7 @@
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
 	</head>
     
-	<body>
+	<body style="background-color: #DBDBDB">
         <?php
         session_start();
         

@@ -1,40 +1,53 @@
+<style>
+.title-caret {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid;
+}
+</style>
 <div class="panel panel-primary">
-    <div class="panel-heading" align="center">
-        <h1 class="panel-title"><b><?=$project['name']?></b></h1>
+    <div class="panel-heading" role="tab" id="heading3-<?=$index?>" align="center" data-toggle="collapse" data-parent="#accordion3" href="#collapse3-<?=$index?>" aria-expanded="false" aria-controls="collapse3-<?=$index?>">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse3-<?=$index?>" aria-expanded="false" aria-controls="collapse3-<?=$index?>">
+            <h4 class="panel-title" style="color: #FFF">
+                <b><?=$project['name']?> </b><span class="caret title-caret"></span>
+            </h4>
+        </a>
     </div>
-    <div class="panel-body">
-        <table class="table" style="margin-bottom: 0px">
-            <tr>
-                <td><b>Location</b></td>
-                <td><?=$project['location']?></td>
-            </tr>
-            <tr>
-                <td><b>Zip Code</b></td>
-                <td><?=str_pad($project['zip'], 5, '0', STR_PAD_LEFT)?></td>
-            </tr>
-            <tr>
-                <td><b>Unit</b></td>
-                <td><?=$project['unit'] == 'S' ? 'Standard' : 'Metric'?></td>
-            </tr>
-            <tr>
-                <td><b>Owner</b></td>
-                <td><?=$userdb->getName($project['ownerID'])?></td>
-            </tr>
-            <tr>
-                <td><b>Users</b></td>
-                <td>
-                    <?php
-                    foreach($project['userIDs'] as $userID){
-                        if($userID != $project['ownerID']){
-                            echo $userdb->getName($userID);
-                            echo '<br>';
+    <div id="collapse3-<?=$index?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3-<?=$index?>">
+        <div class="panel-body">
+            <table class="table" style="margin-bottom: 0px">
+                <tr>
+                    <td><b>Location</b></td>
+                    <td><?=$project['location']?></td>
+                </tr>
+                <tr>
+                    <td><b>Zip Code</b></td>
+                    <td><?=str_pad($project['zip'], 5, '0', STR_PAD_LEFT)?></td>
+                </tr>
+                <tr>
+                    <td><b>Unit</b></td>
+                    <td><?=$project['unit'] == 'S' ? 'Standard' : 'Metric'?></td>
+                </tr>
+                <tr>
+                    <td><b>Owner</b></td>
+                    <td><?=$userdb->getName($project['ownerID'])?></td>
+                </tr>
+                <tr>
+                    <td><b>Users</b></td>
+                    <td>
+                        <?php
+                        foreach($project['userIDs'] as $userID){
+                            if($userID != $project['ownerID']){
+                                echo $userdb->getName($userID);
+                                echo '<br>';
+                            }
                         }
-                    }
-                    ?>
-                    <button class="btn btn-success btn-xs" type="button" data-toggle="modal" data-target="#addUserModal-<?=$index?>" title="Add a user to this project">Add User</button>
-                </td>
-            </tr>
-        </table>
+                        ?>
+                        <button class="btn btn-success btn-xs" type="button" data-toggle="modal" data-target="#addUserModal-<?=$index?>" title="Add a user to this project">Add User</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <div class="panel-footer">
         <div class="row">
