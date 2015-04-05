@@ -1,7 +1,0 @@
-USE Account;
-CREATE TABLE futureNotifications (
-	projectID int NOT NULL,
-	futureID int UNIQUE NOT NULL,
-	futureDate smalldatetime,
-	PRIMARY KEY(futureID)
-);

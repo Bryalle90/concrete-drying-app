@@ -1,0 +1,7 @@
+USE Account;
+CREATE TABLE projectWeatherData (
+	changeInStateNotificationID int NOT NULl,
+	currentRisk double,
+	time varchar(16),
+	PRIMARY KEY(changeInStateNotificationID, time)
+);
