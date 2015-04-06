@@ -1,8 +1,0 @@
-USE Account;
-CREATE TABLE changeInStateNotification (
-	projectID int NOT NULL,
-	changeInStateNotifcationID int UNIQUE NOT NULL,
-	time smalldatetime,
-	currentRisk double,
-	PRIMARY KEY(changeID)
-);
