@@ -1,5 +1,5 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
+    require_once('/../../classes/DbProject.php');
     
     session_start();
     $projectdb = new DbProject();

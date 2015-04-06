@@ -1,6 +1,6 @@
 <?php
 
-require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
+require "/../libraries/password-compat/lib/password.php";
 
 class DbUser {
     

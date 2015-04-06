@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
+require_once('/../libraries/nusoap/nusoap.php');
 include 'DbZipInfo.php';
 
 class DataService{

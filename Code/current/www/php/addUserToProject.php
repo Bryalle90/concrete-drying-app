@@ -1,6 +1,6 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
-    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbUser.php');
+    require_once('/../../classes/DbProject.php');
+    require_once('/../../classes/DbUser.php');
     
     session_start();
     

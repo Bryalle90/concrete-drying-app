@@ -38,8 +38,8 @@
                     </div>
                     ';
                     
-                    include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
-                    include $_SERVER['DOCUMENT_ROOT']."/html/login.html";
+                    include "/html/navbar.html";
+                    include "/html/login.html";
                     ?>
                 </div>
                 <div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>

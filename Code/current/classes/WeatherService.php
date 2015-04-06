@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/simple-nws/SimpleNWS.php');
+require_once('/../libraries/simple-nws/SimpleNWS.php');
 include 'DbWeather.php';
 include 'DbZipUpdate.php';
 

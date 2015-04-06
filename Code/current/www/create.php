@@ -31,8 +31,8 @@
                     if(isset($_SESSION['user']))
                         header("Location: /index.php");
                         
-                    include_once $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
-                    include $_SERVER['DOCUMENT_ROOT']."/../classes/DbUser.php";
+                    include_once "/html/navbar.html";
+                    include "/../classes/DbUser.php";
                     
                     if(isset($_POST['btn_create'])){ // if the create button was pressed
                         if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""  && $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank

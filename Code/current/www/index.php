@@ -33,15 +33,15 @@
                     session_start();
                 
                     // show top nav bar and zipcode input
-                    include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
-                    include $_SERVER['DOCUMENT_ROOT']."/html/enterzip.html";
+                    include "/html/navbar.html";
+                    include "/html/enterzip.html";
                         
                     // require libraries
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../libraries/nusoap/nusoap.php');
+                    require_once('/../libraries/nusoap/nusoap.php');
                     
                     // require classes
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/WeatherService.php');
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DataService.php');
+                    require_once('/../classes/WeatherService.php');
+                    require_once('/../classes/DataService.php');
                         
                     if(isset($_GET['zip']) && isset($_GET['unit']))
                         // if the zip code provided is valid
@@ -99,7 +99,7 @@
                                 <?php
                 
                                 // draw graph
-                                include $_SERVER['DOCUMENT_ROOT']."/html/graph.html";
+                                include "/html/graph.html";
                                 
                             }
                             catch (Exception $error){

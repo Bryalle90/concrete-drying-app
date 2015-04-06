@@ -92,10 +92,10 @@
                     if(!isset($_SESSION['id']))
                         header("Location: /login_page.php");
                         
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DataService.php');
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/WeatherService.php');
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
-                    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbUser.php');
+                    require_once('/../classes/DataService.php');
+                    require_once('/../classes/WeatherService.php');
+                    require_once('/../classes/DbProject.php');
+                    require_once('/../classes/DbUser.php');
                                 
                     $projectdb = new DbProject();
                     $userdb = new DbUser();
@@ -220,7 +220,7 @@
                     }
                     
                     $_SESSION['numProjects'] = count($projectdb->getProjects($_SESSION['id']));
-                    include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
+                    include "/html/navbar.html";
                     ?>
                     <div class="addbtn row">
                         <div class="col-xs-12" align="center">
@@ -249,7 +249,7 @@
                                     pPanels.push(pPanel);
                                 </script>
                                 <?php
-                                include $_SERVER['DOCUMENT_ROOT']."/html/projectPanel3.html";
+                                include "/html/projectPanel3.html";
                                 $index++;
                             }
                         }

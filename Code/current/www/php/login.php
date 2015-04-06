@@ -1,6 +1,6 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT']."/../classes/DbUser.php");
-    require_once($_SERVER['DOCUMENT_ROOT'].'/../classes/DbProject.php');
+    require_once("/../../classes/DbUser.php");
+    require_once('/../../classes/DbProject.php');
 	// if user tried to log in
 	if(isset($_POST['btn_signin']) && $_POST['tb_email'] != "" && $_POST['tb_pass'] != ""){
 		$userdb = new DbUser();
@@ -22,7 +22,6 @@
 	}
 	if(!isset($_SESSION['user'])){
         header("Location: /../login_page.php");
-		//include $_SERVER['DOCUMENT_ROOT']."/includes/login_page.html";
 	} else {
 		header("Location: /../projects.php");
 	}

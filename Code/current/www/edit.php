@@ -28,8 +28,8 @@
                 // send user to index if not logged in
                 if(!isset($_SESSION['user']))
                     header("Location: /login_page.php");
-                include $_SERVER['DOCUMENT_ROOT']."/../classes/DbUser.php";
-                include $_SERVER['DOCUMENT_ROOT']."/../classes/DbProject.php";
+                include "/../classes/DbUser.php";
+                include "/../classes/DbProject.php";
                 
                 $userdb = new DbUser();
                 $projectdb = new DbProject();
@@ -127,7 +127,7 @@
                         ';
                     }
                 }
-                include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
+                include "/html/navbar.html";
                 ?>
                 <form class="form-horizontal" action="/edit.php" method="post">
                     <div class="form-group row">
