@@ -1,0 +1,12 @@
+USE plasticcracks;
+CREATE TABLE weather (
+	zipcode int NOT NULL,
+	evapRate double,
+	cloudCoverage double,
+	airTemp double,
+	concTemp double,
+	humidity double,
+	windSpeed double,
+	weatherTime varchar(16),
+	PRIMARY KEY(zipcode, weatherTime)
+);

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    </head>
+
+    <body>
+        <div align="center">
+            <form class="form-inline" action="/index.php" method="get">
+                <div class="form-group">
+                    <select name="unit" class="form-control">
+                        <option>Standard</option>
+                        <option>Metric</option>
+                    </select>
+                    <div class="input-group">
+                        <label class="sr-only" for="zipinput">Zip Code</label>
+                        <input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Go!</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

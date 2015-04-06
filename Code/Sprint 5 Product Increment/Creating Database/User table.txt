@@ -1,0 +1,9 @@
+USE plasticcracks;
+CREATE TABLE user (
+	userID int UNIQUE NOT NULL AUTO_INCREMENT,
+	name varchar(40),
+	email varchar(254),
+	userPass varchar(80),
+	isAdmin char(1),
+	PRIMARY KEY(userID)
+);
