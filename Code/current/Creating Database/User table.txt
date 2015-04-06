@@ -1,8 +1,7 @@
-USE Account;
+USE plasticcracks;
 CREATE TABLE user (
 	userID int UNIQUE NOT NULL AUTO_INCREMENT,
 	name varchar(40),
-	currentNumberOfNotifications int,
 	email varchar(254),
 	userPass varchar(80),
 	isAdmin char(1),

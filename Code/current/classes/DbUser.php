@@ -9,7 +9,7 @@ class DbUser {
     private $HOST = 'localhost';
     private $ACCOUNT = 'root';
     private $PASSWORD = '';
-    private $DATABASE = 'Account';
+    private $DATABASE = 'plasticcracks';
     
     private function hashPass($pass){
         return(password_hash($pass, PASSWORD_BCRYPT, array("cost" => 10)));
@@ -33,8 +33,8 @@ class DbUser {
     //inserts a new user to the table
     public function addUser($name, $email, $userPass, $isAdmin){
         $hashedPass = $this->hashPass($userPass);
-        $sql = "INSERT INTO user (name, currentNumberOfNotifications, email, userPass, isAdmin)
-        VALUES ('$name', 0, '$email', '$hashedPass', '$isAdmin')";
+        $sql = "INSERT INTO user (name, email, userPass, isAdmin)
+        VALUES ('$name', '$email', '$hashedPass', '$isAdmin')";
         mysql_query($sql);      
     }
 

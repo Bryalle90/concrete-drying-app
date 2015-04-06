@@ -7,7 +7,7 @@ class DbZipInfo {
     private $HOST = 'localhost';
     private $ACCOUNT = 'root';
     private $PASSWORD = '';
-    private $DATABASE = 'Account';
+    private $DATABASE = 'plasticcracks';
 
     public function __construct(){
         $this->connectdb();

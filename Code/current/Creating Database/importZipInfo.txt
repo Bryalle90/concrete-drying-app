@@ -1,4 +1,4 @@
-USE Account;
+USE plasticcracks;
 CREATE TABLE zipinfo (
 	zipcode int NOT NULL,
 	city varchar(40),
@@ -8,10 +8,10 @@ CREATE TABLE zipinfo (
 	PRIMARY KEY(zipcode)
 );
 
-USE Account;
-LOAD DATA LOCAL INFILE 'D:/web server/Creating Database/zipcode_city_state_lat_long.csv'
-INTO TABLE zipinfo
+USE plasticcracks;
+LOAD DATA INFILE '/home/s002457/download/zipinfo.csv'
+IGNORE INTO TABLE zipinfo
 FIELDS TERMINATED BY ','
-ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;
+IGNORE 1 ROWS
+(zipcode, city, state, latitude, longitude);

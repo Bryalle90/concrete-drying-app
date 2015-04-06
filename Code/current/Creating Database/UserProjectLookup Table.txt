@@ -1,4 +1,4 @@
-USE Account;
+USE plasticcracks;
 CREATE TABLE userProjectLookup (
 	lookupID int UNIQUE NOT NULL AUTO_INCREMENT,
 	userID int NOT NULL,

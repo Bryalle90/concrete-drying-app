@@ -1,4 +1,4 @@
-USE Account;
+USE plasticcracks;
 CREATE TABLE project (
 	projectID int UNIQUE NOT NULL AUTO_INCREMENT,
 	projectName varchar(40),

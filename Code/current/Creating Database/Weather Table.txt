@@ -1,4 +1,4 @@
-USE Account;
+USE plasticcracks;
 CREATE TABLE weather (
 	zipcode int NOT NULL,
 	evapRate double,

@@ -1,4 +1,4 @@
-USE Account;
+USE plasticcracks;
 CREATE TABLE zipUpdate (
 	zipcode int NOT NULL,
 	updateTime varchar(16),
