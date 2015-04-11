@@ -111,7 +111,6 @@ class WeatherService{
 	
 	public function getWeatherData(){	
 		$updatedb = new DbZipUpdate();
-		$weatherdb = new DbWeather();
 		
 		$timeUpdated = date($updatedb->getLastUpdated($this->zipcode));
 		$timeNow = date('Y-m-d H:i:s', strtotime('now'));

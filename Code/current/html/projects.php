@@ -39,15 +39,10 @@
 					return this.projectID;
 				};
 				
-				this.viewProject = function () {
-					$.ajax({
-						type: "POST",
-						url: '/php/viewProject.php',
-						data: { projectID: this.projectID },
-						success: function(data) {
-							location.replace('/index.php'+data);
-						}
-					});
+				this.viewProject = function (unit, zip) {
+					var formElement = $('<form action="/index.php?unit='+unit+'&zip='+zip+'" method="post" style="display:none;"><input type="hidden" name="view" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /></form>');
+					$('body').append(formElement);
+					$(formElement).submit();
 				};
 				
 				this.addUserToProject = function () {
@@ -75,9 +70,7 @@
 					$(formElement).submit();
 				};
 			}
-			$(function () {
-			  $('[data-toggle="tooltip"]').tooltip()
-			});
+			
 		</script>
 	</head>
 
@@ -112,7 +105,8 @@
 									$weatherService->getWeatherData();
 									$location = $city.', '.$state;
 									$title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
-									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], date('Y-m-d H:i:s', strtotime('now')), $_POST['newProjectUnit']);
+									$unit = $_POST['newProjectUnit'] = 'Standard' ? 'S' : 'M';
+									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], date('Y-m-d H:i:s', strtotime('now')), $unit);
 									
 									echo '
 									<div class="alert alert-success" role="alert">

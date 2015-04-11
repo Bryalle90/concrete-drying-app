@@ -35,37 +35,40 @@
 					// show top nav bar and zipcode input
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					include $_SERVER['DOCUMENT_ROOT']."/html/enterzip.html";
-						
-					// require libraries
-					require_once($_SERVER['DOCUMENT_ROOT'].'/libraries/nusoap/nusoap.php');
 					
 					// require classes
 					require_once($_SERVER['DOCUMENT_ROOT'].'/classes/WeatherService.php');
 					require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DataService.php');
 						
 					if(isset($_GET['zip']) && isset($_GET['unit'])){
+						$zip = $_GET['zip'];
+						if($zip == '00000'){
+							$zipInfodb = new DbZipInfo();
+							while(!$zipInfodb->checkZip((int)$zip))
+								$zip = (string)rand(60001, 60499);
+						}
 						// if the zip code provided is valid
-						if (preg_match($ZIPPATTERN, $_GET['zip'])){
+						if (preg_match($ZIPPATTERN, $zip)){
 							
 							$isMetric = $_GET['unit'] == "Metric" ? 1 : 0;
 							
 							// instantiate graph helper class
 							?>
 							<script>
-							main = new Main(<?php echo json_encode($_GET['zip'])?>, <?php echo $isMetric;?>);
+							main = new Main(<?php echo json_encode($zip)?>, <?php echo $isMetric;?>);
 							</script>
 							<?php
 							
 							try{
 								// get city, state, lon, lat from zip code
-								$dataService = new DataService((int)$_GET['zip']);
+								$dataService = new DataService((int)$zip);
 								$city = $dataService->getCity();
 								$state = $dataService->getState();
 								$lat = $dataService->getLat();
 								$lon = $dataService->getLon();
 								
 								// using lon and lat, get weather data
-								$weatherService = new WeatherService((int)$_GET['zip'], $lat, $lon);
+								$weatherService = new WeatherService((int)$zip, $lat, $lon);
 								$weatherService->getWeatherData();
 							
 								// fill javascript arrays with weather data for the graph

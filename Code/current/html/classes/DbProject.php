@@ -25,9 +25,9 @@ class DbProject {
 	public function addToProjectTable($projectName, $location, $ownerID, $zipcode, $time, $unit){
 		
 		//project table
-		$sql = "INSERT INTO project (projectName, location, ownerID, zipcode, addedTime, unit)
-		VALUES ('$projectName', '$location', '$ownerID', '$zipcode', '$time', '$unit')";
-		mysql_query($sql);	
+		$sql = "INSERT INTO project (projectName, location, ownerID, zipcode, unit, addedTime)
+		VALUES ('$projectName', '$location', '$ownerID', '$zipcode', '$unit', '$time')";
+		$result = mysql_query($sql);
 		
 		$sql = "SELECT projectID FROM project WHERE projectName = '$projectName' AND ownerID = '$ownerID'";
 		$result = mysql_query($sql);
@@ -188,7 +188,7 @@ class DbProject {
 
 	//close the connection
 	public function disconnectdb(){
-		mysql_close($dbhandle);
+		mysql_close($this->dbhandle);
 	}
 
 	public function _destruct(){

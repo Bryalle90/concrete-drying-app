@@ -20,7 +20,7 @@ class DataService{
 		$this->city = $infodb->getCity($zip);
 		$this->state = $infodb->getState($zip);
 		$this->latitude = $infodb->getLat($zip);
-		$this->longitude = $infodb->getLon($zip); 
+		$this->longitude = $infodb->getLon($zip);
 	}
 	
 	public function forceUpdate(){

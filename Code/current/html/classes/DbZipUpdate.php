@@ -42,7 +42,7 @@ class DbzipUpdate {
 
 	//close the connection
 	public function disconnectdb(){
-		mysql_close($dbhandle);
+		mysql_close($this->dbhandle);
 	}
 
 	public function _destruct(){
