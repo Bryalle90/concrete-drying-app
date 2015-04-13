@@ -52,7 +52,7 @@
 	<div class="panel-footer">
 		<div class="row">
 			<div class="col-xs-7">
-				<button class="btn btn-info btn-sm" type="button" onclick="pPanels[<?php echo $index?>].viewProject()" title="View this project's forcast">View</button>
+				<button class="btn btn-info btn-sm" type="button" onclick="pPanels[<?php echo $index?>].viewProject('<?php echo $project['unit'] == 'S' ? 'Standard' : 'Metric'?>', '<?php echo str_pad($project['zip'], 5, '0', STR_PAD_LEFT)?>')" title="View this project's forcast">View</button>
 				<button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#editModal-<?php echo $index?>" title="Change name, zipcode, or unit">Edit</button>
 			</div>
 			<div class="col-xs-5" align="right">

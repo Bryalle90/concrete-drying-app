@@ -21,7 +21,7 @@
 		<!-- Custom styles for this template -->
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
 	</head>
-	<body>
+	<body style="background-color: #DBDBDB">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-0 col-md-0 col-lg-0"></div>
@@ -34,7 +34,8 @@
 				
 					// show top nav bar and zipcode input
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
-					include $_SERVER['DOCUMENT_ROOT']."/html/enterzip.html";
+					if(!isset($_POST['projectID']))
+						include $_SERVER['DOCUMENT_ROOT']."/html/enterzip.html";
 					
 					// require classes
 					require_once($_SERVER['DOCUMENT_ROOT'].'/classes/WeatherService.php');
