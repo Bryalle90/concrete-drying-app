@@ -1,6 +1,0 @@
-USE plasticcracks;
-CREATE TABLE zipUpdate (
-	zipcode int NOT NULL,
-	updateTime varchar(16),
-	PRIMARY KEY(zipcode)
-);

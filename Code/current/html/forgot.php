@@ -40,7 +40,7 @@
 						</div>
 						';
 					?>
-					<div align="center">
+					<div class="well well-lg" align="center">
 						<form class="form-inline" action="#" method="post">
 							<h3 class="form-heading">Please enter your email</h3>
 							<div class="form-group">

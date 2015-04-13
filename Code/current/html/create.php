@@ -33,6 +33,7 @@
 						
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
+					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUserVerification.php');
 					
 					if(isset($_POST['btn_create'])){ // if the create button was pressed
 						if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""	&& $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
@@ -40,69 +41,75 @@
 							
 							if($userdb->isUser($_POST['tb_email']) == Null){ // email not already used
 								if ($_POST['tb_pass'] == $_POST['tb_pass2']){
-									$userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
+									$userID = $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
+									
+									include '/php/sendVerifyEmail.php';
+
 									echo '
 									<div class="alert alert-success" role="alert">
-										Your account has been created and an email has been sent to verify your address
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										Your account has been created and an email has been sent to verify your address '; echo $link; echo '
 									</div>
 									';
 								} else { // passwords did not match
 									echo '
 									<div class="alert alert-danger" role="alert">
-										Passwords do not match
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										Passwords do not match
 									</div>
 									';
 								}
 							} else {
 								echo '
 								<div class="alert alert-danger" role="alert">
-									Email address is already in use
 									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									Email address is already in use
 								</div>
 								';
 							}
 						} else { // some fields are empty
 							echo '
 							<div class="alert alert-danger" role="alert">
-								Please fill all fields to continue
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								Please fill all fields to continue
 							</div>
 							';
 						}
 					}
+
 					?>
-					<form class="form-horizontal col-sm-12" action="/create.php" method="post">
-						<div class="form-group row">
-							<label for="tb_name" class="control-label">Display Name</label>
-							<input type="text" class="form-control" name="tb_name" value="<?php echo (isset($_POST['tb_name']) ? $_POST['tb_name'] : "");?>" placeholder="Display Name">
-						</div>
-						<div class="form-group row">
-							<label for="tb_email" class="control-label">Email</label>
-							<div class="input-group">
-								<span class="input-group-addon">*</span>
-								<input type="email" class="form-control" name="tb_email" value="<?php echo (isset($_POST['tb_email']) ? $_POST['tb_email'] : "");?>" placeholder="Email Address">
+					<div class=" well well-lg row">
+						<form class="form-horizontal col-sm-12" action="/create.php" method="post">
+							<div class="form-group row">
+								<label for="tb_name" class="control-label">Display Name</label>
+								<input type="text" class="form-control" name="tb_name" value="<?php echo (isset($_POST['tb_name']) ? $_POST['tb_name'] : "");?>" placeholder="Display Name">
 							</div>
-						</div>
-						<div class="form-group row">
-							<label for="tb_pass" class="control-label">Password</label>
-							<div class="input-group">
-								<span class="input-group-addon">*</span>
-								<input type="password" class="form-control" name="tb_pass" placeholder="*******">
+							<div class="form-group row">
+								<label for="tb_email" class="control-label">Email</label>
+								<div class="input-group">
+									<span class="input-group-addon">*</span>
+									<input type="email" class="form-control" name="tb_email" value="<?php echo (isset($_POST['tb_email']) ? $_POST['tb_email'] : "");?>" placeholder="Email Address">
+								</div>
 							</div>
-						</div>
-						<div class="form-group row">
-							<label for="tb_pass2" class="control-label">Retype Password</label>
-							<div class="input-group">
-								<span class="input-group-addon">*</span>
-								<input type="password" class="form-control" name="tb_pass2" placeholder="*******">
+							<div class="form-group row">
+								<label for="tb_pass" class="control-label">Password</label>
+								<div class="input-group">
+									<span class="input-group-addon">*</span>
+									<input type="password" class="form-control" name="tb_pass" placeholder="*******">
+								</div>
 							</div>
-						</div>
-						<div align="center" class="row">
-							<button class="btn btn-primary" type="submit" name="btn_create">Create Account</button>
-						</div>
-					</form>
+							<div class="form-group row">
+								<label for="tb_pass2" class="control-label">Retype Password</label>
+								<div class="input-group">
+									<span class="input-group-addon">*</span>
+									<input type="password" class="form-control" name="tb_pass2" placeholder="*******">
+								</div>
+							</div>
+							<div align="center" class="row">
+								<button class="btn btn-primary" type="submit" name="btn_create">Create Account</button>
+							</div>
+						</form>
+					</div>
 				</div>
 				<div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>
 			</div>

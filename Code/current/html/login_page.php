@@ -19,16 +19,16 @@
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
 	</head>
 
-	<body>
+	<body style="background-color: #DBDBDB">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>
-				<div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+				<div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 well well-lg">
 					<?php
 					session_start();
 					
 					// send user to index if logged in
-					if(isset($_SESSION['user']))
+					if(isset($_SESSION['id']))
 						header("Location: /index.php");
 						
 					echo '

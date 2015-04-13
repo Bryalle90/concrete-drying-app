@@ -27,6 +27,10 @@
 				// send user to login page if not logged in
 				if(!isset($_SESSION['user']))
 					header("Location: /login_page.php");
+
+				// send user to verify if not verified
+				if(!$_SESSION['verified'])
+					header("Location: /verify.php");
 				
 				// send user to index if not an admin
 				if(!$_SESSION['admin'])

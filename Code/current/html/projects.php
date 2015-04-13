@@ -70,7 +70,6 @@
 					$(formElement).submit();
 				};
 			}
-			
 		</script>
 	</head>
 
@@ -82,8 +81,13 @@
 					session_start();
 					
 					// send user to index if not logged in
-					if(!isset($_SESSION['id']))
+					if(!isset($_SESSION['id'])){
 						header("Location: /login_page.php");
+					}
+					// send user to verify if not verified
+					else if(!$_SESSION['verified']){
+						header("Location: /verify.php");
+					}
 						
 					require($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
 					require($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');

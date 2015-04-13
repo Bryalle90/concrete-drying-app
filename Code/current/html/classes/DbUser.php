@@ -33,9 +33,10 @@ class DbUser {
 	//inserts a new user to the table
 	public function addUser($name, $email, $userPass, $isAdmin){
 		$hashedPass = $this->hashPass($userPass);
-		$sql = "INSERT INTO user (name, email, userPass, isAdmin)
-		VALUES ('$name', '$email', '$hashedPass', '$isAdmin')";
+		$sql = "INSERT INTO user (name, email, userPass, isAdmin, isValidated)
+		VALUES ('$name', '$email', '$hashedPass', '$isAdmin', 0)";
 		mysql_query($sql);		
+		return($this->isUser($email));
 	}
 
 	//delete user from table
@@ -62,6 +63,11 @@ class DbUser {
 		$sql = "UPDATE user SET userPass = '$hashedPass' WHERE userID = '$userID'";
 		mysql_query($sql);
 	}	
+
+	public function validate($userID){
+		$sql = "UPDATE user SET isValidated = 1 WHERE userID = '$userID'";
+		mysql_query($sql);
+	}
 	
 
 	//checks to see if user is admin and return true of false
@@ -117,6 +123,15 @@ class DbUser {
 
 	public function getIsAdmin($userID){
 		$sql = "SELECT isAdmin FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
+	}
+
+	public function getIsValidated($userID){
+		$sql = "SELECT isValidated FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
 			return(Null);

@@ -1,0 +1,77 @@
+CREATE DATABASE plasticcracks;
+
+USE plasticcracks;
+CREATE TABLE zipinfo (
+	zipcode int NOT NULL,
+	city varchar(40),
+	state varchar(40),
+	latitude float,
+	longitude float,
+	PRIMARY KEY(zipcode)
+);
+
+USE plasticcracks;
+LOAD DATA INFILE '/home/s002457/download/zipinfo.csv'
+IGNORE INTO TABLE zipinfo
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(zipcode, city, state, latitude, longitude);
+
+USE plasticcracks;
+CREATE TABLE project (
+	projectID int UNIQUE NOT NULL AUTO_INCREMENT,
+	projectName varchar(40),
+	location varchar(40),
+	ownerID int NOT NULL,
+	zipcode int,
+	unit varchar(1),
+	addedTime varchar(16),
+	PRIMARY KEY(projectID)
+);
+
+USE plasticcracks;
+CREATE TABLE user (
+	userID int UNIQUE NOT NULL AUTO_INCREMENT,
+	name varchar(40),
+	email varchar(254),
+	userPass varchar(80),
+	isAdmin char(1),
+	isValidated char(1) NOT NULL,
+	PRIMARY KEY(userID)
+);
+
+USE plasticcracks;
+CREATE TABLE userProjectLookup (
+	lookupID int UNIQUE NOT NULL AUTO_INCREMENT,
+	userID int NOT NULL,
+	projectID int NOT NULL,
+	PRIMARY KEY(lookupID)
+);
+
+USE plasticcracks;
+CREATE TABLE weather (
+	zipcode int NOT NULL,
+	evapRate double,
+	cloudCoverage double,
+	airTemp double,
+	concTemp double,
+	humidity double,
+	windSpeed double,
+	weatherTime varchar(16),
+	PRIMARY KEY(zipcode, weatherTime)
+);
+
+USE plasticcracks;
+CREATE TABLE zipUpdate (
+	zipcode int NOT NULL,
+	updateTime varchar(16),
+	PRIMARY KEY(zipcode)
+);
+
+USE plasticcracks;
+CREATE TABLE userVerification(
+	userID int NOT NULL,
+	code varchar(60),
+	PRIMARY KEY(userID)
+);

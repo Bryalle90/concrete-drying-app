@@ -21,13 +21,18 @@
 	<body style="background-color: #DBDBDB">		
 		<div class="container-fluid">
 		
-			<div class="col-xs-offset-0 col-sm-offset-2 col-md-offset-3 col-xs-12 col-sm-8 col-md-6">
+			<div class="col-xs-offset-0 col-sm-offset-2 col-md-offset-2 col-lg-offset-3 col-xs-12 col-sm-8 col-md-8 col-lg-6 well well-lg">
 				<?php
 				session_start();
 				
-				// send user to index if not logged in
+				// send user to login_page if not logged in
 				if(!isset($_SESSION['user']))
 					header("Location: /login_page.php");
+
+				// send user to verify if not verified
+				if(!$_SESSION['verified'])
+					header("Location: /verify.php");
+
 				require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
 				require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
 				
