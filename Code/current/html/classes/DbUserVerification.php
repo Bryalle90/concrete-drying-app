@@ -10,6 +10,7 @@ class DbUserVerification {
 	private $DATABASE = 'plasticcracks';
 
 	private function checkUser($userID){
+		$userID = mysql_real_escape_string($userID);
 		$sql = "SELECT code FROM userVerification WHERE userID = '$userID'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -31,6 +32,7 @@ class DbUserVerification {
 
 	//inserts a new user to the table
 	public function addUser($userID){
+		$userID = mysql_real_escape_string($userID);
 		$code = $this->checkUser($userID);
 		if(!$code){
 			$sql = "INSERT INTO userVerification (userID, code)
@@ -41,12 +43,14 @@ class DbUserVerification {
 		return($code);
 	}
 
-	public function removeUser($userID){		
+	public function removeUser($userID){	
+		$userID = mysql_real_escape_string($userID);	
 		$sql = "DELETE FROM userVerification WHERE userID = '$userID'";
 		mysql_query($sql);
 	}
 
 	public function checkCode($code){
+		$code = mysql_real_escape_string($code);
 		$sql = "SELECT userID FROM userVerification WHERE code = '$code'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -57,6 +61,7 @@ class DbUserVerification {
 
 	//changes the users email in the table
 	public function changeCode($userID){
+		$userID = mysql_real_escape_string($userID);
 		$code = md5(uniqid(rand(), true));
 		$sql = "UPDATE userVerification SET code = '$code' WHERE userID = '$userID'";
 		mysql_query($sql);

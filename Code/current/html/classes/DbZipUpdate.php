@@ -21,6 +21,7 @@ class DbzipUpdate {
 	}
 
 	public function getLastUpdated($zip){
+		$zip = mysql_real_escape_string($zip);
 		$query = "SELECT updateTime FROM zipUpdate WHERE zipcode = '$zip'";
 		$result = mysql_query($query);
 		if (!$result || !mysql_num_rows($result))
@@ -30,11 +31,15 @@ class DbzipUpdate {
 	}
 	
 	public function update($zip, $time){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
 		$query = "UPDATE zipUpdate SET updateTime = '$time' WHERE zipcode = '$zip'";
 		mysql_query($query);
 	}
 	
 	public function add($zip, $time){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
 		$query = "INSERT INTO zipUpdate (zipcode, updateTime)
 		VALUES ('$zip', '$time')";
 		mysql_query($query);		
