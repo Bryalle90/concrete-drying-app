@@ -22,6 +22,14 @@ class DbWeather {
 	
 	//inserts a new weather to the table
 	public function addWeather($zipcode, $evapRate, $cloudCoverage, $airTemp, $concTemp, $humidity, $windSpeed, $weatherTime){
+		$zipcode = mysql_real_escape_string($zipcode);
+		$evapRate = mysql_real_escape_string($evapRate);
+		$cloudCoverage = mysql_real_escape_string($cloudCoverage);
+		$airTemp = mysql_real_escape_string($airTemp);
+		$concTemp = mysql_real_escape_string($concTemp);
+		$humidity = mysql_real_escape_string($humidity);
+		$windSpeed = mysql_real_escape_string($windSpeed);
+		$weatherTime = mysql_real_escape_string($weatherTime);
 		$sql = "INSERT INTO weather (zipcode, evapRate, cloudCoverage, airTemp, concTemp, humidity, windSpeed, weatherTime)
 		VALUES ('$zipcode', '$evapRate', '$cloudCoverage', '$airTemp', '$concTemp', '$humidity', '$windSpeed', '$weatherTime')";
 		mysql_query($sql);		
@@ -29,17 +37,22 @@ class DbWeather {
 
 	//delete weather from table
 	public function deleteWeather($zip, $time){		
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
 		$sql = "DELETE FROM weather WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 
 	//delete weather from table
 	public function clearZip($zip){		
+		$zip = mysql_real_escape_string($zip);
 		$sql = "DELETE FROM weather WHERE zipcode = '$zip'";
 		mysql_query($sql);
 	}
 	
 	public function checkZipTime($zip, $time){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
 		$zip = (int)$zip;
 		$query = "SELECT * FROM weather WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		$result = mysql_query($query);
@@ -51,6 +64,7 @@ class DbWeather {
 	
 	//get evapRate
 	public function getEvapRate($zipcode){
+		$zipcode = mysql_real_escape_string($zipcode);
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -64,6 +78,7 @@ class DbWeather {
 	
 	//get cloudCoverage
 	public function getCloudCoverage($zipcode){
+		$zipcode = mysql_real_escape_string($zipcode);
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -77,6 +92,7 @@ class DbWeather {
 	
 	//get airTemp
 	public function getAirTemp($zipcode){
+		$zipcode = mysql_real_escape_string($zipcode);
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -90,6 +106,7 @@ class DbWeather {
 	
 	//get concTemp
 	public function getConcTemp($zipcode){
+		$zipcode = mysql_real_escape_string($zipcode);
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -103,6 +120,7 @@ class DbWeather {
 	
 	//get humidity
 	public function getHumidity($zipcode){
+		$zipcode = mysql_real_escape_string($zipcode);
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -116,6 +134,7 @@ class DbWeather {
 	
 	//get windSpeed
 	public function getWindSpeed($zipcode){
+		$zipcode = mysql_real_escape_string($zipcode);
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -129,6 +148,7 @@ class DbWeather {
 	
 	//get timeArray
 	public function getTimeArray($zipcode){
+		$zipcode = mysql_real_escape_string($zipcode);
 		$sql = "SELECT * FROM weather WHERE zipcode = '$zipcode'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
@@ -142,36 +162,54 @@ class DbWeather {
 	
 	//changes the evapRate
 	public function changeEvapRate($zip, $time, $evapRate){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
+		$evapRate = mysql_real_escape_string($evapRate);
 		$sql = "UPDATE weather SET evapRate = '$evapRate' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the cloudCoverage
 	public function changeCloudCoverage($zip, $time, $cloudCoverage){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
+		$cloudCoverage = mysql_real_escape_string($cloudCoverage);
 		$sql = "UPDATE weather SET cloudCoverage = '$cloudCoverage' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the airTemp
 	public function changeAirTemp($zip, $time, $airTemp){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
+		$airTemp = mysql_real_escape_string($airTemp);
 		$sql = "UPDATE weather SET airTemp = '$airTemp' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the concTemp
 	public function changeConcTemp($zip, $time, $concTemp){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
+		$concTemp = mysql_real_escape_string($concTemp);
 		$sql = "UPDATE weather SET concTemp = '$concTemp' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the humidity
 	public function changeHumidity($zip, $time, $humidity){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
+		$humidity = mysql_real_escape_string($humidity);
 		$sql = "UPDATE weather SET humidity = '$humidity' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
 	
 	//changes the windSpeed
 	public function changeWindSpeed($zip, $time, $windSpeed){
+		$zip = mysql_real_escape_string($zip);
+		$time = mysql_real_escape_string($time);
+		$windSpeed = mysql_real_escape_string($windSpeed);
 		$sql = "UPDATE weather SET windSpeed = '$windSpeed' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}

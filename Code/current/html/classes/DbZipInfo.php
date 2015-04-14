@@ -21,12 +21,18 @@ class DbZipInfo {
 	}
 	
 	public function addZip($zipcode, $city, $state, $lat, $lon){
+		$zipcode = mysql_real_escape_string($zipcode);
+		$city = mysql_real_escape_string($city);
+		$state = mysql_real_escape_string($state);
+		$lat = mysql_real_escape_string($lat);
+		$lon = mysql_real_escape_string($lon);
 		$sql = "INSERT INTO weather (zipcode, city, state, latitude, longitude)
 		VALUES ('$zipcode', '$city', '$state', '$lat', '$lon')";
 		mysql_query($sql);		
 	}
 	
 	public function checkZip($zip){
+		$zip = mysql_real_escape_string($zip);
 		$zip = (int)$zip;
 		$query = "SELECT * FROM zipinfo WHERE zipcode = '$zip'";
 		$result = mysql_query($query);
@@ -37,26 +43,35 @@ class DbZipInfo {
 	}
 	
 	public function changeCity($zip, $city){
+		$zip = mysql_real_escape_string($zip);
+		$city = mysql_real_escape_string($city);
 		$sql = "UPDATE zipinfo SET city = '$city' WHERE zipcode = '$zip'";
 		mysql_query($sql);
 	}
 	
 	public function changeState($zip, $state){
+		$zip = mysql_real_escape_string($zip);
+		$state = mysql_real_escape_string($state);
 		$sql = "UPDATE zipinfo SET state = '$state' WHERE zipcode = '$zip'";
 		mysql_query($sql);
 	}
 	
 	public function changeLat($zip, $lat){
+		$zip = mysql_real_escape_string($zip);
+		$lat = mysql_real_escape_string($lat);
 		$sql = "UPDATE zipinfo SET latitude = '$lat' WHERE zipcode = '$zip'";
 		mysql_query($sql);
 	}
 	
 	public function changeLon($zip, $lon){
+		$zip = mysql_real_escape_string($zip);
+		$lon = mysql_real_escape_string($lon);
 		$sql = "UPDATE zipinfo SET longitude = '$lon' WHERE zipcode = '$zip'";
 		mysql_query($sql);
 	}
 
 	public function getCity($zip){
+		$zip = mysql_real_escape_string($zip);
 		$zip = (int)$zip;
 		$query = "SELECT city FROM zipinfo WHERE zipcode = '$zip'";
 		$result = mysql_query($query);
@@ -67,6 +82,7 @@ class DbZipInfo {
 	}
 
 	public function getState($zip){
+		$zip = mysql_real_escape_string($zip);
 		$zip = (int)$zip;
 		$query = "SELECT state FROM zipinfo WHERE zipcode = '$zip'";
 		$result = mysql_query($query);
@@ -77,6 +93,7 @@ class DbZipInfo {
 	}
 
 	public function getLat($zip){
+		$zip = mysql_real_escape_string($zip);
 		$zip = (int)$zip;
 		$query = "SELECT latitude FROM zipinfo WHERE zipcode = '$zip'";
 		$result = mysql_query($query);
@@ -87,6 +104,7 @@ class DbZipInfo {
 	}
 
 	public function getLon($zip){
+		$zip = mysql_real_escape_string($zip);
 		$zip = (int)$zip;
 		$query = "SELECT longitude FROM zipinfo WHERE zipcode = '$zip'";
 		$result = mysql_query($query);
