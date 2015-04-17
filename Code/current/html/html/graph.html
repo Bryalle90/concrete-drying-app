@@ -8,11 +8,27 @@ Desc: This file generates the graph
 -->
 
 <!--Add Notfication Button. onSubmit check to make sure it is the orginal data -->
-
+<!--$_POST['projectID'] if set thats project. 
 <!--Container that the chart is in -->
-Click a point to add a Notification
-<div id="container" style="height:70vh; min-height:400px;"></div>
+<?php
+if(isset($_POST['projectID'])){
+	?><script> var isProject = true;</script> <?php
+}
+else {
+	
+	?><script> var isProject = false;</script> <?php
+}
+?>
+
+
+	
+<div id="report"></div>
+<div id="container" style="height:70vh; min-height:400px; min-width: 1000px;"></div>
+
 <script>
+	
+
+	
 	var coldWeatherConcTemp = 49;
 	var hotWeatherConcTemp = 85;
 	var numberOfSeries = 1;
@@ -21,10 +37,11 @@ Click a point to add a Notification
 	var windOffset = null;
 	var city = main.getCity();
 	var state = main.getState();
+	var resetButton = false;
+
 	
 $(function () {
 	
-	var resetButton = false;
 	//Weather Data Arrays
 	var evapArray = main.getEvapArray();
 	var originalEvapArray = evapArray;
@@ -36,12 +53,11 @@ $(function () {
 	var windSpeedArray = main.getWindSpeedArray();
 	var originalWindSpeedArray = windSpeedArray;
 
-		var zipCode = main.getZipCode();
+	var zipCode = main.getZipCode();
 	//var zipCode = Math.floor(Math.random()*90000) + 10000;
 	var isMetric = main.isMetric();	
 	var arrayLength = evapArray.length;
 	var isOrignalGraph = true;
-
 
 	var timezone = 'Local time of ' + city + ', ' + state;
 	
@@ -65,12 +81,8 @@ $(function () {
 	var lowRiskBoundary = 0.15;
 	
 	var pointsSelected = [];
-
-	
 	var insideWindSpeed = []
 	
-
-
 	//Date and time variables
 	var monthname = new Array();
 	monthname[0] = "January";
@@ -456,6 +468,7 @@ $(function () {
 			gridLineColor: 'black',
 			minPadding: 0,
 			maxPadding: 0,
+			
 			//Title of y-axis
 			title:
 			{
@@ -577,16 +590,17 @@ $(function () {
 					concreteTemp = concTempArray;
 				}
 				
-				else if (this.series.name == 'Inside Wind Speed')
+				else if (this.series.name == 'Inside')
 				{
 					wind = insideWindSpeed;
 					concreteTemp = concTempArray;
 				}
-				else if (this.series.name.length >= 30)
+				else if (this.series.name.length >= 26)
 				{
 					str = this.series.name;
 					newConcreteTemp = str.match(/\d/g);
 					newConcreteTemp = newConcreteTemp.join("");
+					
 
 					//Inside
 					if (str.indexOf("Inside") > -1)
@@ -697,8 +711,8 @@ $(function () {
 				color: 'black',
 				cursor: 'pointer',
 				allowPointSelect: false,
-				selected: true,
-		
+				selected: false,
+				
 				point:
 				{
 					
@@ -711,33 +725,37 @@ $(function () {
 						
 						click: function()
 						{
-							zone = ''
+							if (isProject) {
+								//code
+							
+							document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ fullDate[this.x];
+							
 							//riskZone = main.findRiskZone(this.y);
 							 if (this.y <= 0.15)
 							 {
-								 zone = 'g';
-								      }
+								document.getElementById("notif1").innerHTML = 'Moderate Risk';
+								document.getElementById("notif2").innerHTML = 'High Risk';
+								document.getElementById("notif3").innerHTML = 'High/Moderate Risk';
+							}
+							
 							 else if (this.y <= 0.20)
 							 {
-							          zone = 'y';
+								document.getElementById("notif1").innerHTML = 'Low Risk';
+								document.getElementById("notif2").innerHTML = 'High Risk';
+								document.getElementById("notif3").innerHTML = 'Low/High Risk';
 							}
 							else
 							{
-							          zone = 'r';
+								document.getElementById("notif1").innerHTML = 'Low Risk';
+								document.getElementById("notif2").innerHTML = 'Moderate Risk';
+								document.getElementById("notif3").innerHTML = 'Low/Moderate Risk';
 							}
 							
 							
-							$('#report').html( "Add Notifcation <br>"+fullDate[this.x] + "series name = " + this.series.name
-									 + "<form action='' method='post'>"
-									+"<select name='zone' >"
-									+"<option>Low Risk</option><option>Moderate Risk</option><option>High Risk</option>"
-									+"<option>Low/Moderate Risk</option>"
-								+"<option>High/Moderate Risk</option>"
-								+"<option>Low/High Risk</option></select><button type='submit' name='submit'>Submit</button></form>"
-							);
-							
-							//alert('point = ' + this.x + ' Risk Zone = ' + zone + ' series name =' + this.series.name + ' ' + fullDate[this.x]);
-							
+							$(document).ready(function(){
+							$("#notificationModal").modal('show');});
+							}
+
 							
 						}
 					}
@@ -767,6 +785,30 @@ $(function () {
 			
 		},
 		
+		navigation:
+		{
+			buttonOptions:
+			{
+				theme:
+				{
+					'stroke-width': 1,
+					stroke: 'silver',
+					states:
+					{
+						hover:
+						{
+							//fill: '#bada55'
+						},
+						select:
+						{
+							stroke: '#039',
+							//fill: '#bada55'
+						}
+					}
+				}
+			},
+        },
+		
 		//Exporting options. Added "Options" text next to export button.
 		exporting:
 		{
@@ -774,11 +816,42 @@ $(function () {
 			{
 				contextButton:
 				{
-					text: "Options",
-					_titleKey: 'some_key',
+					//text: "Options",
+					//_titleKey: 'some_key',
+					//x: -160,
+					enabled: false
 
 				},
+				exportButton:
+				{
+					text: 'Download Graph',
+					x: -160,
+					menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2)
+				},
 				
+				printButton:
+				{
+					text: 'Print Graph',
+					x: -270,
+					onclick: function ()
+					{
+
+						this.print();
+					}
+				},
+				
+				emailButton:
+				{
+					text: 'Email Graph',
+					x: -350,
+						onclick: function ()
+						{
+							$(document).ready(function(){
+							$("#emailModal").modal('show');});
+						}
+					
+				}
+				/*
 				customButton:
 				{
 					onclick: function ()
@@ -791,16 +864,8 @@ $(function () {
 					enabled: resetButton
 
 				},
-				newCustomButton:
-				{
-					text: 'Add Notification',
-					_titleKey: 'add_notif',
-					onclick: function ()
-					{
-						alert("Does nothing right now");
-					},
-					
-				}
+				*/
+
 			}
 		}
 	});
@@ -833,9 +898,9 @@ $(function () {
 	{
 		
 		var cTemp = document.getElementById("concreteTemp").value;
-		alert(cTemp);
+		
 		var windS = document.getElementById("windSpeed").value;
-		alert(windS);
+		
 		//var outside = document.getElementById("Outside").checked;
 		
 
@@ -882,7 +947,7 @@ $(function () {
 		else if (windS == 'Inside' && cTemp == '')
 		{
 			//alert ('Inside Wind Speed');
-			seriesName = 'Inside Wind Speed';
+			seriesName = 'Inside';
 			for (i = 0; i < arrayLength; i++)
 			{
 				
@@ -919,7 +984,7 @@ $(function () {
 		//Inside true cTemp filled in
 		else if (windS == 'Inside' && cTemp != '') {
 			//alert('Inside and ctemp filed in');
-			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside Wind Speed';
+			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside';
 			cTempOffset = cTemp.length
 			windOffset = 1;
 			
@@ -1006,11 +1071,58 @@ $(function () {
 	
 </div>
 <div id ="button"></div>
-<div id="report">
-<!--
-	Here update chart to orginal 
--->
+
+<div id="emailModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Email Graph</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+		<input class="form-control" id="inputdefault" type="text" placeholder='E-mail Address' required>
+
+		<textarea name = "message" class="form-control" tabindex="4" 
+       placeholder="Add message...." ></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send E-mail</button>
+            </div>
+	    </form>
+	</div>
+    </div>
 </div>
+
+<div id="notificationModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id = notiftitle>Add Notification</h4>
+            </div>
+            <div class="modal-body">
+                
+                <form>
+			Receive an e-mail when the predicted risk changes to
+		<select> 
+			<option id = notif1> </option>
+			<option id = notif2> </option>
+			<option id = notif3> </option>
+		</select>
+	    </div>
+	    
+	    <div class = "modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		
+                <button type="button" class="btn btn-primary">Add Notification</button>
+		</form>
+	    </div>  
+            </div>
+        </div>
+    </div>
+
 
 
 
