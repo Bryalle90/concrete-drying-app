@@ -12,23 +12,43 @@ Desc: This file generates the graph
 <!--Container that the chart is in -->
 <?php
 if(isset($_POST['projectID'])){
-	?><script> var isProject = true;</script> <?php
+	?>
+	<script> var isProject = true;</script>
+	<?php
+	$projectID = $_POST['projectID'];
+	include($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
+	$projectdb= new DbProject();
+	$name = $projectdb->getName($_POST['projectID']);
+	?>
+	<script>
+	var projectID = (<?php echo json_encode($projectID)?>);
+	var projectName = (<?php echo json_encode($name)?>);
+	var yLevel = 30;
+	
+	</script>
+	<?php
+	
 }
 else {
-	
-	?><script> var isProject = false;</script> <?php
+	?>
+	<script>
+	var isProject = false;
+	var projectName = null;
+	var yLevel = 5;
+	</script>
+	<?php
 }
 ?>
 
-
-	
 <div id="report"></div>
 <div id="container" style="height:70vh; min-height:400px; min-width: 1000px;"></div>
 
 <script>
-	
 
 	
+	var currentZone;
+	var notifTimeID;
+	var seriesNotifID;
 	var coldWeatherConcTemp = 49;
 	var hotWeatherConcTemp = 85;
 	var numberOfSeries = 1;
@@ -38,7 +58,14 @@ else {
 	var city = main.getCity();
 	var state = main.getState();
 	var resetButton = false;
-
+	
+	var plotBandUpperBoundary = 5.0000;
+	var plotBandRedYellowBoundary = 0.2001;
+	var plotBandYellowGreenBoundary = 0.1501
+	var plotBandLowerBoundary = -5.0000
+	
+	var ModerateRiskBoundary = 0.20;
+	var lowRiskBoundary = 0.15;
 	
 $(function () {
 	
@@ -71,14 +98,6 @@ $(function () {
 	var upperBoundConcreteTemp = '';
 	var lowerBoundWindSpeed = '';
 	var upperBoundWindSpeed = '';
-	
-	var plotBandUpperBoundary = 5.0000;
-	var plotBandRedYellowBoundary = 0.2001;
-	var plotBandYellowGreenBoundary = 0.1501
-	var plotBandLowerBoundary = -5.0000
-	
-	var ModerateRiskBoundary = 0.20;
-	var lowRiskBoundary = 0.15;
 	
 	var pointsSelected = [];
 	var insideWindSpeed = []
@@ -119,7 +138,13 @@ $(function () {
 	var evaporationRateLabel = "";
 	var temperatureLabel = "";
 	var windLabel = "";
-	var title = city + ', ' + state + ' ' + zipCode;
+	if (projectName == null) {
+		var title = city + ', ' + state + ' ' + zipCode;
+	}
+	else if (projectName != null) {
+		var title = 'Project: ' + projectName + '<br>' +city + ', ' + state + ' ' + zipCode;
+	}
+	//var title = city + ', ' + state + ' ' + zipCode;
 	
 	//Add suffixes of labels 
 	//If metric assign metric labels
@@ -131,7 +156,6 @@ $(function () {
 		windLabel = 'kph';
 		
 		lowerBoundConcreteTemp = 4.4;
-
 		upperBoundConcreteTemp = 37.2;
 		lowerBoundWindSpeed = 0.0;
 		upperBoundWindSpeed = 56.3;
@@ -597,10 +621,18 @@ $(function () {
 				}
 				else if (this.series.name.length >= 26)
 				{
-					str = this.series.name;
-					newConcreteTemp = str.match(/\d/g);
-					newConcreteTemp = newConcreteTemp.join("");
+					str = this.series.name
+					if (isMetric) {
+						
+						newConcreteTemp = parseFloat(str.match(/[\d\.]+/))
+						//newConcreteTemp = newConcreteTemp.join("");
+					}
+					else{
 					
+					newConcreteTemp = str.match(/\d/g);
+					
+					newConcreteTemp = newConcreteTemp.join("");
+					}
 
 					//Inside
 					if (str.indexOf("Inside") > -1)
@@ -710,8 +742,8 @@ $(function () {
 				
 				color: 'black',
 				cursor: 'pointer',
-				allowPointSelect: false,
-				selected: false,
+				allowPointSelect: true,
+				selected: true,
 				
 				point:
 				{
@@ -726,6 +758,11 @@ $(function () {
 						click: function()
 						{
 							if (isProject) {
+								notifTimeID = fullDate[this.x];
+								seriesNotifID = this.series.name;
+								//alert(this.series[0].id);
+								
+								
 								//code
 							
 							document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ fullDate[this.x];
@@ -733,28 +770,31 @@ $(function () {
 							//riskZone = main.findRiskZone(this.y);
 							 if (this.y <= 0.15)
 							 {
+								currentZone = 0;
 								document.getElementById("notif1").innerHTML = 'Moderate Risk';
 								document.getElementById("notif2").innerHTML = 'High Risk';
-								document.getElementById("notif3").innerHTML = 'High/Moderate Risk';
+								document.getElementById("notif3").innerHTML = 'Moderate or High Risk';
 							}
 							
 							 else if (this.y <= 0.20)
 							 {
+								currentZone = 1;
 								document.getElementById("notif1").innerHTML = 'Low Risk';
 								document.getElementById("notif2").innerHTML = 'High Risk';
-								document.getElementById("notif3").innerHTML = 'Low/High Risk';
+								document.getElementById("notif3").innerHTML = 'Low or High Risk';
 							}
 							else
 							{
+								currentZone = 2;
 								document.getElementById("notif1").innerHTML = 'Low Risk';
 								document.getElementById("notif2").innerHTML = 'Moderate Risk';
-								document.getElementById("notif3").innerHTML = 'Low/Moderate Risk';
+								document.getElementById("notif3").innerHTML = 'Low or Moderate Risk';
 							}
 							
 							
 							$(document).ready(function(){
-							$("#notificationModal").modal('show');});
-							}
+							$("#notificationModal").modal('show');}
+							);}
 
 							
 						}
@@ -775,7 +815,9 @@ $(function () {
 		[{
 			name: 'Original Prediction',
 			data: evapArray,
-			lineWidth: 2
+			lineWidth: 2,
+			//id: 0
+			
 		}],
 
 		lang:
@@ -826,6 +868,7 @@ $(function () {
 				{
 					text: 'Download Graph',
 					x: -160,
+					y: yLevel,
 					menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2)
 				},
 				
@@ -833,6 +876,7 @@ $(function () {
 				{
 					text: 'Print Graph',
 					x: -270,
+					y: yLevel,
 					onclick: function ()
 					{
 
@@ -844,6 +888,7 @@ $(function () {
 				{
 					text: 'Email Graph',
 					x: -350,
+					y: yLevel,
 						onclick: function ()
 						{
 							$(document).ready(function(){
@@ -897,15 +942,21 @@ $(function () {
 	$("#sbutton").click(function()
 	{
 		
-		var cTemp = document.getElementById("concreteTemp").value;
+		cTemp = document.getElementById("concreteTemp").value;
+		if (isMetric) {
+			cTemp = parseFloat(cTemp).toFixed(2);
+		}
 		
-		var windS = document.getElementById("windSpeed").value;
+		windS = document.getElementById("windSpeed").value;
 		
-		//var outside = document.getElementById("Outside").checked;
-		
-
-		//var isInside = document.getElementById("windSpeed") == "Inside" ? true : false;
-		
+		if (cTemp < lowerBoundConcreteTemp && cTemp != '') {
+			alert('Concrete temperature must be higher than '+ lowerBoundConcreteTemp + temperatureLabel);
+		}
+		else if (cTemp > upperBoundConcreteTemp && cTemp != '') {
+			alert('Concrete temperature must be lower than than '+ upperBoundConcreteTemp + temperatureLabel);
+		}
+		else
+		{
 		
 		seriesName = '';
 		newEvapArray = [];
@@ -942,10 +993,11 @@ $(function () {
 			alert("Series already exists");
 			
 		}
-		
+	
 		// Else if inside is checked and empy concrete temp
 		else if (windS == 'Inside' && cTemp == '')
 		{
+			numberOfSeries = numberOfSeries + 1;
 			//alert ('Inside Wind Speed');
 			seriesName = 'Inside';
 			for (i = 0; i < arrayLength; i++)
@@ -959,12 +1011,14 @@ $(function () {
 				color: seriesColor,
 				dashStyle: 'dot',
 				lineWidth: 2
+				
 			}, false);
 		}
 		
 		//Outisde checked and conc temp filled in
 		else if (windS == 'Outside' && cTemp != '')
 		{
+			numberOfSeries = numberOfSeries + 1;
 			//alert('Outside and conc temp fillled in');
 			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Outside Wind Speed';
 			for (i = 0; i < arrayLength; i++)
@@ -977,12 +1031,15 @@ $(function () {
 				data: newEvapArray,
 				color: seriesColor,
 				dashStyle: 'dot',
-				lineWidth: 2
+				lineWidth: 2,
+			
 			}, false);
 		}
 		
 		//Inside true cTemp filled in
-		else if (windS == 'Inside' && cTemp != '') {
+		else if (windS == 'Inside' && cTemp != '')
+		{
+			numberOfSeries = numberOfSeries + 1;
 			//alert('Inside and ctemp filed in');
 			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside';
 			cTempOffset = cTemp.length
@@ -999,49 +1056,57 @@ $(function () {
 				color: seriesColor,
 				dashStyle: 'dot',
 				lineWidth: 2
-				//radius: 2,
-				//lineWidth: 2
 			}, false);
 		}
 		
 		chart.redraw();
-		numberOfSeries += 1;
+		
+		
+		}
 		return false;
+	});
+	
+	$("#addNotif").click(function()
+	{
+		var c = $('#container').highcharts();
+		var notif = document.getElementById("notif").value;
+		//alert('zone wanted= ' + notif + ' CurrentZone=' + currentZone + ' time=' + notifTimeID + ' projectID= '+ projectID + ' seriesID=' + seriesNotifID);
+		
+		alert('NotificationAdded');
+		
 
+		$('#notificationModal').modal('toggle');
+	});
+	
+	$("#emailGraph").click(function()
+	{
+		var c = $('#container').highcharts();
+		var email = document.getElementById("email").value;
+		var message = document.getElementById("message").value;
+		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+		
+		//validate email
+		if (email == '' || emailReg.test(email) == false) {
+			alert('Invalid e-mail address');
+		}
+		
+		//else send email
+		else
+		{
+			var url = window.location.href;
+			
+
+			alert('E-mail Sent');
+			$('#emailModal').modal('toggle');
+		}
 	});
 });
+
+
 </script>
 
-<!--
-<div id="divForm">
-	<form id = "weatherChangeForm" action= none>
-		<table>
-			<tr>
-				<td>
-					Concrete Temperature: <input type="number" style = "width:35px" maxlength = "5" name="concreteTemp" id="concreteTemp">
-					<span id= "cTempLabel"> " "</span>
-				</td>
-				<td>
-					<td>
-						Wind Speed: 
-					</td>
-				<td>
-					<br>
-					<input type="radio" name="windSpeed" id = "Outside" value="Outside" checked > Outside
-					<br>
-					<input type="radio" name="windSpeed" text-align="right" id = "Inside" value="Inside"> Inside
-				</td>
-				<td>
-					<input type = "submit" value="Submit">
-
-				</td>
-			</tr>
-		</table>
-	</form>
-
-!-->
 					
-						</div>
+
 					
 	
 	<form class="form-horizontal" id="weatherChangeForm" action=none>
@@ -1081,13 +1146,13 @@ $(function () {
             </div>
             <div class="modal-body">
                 <form>
-		<input class="form-control" id="inputdefault" type="text" placeholder='E-mail Address' required>
+		<input class="form-control" id="email" type="text" placeholder='E-mail Address' required>
 
-		<textarea name = "message" class="form-control" tabindex="4" 
+		<textarea name = "message" id = 'message' class="form-control" tabindex="4" 
        placeholder="Add message...." ></textarea>
             </div>
             <div class="modal-footer">
-		<button type="button" class="btn btn-primary">Send E-mail</button>
+		<button type="button" class="btn btn-primary" id='emailGraph'>Send E-mail</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
 	    </form>
@@ -1103,20 +1168,16 @@ $(function () {
                 <h4 class="modal-title" id = notiftitle>Add Notification</h4>
             </div>
             <div class="modal-body">
-                
                 <form>
 			Receive an e-mail when the predicted risk changes to
-		<select> 
+		<select id='notif'> 
 			<option id = notif1> </option>
 			<option id = notif2> </option>
 			<option id = notif3> </option>
 		</select>
 	    </div>
-	    
 	    <div class = "modal-footer">
-		
-		
-                <button type="button" class="btn btn-primary">Add Notification</button>
+                <button type="button" class="btn btn-primary" id="addNotif" >Add Notification</button>
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		</form>
 	    </div>  
