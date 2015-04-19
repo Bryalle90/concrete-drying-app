@@ -33,7 +33,6 @@
 						
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
-					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUserVerification.php');
 					
 					if(isset($_POST['btn_create'])){ // if the create button was pressed
 						if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""	&& $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
@@ -43,10 +42,11 @@
 								if ($_POST['tb_pass'] == $_POST['tb_pass2']){
 									$userID = $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
 									$code = $userdb->getCode($userID);
+									$email = $_POST['tb_email'];
 
 									//TODO: send email to user with link and code
 									$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
-									$link = $link.'/verify.php?code='.$code;
+									$link = $link.'/verify.php?email='.$email.'&code='.$code;
 
 									echo '
 									<div class="alert alert-success" role="alert">

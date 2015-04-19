@@ -27,15 +27,13 @@
 
 				include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
 				include($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
-				include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUserVerification.php');
 
 				$userdb = new DbUser();
 				$userID = 0;
 
 				// if $_GET['code'] is not blank check validation table for code and validate account
 				if(isset($_GET['code'])){
-					$verifydb = new DbUserVerification();
-					$userID = $userdb->checkCode($_GET['code']);
+					$userID = $userdb->checkCode($_GET['email'], $_GET['code']);
 
 					if($userID){
 						// set verified in userdb
@@ -87,11 +85,12 @@
 					if($userID){
 						if(!$userdb->getIsValidated($userID)){
 
+							$email = $_POST['tb_email'];
 							$code = $userdb->changeCode($userID);
 
 							//TODO: send email to user with link and code
 							$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
-							$link = $link.'/verify.php?code='.$code;
+							$link = $link.'/verify.php?email='.$email.'&code='.$code;
 							
 							echo '
 							<div class="alert alert-success" role="alert">
@@ -131,10 +130,9 @@
 					<form class="form-inline col-xs-12" action="/verify.php" method="get">
 						<div class="form-group">
 							<div class="input-group">
+								<input type="email" class="form-control" name="email" value="<?php echo isset($_SESSION["email"]) ? $_SESSION["email"] : ''?>" placeholder="Email Address">
 								<input type="text" class="form-control" name="code" value="" placeholder="Validation Code">
-								<span class="input-group-btn">
-									<button class="btn btn-primary" type="submit" id="btn_validate">Enter</button>
-								</span>
+								<button class="btn btn-primary" type="submit" id="btn_validate">Enter</button>
 							</div>
 						</div>
 					</form>

@@ -19,6 +19,9 @@ IGNORE 1 ROWS
 (zipcode, city, state, latitude, longitude);
 
 USE plasticcracks;
+DELETE FROM zipinfo WHERE zipcode = 0;
+
+USE plasticcracks;
 CREATE TABLE project (
 	projectID int UNIQUE NOT NULL AUTO_INCREMENT,
 	projectName varchar(40),

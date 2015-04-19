@@ -64,8 +64,8 @@ class DbUser {
 		return $result;
 	}
 
-	public function checkCode($code){
-		$sql = "SELECT userID FROM user WHERE code = '$code'";
+	public function checkCode($email, $code){
+		$sql = "SELECT userID FROM user WHERE code = '$code' AND email = '$email'";
 		$result = mysql_query($sql);
 
 		if (!$result || !mysql_num_rows($result))
@@ -76,7 +76,7 @@ class DbUser {
 	}
 
 	public function removeCode($userID){
-		$sql = "UPDATE user SET code = '' WHERE userID = '$userID'";
+		$sql = "UPDATE user SET code = NULL WHERE userID = '$userID'";
 		mysql_query($sql);
 	}
 
