@@ -35,12 +35,9 @@
 				// if $_GET['code'] is not blank check validation table for code and validate account
 				if(isset($_GET['code'])){
 					$verifydb = new DbUserVerification();
-					$userID = $verifydb->checkCode($_GET['code']);
+					$userID = $userdb->checkCode($_GET['code']);
 
 					if($userID){
-						// remove user from verifydb
-						$verifydb->removeUser($userID);
-
 						// set verified in userdb
 						$userdb->validate($userID);
 
@@ -89,7 +86,13 @@
 
 					if($userID){
 						if(!$userdb->getIsValidated($userID)){
-							include '/php/sendVerifyEmail.php';
+
+							$code = $userdb->changeCode($userID);
+
+							//TODO: send email to user with link and code
+							$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
+							$link = $link.'/verify.php?code='.$code;
+							
 							echo '
 							<div class="alert alert-success" role="alert">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

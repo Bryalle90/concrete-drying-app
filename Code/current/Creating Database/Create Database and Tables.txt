@@ -36,6 +36,8 @@ CREATE TABLE user (
 	name varchar(40),
 	email varchar(254),
 	userPass varchar(80),
+	code varchar(60),
+	createdTime varchar(16),
 	isAdmin char(1),
 	isValidated char(1) NOT NULL,
 	PRIMARY KEY(userID)
