@@ -28,8 +28,8 @@ class DbUser {
 		$time = date('Y-m-d H:i:s', strtotime('now'));
 		$code = $this->createCode();
 
-		$sql = "INSERT INTO user (name, email, userPass, code, createdTime, isAdmin, isValidated)
-		VALUES ('$name', '$email', '$hashedPass', '$code', '$time', '$isAdmin', 0)";
+		$sql = "INSERT INTO user (name, email, userPass, code, createdTime, isAdmin, isValidated, seenNotifMsg)
+		VALUES ('$name', '$email', '$hashedPass', '$code', '$time', '$isAdmin', 0, 0)";
 		mysql_query($sql);
 
 		$id = $this->isUser($email);
@@ -84,6 +84,25 @@ class DbUser {
 		$sql = "UPDATE user SET isValidated = 1 WHERE userID = '$userID'";
 		$this->removeCode($userID);
 		mysql_query($sql);
+	}
+	
+	public function seenNotificationMsg($userID){
+		$sql = "UPDATE user SET seenNotifMsg = 1 WHERE userID = '$userID'";
+		mysql_query($sql);
+	}
+	
+	public function unSeenNotificationMsg($userID){
+		$sql = "UPDATE user SET seenNotifMsg = 0 WHERE userID = '$userID'";
+		mysql_query($sql);
+	}
+	
+	public function getSeenNotificationMsg($userID){
+		$sql = "SELECT seenNotifMsg FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
 	}
 
 	//delete user from table

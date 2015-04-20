@@ -42,16 +42,17 @@ CREATE TABLE user (
 	code varchar(60),
 	createdTime varchar(16),
 	isAdmin char(1),
-	isValidated char(1) NOT NULL,
+	isValidated tinyint(1),
+	seenNotifMsg tinyint(1),
 	PRIMARY KEY(userID)
 );
 
 USE plasticcracks;
 CREATE TABLE userProjectLookup (
-	lookupID int UNIQUE NOT NULL AUTO_INCREMENT,
 	userID int NOT NULL,
 	projectID int NOT NULL,
-	PRIMARY KEY(lookupID)
+	accepted tinyint(1),
+	PRIMARY KEY(userID, projectID)
 );
 
 USE plasticcracks;
@@ -72,11 +73,4 @@ CREATE TABLE zipUpdate (
 	zipcode int NOT NULL,
 	updateTime varchar(16),
 	PRIMARY KEY(zipcode)
-);
-
-USE plasticcracks;
-CREATE TABLE userVerification(
-	userID int NOT NULL,
-	code varchar(60),
-	PRIMARY KEY(userID)
 );
