@@ -5,17 +5,21 @@
 	session_start();
 	
 	$projectdb = new DbProject();
-	if(isset($_SESSION['id']) && $projectdb->getOwner($_POST['projectID']) == $_SESSION['id']){
+	if(isset($_SESSION['id'])){
 		$userdb = new DbUser();
 		if($_POST['email'] != ''){ // check if email address is blank
 			$newUserID = $userdb->isUser($_POST['email']);
 			if($newUserID != Null){ // check if user email exists in database
-				if(!$projectdb->isUserInProject($_POST['projectID'], $newUserID)){ // check if user is already in project
-					// TODO: send email stating that user has been added to a project and tell them to sign in to accept
-					$projectdb->addUserToSharedProject($_POST['projectID'], $newUserID, 0);
-					echo 'user was added to project';
+				if($userdb->getIsValidated($newUserID)){ // check if user email is verified
+					if(!$projectdb->isUserInProject($_POST['projectID'], $newUserID)){ // check if user is already in project
+						// TODO: send email stating that user has been added to a project and tell them to sign in to accept
+						$projectdb->addUserToSharedProject($_POST['projectID'], $newUserID, 0);
+						echo 'user was invite to the project';
+					} else {
+						echo 'user is already in project or already invited';
+					}
 				} else {
-					echo 'user is already in project';
+					echo 'user has not verified thier account';
 				}
 			} else {
 				echo 'user does not have an account';

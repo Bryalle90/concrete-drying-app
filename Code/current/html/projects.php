@@ -52,7 +52,7 @@
 						data: { projectID: this.projectID, email: document.getElementById("addUserEmail-"+this.index).value },
 						success: function(data) {
 							if(data){ alert(data); }
-							document.getElementById("addUserEmail").value = "";
+							document.getElementById("addUserEmail-"+this.index).value = "";
 						}
 					});
 				};
