@@ -71,7 +71,7 @@
 						$_SESSION['email'] = $userdb->getEmail($userID);
 						$_SESSION['admin'] = $userdb->isUserAdmin($userID);
 						$_SESSION['verified'] = $userdb->getIsValidated($userID);
-						$_SESSION['numProjects'] = count($projectdb->getProjects($userID));
+						$_SESSION['unacceptedProjects'] = count($projectdb->getUnacceptedProjects($userID));
 					} else {
 						header("Location: /login_page.php");
 					}

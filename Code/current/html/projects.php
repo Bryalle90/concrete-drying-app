@@ -69,6 +69,18 @@
 					$('body').append(formElement);
 					$(formElement).submit();
 				};
+				
+				this.acceptInvite = function () {
+					var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="hidden" name="accept" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /></form>');
+					$('body').append(formElement);
+					$(formElement).submit();
+				};
+				
+				this.declineInvite = function () {
+					var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="hidden" name="decline" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /></form>');
+					$('body').append(formElement);
+					$(formElement).submit();
+				};
 			}
 		</script>
 	</head>
@@ -110,7 +122,7 @@
 									$location = $city.', '.$state;
 									$title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
 									$unit = $_POST['newProjectUnit'] = 'Standard' ? 'S' : 'M';
-									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], date('Y-m-d H:i:s', strtotime('now')), $unit);
+									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], $unit);
 									
 									echo '
 									<div class="alert alert-success" role="alert">
@@ -216,15 +228,22 @@
 							';
 						}
 					}
+					if(isset($_POST['accept']) && $projectdb->isUserInProject($_POST['projectID'], $_SESSION['id'])){
+						$projectdb->acceptProject($_POST['projectID'], $_SESSION['id']);
+					}
+					if(isset($_POST['decline']) && $projectdb->isUserInProject($_POST['projectID'], $_SESSION['id'])){
+						$projectdb->deleteProject($_POST['projectID'], $_SESSION['id']);
+					}
 					
-					$_SESSION['numProjects'] = count($projectdb->getProjects($_SESSION['id']));
+					$_SESSION['unacceptedProjects'] = count($projectdb->getUnacceptedProjects($_SESSION['id']));
+					$numProjects = count($projectdb->getProjectIDs($_SESSION['id']));
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					?>
 					<div class="addbtn row">
 						<div class="col-xs-12" align="center">
 							<?php
 							// if there are no projects we show a button with a popup telling the user to add one
-							if($_SESSION['numProjects'] > 0)
+							if($numProjects > 0)
 								echo '<button class="btn btn-primary btn-xl" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project">Add Project</button>';
 							else
 								echo '<button class="btn btn-primary btn-xl popover-show" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project" data-trigger="focus" data-container="body" data-content="You have no projects, click here to add one" data-placement="bottom">Add Project</button>';
@@ -287,6 +306,17 @@
 										<option>Standard</option>
 										<option>Metric</option>
 									</select>
+								</div>
+								<div class="form-group">
+									<label for="newProjectZip" class="control-label">Future Date?</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" title="Get notified when this date is in range.">
+										</span>
+										<input name="futureDay" type="text" class="form-control" placeholder="Day">
+										<input name="futureMonth" type="text" class="form-control" placeholder="Month">
+										<input name="futureYear" type="text" class="form-control" placeholder="Year">
+									</div>
 								</div>
 							</div>
 						</div>

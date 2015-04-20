@@ -5,14 +5,16 @@
 	border-top: 8px solid;
 }
 </style>
-<div class="panel panel-primary">
+<script src="javascript/GraphFunctions.js"></script>
+<div class="panel panel-<?php echo $project['accepted'] ? 'primary' : 'warning'?>">
 	<div class="panel-heading" role="tab" id="heading3-<?php echo $index?>" align="center" data-toggle="collapse" data-parent="#accordion3" href="#collapse3-<?php echo $index?>" aria-expanded="false" aria-controls="collapse3-<?php echo $index?>">
 		<a class="collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse3-<?php echo $index?>" aria-expanded="false" aria-controls="collapse3-<?php echo $index?>">
-			<h4 class="panel-title" style="color: #FFF">
-				<b><?php echo $project['name']?> </b><span class="caret title-caret"></span>
+			<h4 class="panel-title" style="color: <?php echo $project['accepted'] ? '#FFF' : '#000' ?>">
+				<b><?php echo $project['name']?> <?php echo $project['accepted'] ? '' : '(invited)'?> </b><span class="caret title-caret"> </span>
 			</h4>
 		</a>
 	</div>
+	
 	<div id="collapse3-<?php echo $index?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3-<?php echo $index?>">
 		<div class="panel-body">
 			<table class="table" style="margin-bottom: 0px">
@@ -36,20 +38,23 @@
 					<td><b>Users</b></td>
 					<td>
 						<?php
-						foreach($project['userIDs'] as $userID){
-							if($userID != $project['ownerID']){
-								echo $userdb->getName($userID);
-								echo '<br>';
+						if($project['userIDs']){
+							foreach($project['userIDs'] as $userID){
+								if($userID != $project['ownerID']){
+									echo $userdb->getName($userID);
+									echo '<br>';
+								}
 							}
 						}
 						?>
-						<button class="btn btn-success btn-xs" type="button" data-toggle="modal" data-target="#addUserModal-<?php echo $index?>" title="Add a user to this project">Add User</button>
+						<button class="btn btn-success btn-xs <?php echo $project['accepted'] ? '' : 'hidden'?>" type="button" data-toggle="modal" data-target="#addUserModal-<?php echo $index?>" title="Add a user to this project">Add User</button>
 					</td>
 				</tr>
 			</table>
 		</div>
 	</div>
-	<div class="panel-footer">
+	
+	<div class="panel-footer <?php echo $project['accepted'] ? '' : 'hidden'?>">
 		<div class="row">
 			<div class="col-xs-7">
 				<button class="btn btn-info btn-sm" type="button" onclick="pPanels[<?php echo $index?>].viewProject('<?php echo $project['unit'] == 'S' ? 'Standard' : 'Metric'?>', '<?php echo str_pad($project['zip'], 5, '0', STR_PAD_LEFT)?>')" title="View this project's forcast">View</button>
@@ -60,6 +65,18 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="panel-footer <?php echo $project['accepted'] ? 'hidden' : ''?>">
+		<div class="row">
+			<div class="col-xs-7">
+				<button class="btn btn-primary btn-sm" type="button" onclick="pPanels[<?php echo $index?>].acceptInvite()" title="Accept the invitation to this project">Accept</button>
+			</div>
+			<div class="col-xs-5" align="right">
+				<button class="btn btn-danger btn-sm" type="button" onclick="pPanels[<?php echo $index?>].declineInvite()" title="Decline the invitation to this project">Decline</button>
+			</div>
+		</div>
+	</div>
+	
 </div>
 
 			
