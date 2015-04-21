@@ -23,7 +23,8 @@ class DbFutureNotification {
 	}
 
 	//inserts a new notification to the table
-	public function addNotification($projectID, $futureDate, $createdDate){
+	public function addNotification($projectID, $futureDate){
+		$createdDate = date('Y-m-d H:i:s', strtotime('now'));
 		$sql = "INSERT INTO futureNotification (projectID, futureDate, createdDate)
 		VALUES ('$projectID', '$futureDate', '$createdDate')";
 		mysql_query($sql);		

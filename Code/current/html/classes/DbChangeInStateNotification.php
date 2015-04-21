@@ -23,7 +23,8 @@ class DbChangeInStateNotification {
 	}
 
 	//inserts a new notification to the table
-	public function addNotification($projectID, $seriesID, $time, $currentZone, $notifyZone, $createdDate){
+	public function addNotification($projectID, $seriesID, $time, $currentZone, $notifyZone){
+		$createdDate = date('Y-m-d H:i:s', strtotime('now'));
 		$sql = "INSERT INTO changeInStateNotification (projectID, seriesID, time, currentZone, notifyZone, createdDate)
 		VALUES ('$projectID', '$seriesID', '$time', '$currentZone', '$notifyZone', '$createdDate')";
 		mysql_query($sql);		
