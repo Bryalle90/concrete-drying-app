@@ -11,33 +11,67 @@ Desc: This file generates the graph
 <!--$_POST['projectID'] if set thats project. 
 <!--Container that the chart is in -->
 <div class="bs-example">
-    <div class="alert alert-success" id='notifSuccess' role="alert">
+    <div class="alert alert-success" id='notifSuccess' role="alert" align="center">
         <a href="#" class="close" >&times;</a>
         <strong>Success!</strong> Your notification has successfully been saved.
     </div>
 </div>
 <div class="bs-example">
-    <div class="alert alert-success" id='emailSuccess' role="alert">
+    <div class="alert alert-success" id='emailSuccess' role="alert" align="center">
         <a href="#" class="close">&times;</a>
         <strong>Success!</strong> Your E-mail has succesfully been sent.
     </div>
 </div>
 
 
+
 <?php
-if(isset($_POST['projectID'])){
+
+if(isset($_POST['projectID']))
+{
 	?>
 	<script> var isProject = true;</script>
 	<?php
-	$projectID = $_POST['projectID'];
 	include($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
+	include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
+	$projectID = $_POST['projectID'];
+
 	$projectdb= new DbProject();
+	
+	$userdb = new DbUser();
+	$userID = $_SESSION['id'];
+	if($projectdb->getOwner($projectID) == $userID)
+	{
+		$isOwner = true;
+		
+		if ($userdb->getSeenNotificationMsg($userID) == 0)
+		{
+		
+		
+		?>
+		
+		<div class="alert alert-info" id ='notifInfo' role="alert" align="center">
+		<a href="#" class="close">&times;</a>
+		Click a point to add a notification
+		<br>
+		<input type="checkbox" name="checkbox" id='checkbox' value="0" onclick=<?php $userdb->seenNotificationMsg($userID); ?>> Check this box to never display this message 
+		</div>
+		<?php
+		}
+	}
+	else
+	{
+		$isOwner = false;
+	}
 	$name = $projectdb->getName($_POST['projectID']);
 	?>
 	<script>
 	var projectID = (<?php echo json_encode($projectID)?>);
 	var projectName = (<?php echo json_encode($name)?>);
+	var isOwner = (<?php echo json_encode($isOwner)?>);
+	var userID = (<?php echo json_encode($userID)?>);
 	var yLevel = 30;
+	
 	
 	</script>
 	<?php
@@ -49,9 +83,11 @@ else {
 	var isProject = false;
 	var projectName = null;
 	var yLevel = 5;
+	var isOwner = false;
 	</script>
 	<?php
 }
+
 ?>
 
 <div id="report"></div>
@@ -77,7 +113,6 @@ else {
 	var plotBandRedYellowBoundary = 0.2001;
 	var plotBandYellowGreenBoundary = 0.1501
 	var plotBandLowerBoundary = -5.0000
-	
 	var ModerateRiskBoundary = 0.20;
 	var lowRiskBoundary = 0.15;
 	
@@ -95,7 +130,6 @@ $(function () {
 	var originalWindSpeedArray = windSpeedArray;
 
 	var zipCode = main.getZipCode();
-	//var zipCode = Math.floor(Math.random()*90000) + 10000;
 	var isMetric = main.isMetric();	
 	var arrayLength = evapArray.length;
 	var isOrignalGraph = true;
@@ -158,7 +192,7 @@ $(function () {
 	else if (projectName != null) {
 		var title = 'Project: ' + projectName + '<br>' +city + ', ' + state + ' ' + zipCode;
 	}
-	//var title = city + ', ' + state + ' ' + zipCode;
+	
 	
 	//Add suffixes of labels 
 	//If metric assign metric labels
@@ -752,7 +786,12 @@ $(function () {
 						
 						click: function()
 						{
-							if (isProject) {
+							if (isProject)
+							{
+								if (isOwner == true)
+								{
+
+								
 								notifTimeID = fullDate[this.x];
 								seriesNotifID = this.series.name;
 								//alert(this.series[0].id);
@@ -789,7 +828,13 @@ $(function () {
 							
 							$(document).ready(function(){
 							$("#notificationModal").modal('show');}
-							);}
+							);
+								}
+								else {
+									alert('Must be project owner to add a notification.')
+								}
+							}
+							
 						}
 					}
 				}
@@ -1072,6 +1117,11 @@ $(function () {
 		return false;
 	});
 	
+	$("#checkbox").click(function()
+	{
+		$("#notifInfo").hide();
+	});
+	
 	$("#addNotif").click(function()
 	{
 		var c = $('#container').highcharts();
@@ -1123,13 +1173,17 @@ $(function () {
 	
 	<form class="form-horizontal" id="weatherChangeForm" action=none>
 		<div class="form-group">
-			
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Create a new series with a custom concrete temperature/wind speed for the entire series.
+			 
+			 "\n"Leaving concrete temperature blank will set it to the defualt concrete temperature prediction.
+			 Inside wind speed sets the wind to 1mph for the entire series.
+			 Outside wind speed sets the wind to the default predicted wind speed.
 			<div class="row">
 				
 				<div class="col-xs-12 col-sm-4 col-md-5 col-lg-3">
 					<label for="concreteTemp" class="col-xs-12 col-sm-7 col-md-6 col-lg-7 control-label">Concrete Temperature <span id= "cTempLabel"> " "</span></label>
 					<div class="col-xs-12 col-sm-5 col-md-4 col-lg-5">
-						<input type="number" class="form-control" id="concreteTemp" maxlength="3">
+						<input type="number" class="form-control" id="concreteTemp" maxlength="3" placeholder="Default">
 							
 					</div>
 					
