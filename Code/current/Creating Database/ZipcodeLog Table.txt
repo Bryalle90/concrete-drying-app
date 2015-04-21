@@ -1,0 +1,7 @@
+USE Account;
+CREATE TABLE zipcodeLog (
+	zipcode int,
+	userType varchar(1),
+	date varchar(16),
+	PRIMARY KEY(zipcode, userType, date)
+);

@@ -2,5 +2,9 @@ USE Account;
 CREATE TABLE changeInStateNotification (
 	changeInStateNotificationID int UNIQUE NOT NULL AUTO_INCREMENT,	
 	projectID int,
-	PRIMARY KEY(changeInStateNotificationID)
+	seriesID int,
+	time varchar(16),
+	currentZone varchar(32),
+	notifyZone varchar(32),
+	PRIMARY KEY(projectID, seriesID)
 );

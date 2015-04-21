@@ -24,8 +24,6 @@ class DbFutureNotification {
 
 	//inserts a new notification to the table
 	public function addNotification($projectID, $futureDate){
-		$projectID = mysql_real_escape_string($projectID);
-		$futureDate = mysql_real_escape_string($futureDate);
 		$sql = "INSERT INTO futureNotification (projectID, futureDate)
 		VALUES ('$projectID', '$futureDate')";
 		mysql_query($sql);		
@@ -33,22 +31,18 @@ class DbFutureNotification {
 
 	//delete notification from table
 	public function deleteNotification($futureID){		
-		$futureID = mysql_real_escape_string($futureID);
 		$sql = "DELETE FROM futureNotification WHERE futureID = '$futureID'";
 		mysql_query($sql);
 	}
 
 	//changes the futureDate in the table
 	public function changeName($futureID, $futureDate){
-		$futureID = mysql_real_escape_string($futureID);
-		$futureDate = mysql_real_escape_string$futureDate);
 		$sql = "UPDATE futureNotification SET futureDate = '$futureDate' WHERE futureID = '$futureID'";
 		mysql_query($sql);
 	}
 
 	//gets the futureID by using the project id
 	public function getfutureID($projectID){
-		$projectID = mysql_real_escape_string($projectID);
 		$sql = "SELECT futureID FROM futureNotification WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))

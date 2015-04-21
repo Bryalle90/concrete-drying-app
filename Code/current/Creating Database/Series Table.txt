@@ -1,0 +1,9 @@
+USE Account;
+CREATE TABLE series (
+	seriesID int UNIQUE NOT NULL AUTO_INCREMENT,
+	projectID int,
+	isOriginal varchar(1),
+	concreteTemp double,
+	windSpeed double,
+	PRIMARY KEY(seriesID)
+);
