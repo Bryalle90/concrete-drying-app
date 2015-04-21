@@ -6,5 +6,6 @@ CREATE TABLE changeInStateNotification (
 	time varchar(16),
 	currentZone varchar(32),
 	notifyZone varchar(32),
+	createdDate varchar(16),
 	PRIMARY KEY(projectID, seriesID)
 );

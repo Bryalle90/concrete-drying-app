@@ -23,9 +23,9 @@ class DbChangeInStateNotification {
 	}
 
 	//inserts a new notification to the table
-	public function addNotification($projectID, $seriesID, $time, $currentZone, $notifyZone){
-		$sql = "INSERT INTO changeInStateNotification (projectID, seriesID, time, currentZone, notifyZone)
-		VALUES ('$projectID', '$seriesID', '$time', '$currentZone', '$notifyZone')";
+	public function addNotification($projectID, $seriesID, $time, $currentZone, $notifyZone, $createdDate){
+		$sql = "INSERT INTO changeInStateNotification (projectID, seriesID, time, currentZone, notifyZone, createdDate)
+		VALUES ('$projectID', '$seriesID', '$time', '$currentZone', '$notifyZone', '$createdDate')";
 		mysql_query($sql);		
 	}
 
@@ -65,6 +65,15 @@ class DbChangeInStateNotification {
 	
 	public function getNotifyZone($projectID, $seriesID){
 		$sql = "SELECT notifyZone FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID'";
+		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
+	}
+	
+	public function getCreatedDate($projectID, $seriesID){
+		$sql = "SELECT createdDate FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);

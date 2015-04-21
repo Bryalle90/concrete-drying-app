@@ -23,9 +23,9 @@ class DbFutureNotification {
 	}
 
 	//inserts a new notification to the table
-	public function addNotification($projectID, $futureDate){
-		$sql = "INSERT INTO futureNotification (projectID, futureDate)
-		VALUES ('$projectID', '$futureDate')";
+	public function addNotification($projectID, $futureDate, $createdDate){
+		$sql = "INSERT INTO futureNotification (projectID, futureDate, createdDate)
+		VALUES ('$projectID', '$futureDate', '$createdDate')";
 		mysql_query($sql);		
 	}
 
@@ -44,6 +44,24 @@ class DbFutureNotification {
 	//gets the futureID by using the project id
 	public function getfutureID($projectID){
 		$sql = "SELECT futureID FROM futureNotification WHERE projectID = '$projectID'";
+		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
+	}
+	
+	public function getFutureDate($futureID){
+		$sql = "SELECT futureDate FROM futureNotification WHERE futureID = '$futureID'";
+		$result = mysql_query($sql);
+        if (!$result || !mysql_num_rows($result))
+            return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
+	}
+	
+	public function getCreatedDate($futureID){
+		$sql = "SELECT createdDate FROM futureNotification WHERE futureID = '$futureID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
