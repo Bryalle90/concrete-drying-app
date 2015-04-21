@@ -434,7 +434,7 @@ $(function () {
 		{
 			title:
 			{
-				text: 'Predictions<br/><span style="font-size: 9px; color: #666; font-weight: normal">(Click to hide)</span>',
+				text: 'Predictions<br/><span style="font-size: 9px; color: #666; font-weight: normal">(Click to remove)</span>',
 				style:
 				{
 					fontStyle: 'italic'
@@ -774,6 +774,24 @@ $(function () {
 				allowPointSelect: true,
 				selected: true,
 				
+				events:
+				{
+
+				
+					hide: function()
+					{
+						this.show();
+						if (this.name == 'Original Prediction')
+						{
+							alert('Can not delete Original Prediction');
+						}
+						else
+						{
+							
+							this.remove();
+						}
+					},
+				},
 				point:
 				{
 					
@@ -783,6 +801,8 @@ $(function () {
 						{
 							this.chart.tooltip.hide();
 						},
+						
+			
 						
 						click: function()
 						{
@@ -1133,6 +1153,19 @@ $(function () {
 		$("#notifSuccess").show();
 		$('#notificationModal').modal('toggle');
 	});
+	
+	$( document ).ready(function() {
+		alert('woo');
+		if (isProject == true) {
+			
+			//If number of series > 1 and numbOfNotif == 0
+				//for (i=0; i< numbOfSeries)
+			//If number of series == 1 and numbOfNotif > 0
+			
+			
+		}
+	});
+	
 	$("#notifSuccess").hide();
 	$("#emailSuccess").hide();
 	$('.alert .close').on('click', function(e)
@@ -1173,26 +1206,31 @@ $(function () {
 	
 	<form class="form-horizontal" id="weatherChangeForm" action=none>
 		<div class="form-group">
+			 <h4>Add series</h4>
 			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Create a new series with a custom concrete temperature/wind speed for the entire series.
-			 
-			 "\n"Leaving concrete temperature blank will set it to the defualt concrete temperature prediction.
-			 Inside wind speed sets the wind to 1mph for the entire series.
-			 Outside wind speed sets the wind to the default predicted wind speed.
+			<br><br>
 			<div class="row">
 				
-				<div class="col-xs-12 col-sm-4 col-md-5 col-lg-3">
-					<label for="concreteTemp" class="col-xs-12 col-sm-7 col-md-6 col-lg-7 control-label">Concrete Temperature <span id= "cTempLabel"> " "</span></label>
-					<div class="col-xs-12 col-sm-5 col-md-4 col-lg-5">
-						<input type="number" class="form-control" id="concreteTemp" maxlength="3" placeholder="Default">
-							
+				<div class="col-xs-12 col-sm-4 col-md-5 col-lg-5">
+					
+					<label for="concreteTemp" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Concrete Temperature: </label>
+					<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
+						<div class='input-group' col-md-6>
+						<input type="number" class="form-control" id="concreteTemp" maxlength="3" placeholder="Default" siz>
+						<span id="cTempLabel" class="input-group-addon"></span>
+						
+						</div>
+						<p class=help-block>If blank it defaults to orginal predicted concrete temperature</p>
 					</div>
 					
-					<label for="windSpeed" class="col-xs-12 col-sm-7 col-md-6 col-lg-7 control-label">Wind Speed</label>
-					<div class="col-xs-12 col-sm-5 col-md-4 col-lg-5">
+					<label for="windSpeed" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Wind Speed: </label>
+					<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
 						<select  id="windSpeed" class="form-control">
 							<option id = "Outside">Outside</option>
 							<option id = "Inside">Inside</option>
 						</select>
+					<p class=help-block>If placing concrete inside change to Inside.</p>
+
 					</div>
 					<div class="col-xs-offset-0 col-sm-offset-7 col-md-offset-6 col-lg-offset-7 col-xs-12">
 						<button class="btn btn-primary"  type='button' id='sbutton'>Submit</button>
