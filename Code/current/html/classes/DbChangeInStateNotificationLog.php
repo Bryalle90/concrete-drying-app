@@ -5,11 +5,14 @@
 //by: zach smith
 //last edited: 4/24/15
 
-require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
-
 class DbChangeInStateNotificationLog {
 	
 	private $dbhandle;
+
+	private $HOST = '127.0.0.1:3666';
+	private $ACCOUNT = 'root';
+	private $PASSWORD = 'a1b2c3';
+	private $DATABASE = 'plasticcracks';
 	
 	public function __construct(){
         $this->connectdb();
@@ -17,9 +20,9 @@ class DbChangeInStateNotificationLog {
 
 	//connect to the database
 	public function connectdb(){			
-		$this->dbhandle = mysql_connect('localhost', 'root', '');
+		$this->dbhandle = mysql_connect($this->HOST, $this->ACCOUNT, $this->PASSWORD);
 					
-		$selected = mysql_select_db("Account", $this->dbhandle);
+		$selected = mysql_select_db($this->DATABASE, $this->dbhandle);
 	}
 
 	//inserts a new log to the table
@@ -37,7 +40,7 @@ class DbChangeInStateNotificationLog {
 
 	//close the connection
 	public function disconnectdb(){
-		mysql_close($dbhandle);
+		mysql_close($this->dbhandle);
 	}
 
 	public function _destruct(){
