@@ -94,11 +94,17 @@
 					
 					// send user to index if not logged in
 					if(!isset($_SESSION['id'])){
-						header("Location: /login_page.php");
+						?><script> window.location.replace("/login_page.php"); </script><?php
+						exit();
 					}
 					// send user to verify if not verified
 					else if(!$_SESSION['verified']){
-						header("Location: /verify.php");
+						?><script> window.location.replace("/verify.php"); </script><?php
+						exit();
+					}
+					else if($_SESSION['resetPW']){
+						?><script> window.location.replace("/edit.php"); </script><?php
+						exit();
 					}
 						
 					require($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');

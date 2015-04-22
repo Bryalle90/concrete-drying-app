@@ -40,10 +40,12 @@ CREATE TABLE user (
 	email varchar(254),
 	userPass varchar(80),
 	code varchar(60),
+	forgotCode varchar(60),
 	createdTime varchar(16),
 	isAdmin char(1),
 	isValidated tinyint(1),
 	seenNotifMsg tinyint(1),
+	forceNewPass tinyint(1),
 	PRIMARY KEY(userID)
 );
 

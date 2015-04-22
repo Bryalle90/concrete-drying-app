@@ -65,6 +65,7 @@
 							if($userdb->verifyLogin($_SESSION['email'], $_POST['tb_pass']) == $_SESSION['id']){
 								if($_POST['tb_newPass'] == $_POST['tb_newPass2']){
 									$userdb->changePassword($_SESSION['id'], $_POST['tb_newPass']);
+									$_SESSION['resetPW'] = 0;
 									echo '
 									<div class="alert alert-success" role="alert">
 										Your password has been changed
@@ -131,6 +132,14 @@
 						</div>
 						';
 					}
+				}
+				if($_SESSION['resetPW']){
+					echo '
+					<div class="alert alert-danger" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						You must change your password
+					</div>
+					';
 				}
 				include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 				?>

@@ -28,8 +28,8 @@ class DbUser {
 		$time = date('Y-m-d H:i:s', strtotime('now'));
 		$code = $this->createCode();
 
-		$sql = "INSERT INTO user (name, email, userPass, code, createdTime, isAdmin, isValidated, seenNotifMsg)
-		VALUES ('$name', '$email', '$hashedPass', '$code', '$time', '$isAdmin', 0, 0)";
+		$sql = "INSERT INTO user (name, email, userPass, code, forgotCode, createdTime, isAdmin, isValidated, seenNotifMsg, forceNewPass)
+		VALUES ('$name', '$email', '$hashedPass', '$code', '$time', '$isAdmin', 0, 0, 0)";
 		mysql_query($sql);
 
 		$id = $this->isUser($email);
@@ -81,9 +81,67 @@ class DbUser {
 	}
 
 	public function validate($userID){
-		$sql = "UPDATE user SET isValidated = 1 WHERE userID = '$userID'";
 		$this->removeCode($userID);
+		$sql = "UPDATE user SET isValidated = 1 WHERE userID = '$userID'";
 		mysql_query($sql);
+	}
+	
+	public function randomPassword($len) {
+		$charPool = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+		$pass = array(); //remember to declare $pass as an array
+		$alphaLength = strlen($charPool) - 1; //put the length -1 in cache
+		for ($i = 0; $i < $len; $i++) {
+			$n = rand(0, $alphaLength);
+			$pass[] = $charPool[$n];
+		}
+		return implode($pass); //turn the array into a string
+	}
+	
+	public function resetPass($userID) {
+		$newPass = $this->randomPassword(10);
+		$newHash = $this->hashPass($newPass);
+		
+		// save new hash in user table
+		$sql = "UPDATE user SET userPass = '$newHash' WHERE userID = '$userID'";
+		mysql_query($sql);
+
+		$sql = "UPDATE user SET forgotCode = NULL WHERE userID = '$userID'";
+		mysql_query($sql);
+		
+		// make sure the user must reset their password when logging in
+		$sql = "UPDATE user SET forceNewPass = 1 WHERE userID = '$userID'";
+		mysql_query($sql);
+		
+		return $newPass;
+	}
+	
+	public function createForgotCode($userID){
+		$code = $this->createCode();
+
+		$sql = "UPDATE user SET forgotCode = '$code' WHERE userID = '$userID'";
+		mysql_query($sql);
+
+		return($code);
+	}
+	
+	public function getForceNewPass($userID){
+		$sql = "SELECT forceNewPass FROM user WHERE userID = '$userID'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
+	}
+
+	public function checkForgotCode($email, $code){
+		$sql = "SELECT userID FROM user WHERE forgotCode = '$code' AND email = '$email'";
+		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
+		$userID = mysql_result($result, 0);
+		return $userID;
 	}
 	
 	public function seenNotificationMsg($userID){
@@ -127,6 +185,9 @@ class DbUser {
 	public function changePassword($userID, $password){
 		$hashedPass = $this->hashPass($password);
 		$sql = "UPDATE user SET userPass = '$hashedPass' WHERE userID = '$userID'";
+		mysql_query($sql);
+
+		$sql = "UPDATE user SET forceNewPass = 0 WHERE userID = '$userID'";
 		mysql_query($sql);
 	}	
 

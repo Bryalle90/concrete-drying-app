@@ -64,6 +64,7 @@
 						$_SESSION = array();
 						session_destroy();
 						session_start();
+						
 						$projectdb = new DbProject();
 						
 						$_SESSION['id'] = $userID;
@@ -71,9 +72,11 @@
 						$_SESSION['email'] = $userdb->getEmail($userID);
 						$_SESSION['admin'] = $userdb->isUserAdmin($userID);
 						$_SESSION['verified'] = $userdb->getIsValidated($userID);
+						$_SESSION['resetPW'] = $userdb->getForceNewPass($userID);
 						$_SESSION['unacceptedProjects'] = count($projectdb->getUnacceptedProjects($userID));
 					} else {
-						header("Location: /login_page.php");
+						?><script> window.location.replace("/login_page.php"); </script><?php
+						exit();
 					}
 				}
 
@@ -117,8 +120,15 @@
 				}
 
 				// send user to projects if verified already
-				if(isset($_SESSION['verified']) && $_SESSION['verified'] && !isset($_GET['code']))
-					header("Location: /projects.php");
+				if(isset($_SESSION['verified']) && $_SESSION['verified'] && !isset($_GET['code'])){
+					if($_SESSION['resetPW']){
+						?><script> window.location.replace("/edit.php"); </script><?php
+						exit();
+					} else {
+						?><script> window.location.replace("/projects.php"); </script><?php
+						exit();
+					}
+				}
 
 				include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 

@@ -23,18 +23,25 @@
 			<div class="col-xs-offset-0 col-sm-offset-2 col-md-offset-3 col-xs-12 col-sm-8 col-md-6">
 			<?php
 				session_start();
-				
-				// send user to login page if not logged in
-				if(!isset($_SESSION['user']))
-					header("Location: /login_page.php");
-
+					
+				// send user to index if not logged in
+				if(!isset($_SESSION['id'])){
+					?><script> window.location.replace("/login_page.php"); </script><?php
+					exit();
+				}
 				// send user to verify if not verified
-				if(!$_SESSION['verified'])
-					header("Location: /verify.php");
-				
+				else if(!$_SESSION['verified']){
+					?><script> window.location.replace("/verify.php"); </script><?php
+					exit();
+				}
+				else if($_SESSION['resetPW']){
+					?><script> window.location.replace("/edit.php"); </script><?php
+					exit();
+				}
 				// send user to index if not an admin
-				if(!$_SESSION['admin'])
-					header("Location: /index.php");
+				else if(!$_SESSION['admin'])
+					?><script> window.location.replace("/index.php"); </script><?php
+					exit();
 				
 				include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 			?>
