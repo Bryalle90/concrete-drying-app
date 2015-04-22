@@ -40,8 +40,34 @@ class DbChangeInStateNotification {
 	}	
 
 	//gets the changeInStateNotificationID by using the project id
-	public function getchangeInStateNotificationID($projectID, $seriesID){
-		$sql = "SELECT changeInStateNotificationID FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID'";
+	public function getchangeInStateNotificationID($projectID){
+		$sql = "SELECT changeInStateNotificationID FROM changeInStateNotification WHERE projectID = '$projectID'";
+		$result = mysql_query($sql);	
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['changeInStateNotificationID'];
+		}
+		return $array;
+		}
+		
+	//Gets notifications for a project
+	public function getNotif($projectID){
+		$notifIDarray = $this->getchangeInStateNotificationID($projectID);
+		if($notifIDarray == Null)
+			return Null;
+		foreach($notifIDarray as $pID){
+			$projects[$pID]['seriesID'] = $this->getSeries($pID);
+			$projects[$pID]['time'] = $this->getTime($pID);
+			$projects[$pID]['currentZone'] = $this->getCurrentZone($pID);
+			$projects[$pID]['notifyZone'] = $this->getNotifyZone($pID);
+		}
+		return $projects;
+	}
+	
+	public function getSeries($changeInStateNotificationID){
+		$sql = "SELECT seriesID FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
@@ -49,8 +75,8 @@ class DbChangeInStateNotification {
 		return $result;
 	}
 	
-	public function getTime($projectID, $seriesID){
-		$sql = "SELECT time FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID'";
+		public function getTime($changeInStateNotificationID){
+		$sql = "SELECT time FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
@@ -58,8 +84,8 @@ class DbChangeInStateNotification {
 		return $result;
 	}
 	
-	public function getCurrentZone($projectID, $seriesID){
-		$sql = "SELECT currentZone FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID'";
+	public function getCurrentZone($changeInStateNotificationID){
+		$sql = "SELECT currentZone FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
@@ -67,8 +93,8 @@ class DbChangeInStateNotification {
 		return $result;
 	}
 	
-	public function getNotifyZone($projectID, $seriesID){
-		$sql = "SELECT notifyZone FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID'";
+	public function getNotifyZone($changeInStateNotificationID){
+		$sql = "SELECT notifyZone FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
