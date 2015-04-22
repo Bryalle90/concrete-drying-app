@@ -37,6 +37,12 @@ class DbProject {
 
 		//userProjectLookup table
 		$this->addUserToSharedProject($projectID, $ownerID, 1);	
+		
+		//Add orginal series to series table
+		include($_SERVER['DOCUMENT_ROOT'].'/classes/DbSeries.php');
+		$seriesdb= new DbSeries();
+		$seriesdb->addSeries($projectID, 'y', 0, 0);
+
 	}
 
 	//Adds to additional user to project lookup table
