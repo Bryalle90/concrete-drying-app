@@ -280,15 +280,6 @@ class DbUser {
 		
 		return($id);
 	}
-
-	//close the connection
-	public function disconnectdb(){
-		mysql_close($this->dbhandle);
-	}
-
-	public function __destruct(){
-		$this->disconnectdb();
-	}
 	
 	private function hashPass($pass){
 		return(password_hash($pass, PASSWORD_BCRYPT, array("cost" => 10)));

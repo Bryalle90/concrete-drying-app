@@ -95,15 +95,6 @@ class DbZipInfo {
 		$result = mysql_result($result, 0);
 		return $result;
 	}
-
-	//close the connection
-	public function disconnectdb(){
-		mysql_close($this->dbhandle);
-	}
-
-	public function __destruct(){
-		$this->disconnectdb();
-	}
 }
 
 ?>

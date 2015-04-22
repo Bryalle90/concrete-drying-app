@@ -39,15 +39,6 @@ class DbzipUpdate {
 		VALUES ('$zip', '$time')";
 		mysql_query($query);		
 	}
-
-	//close the connection
-	public function disconnectdb(){
-		mysql_close($this->dbhandle);
-	}
-
-	public function __destruct(){
-		$this->disconnectdb();
-	}
 }
 
 ?>

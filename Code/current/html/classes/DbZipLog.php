@@ -5,8 +5,6 @@
 //by: zach smith
 //last edited: 4/24/15
 
-require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
-
 class DbZipLog {
 	
 	private $dbhandle;
@@ -38,17 +36,7 @@ class DbZipLog {
 	public function deleteLogs(){
 		$sql = "DELETE FROM zipcodeLog WHERE *";
 		mysql_query($sql);
-	}	
-
-	//close the connection
-	public function disconnectdb(){
-		mysql_close($this->dbhandle);
 	}
-
-	public function __destruct(){
-		$this->disconnectdb();
-	}
-
 }
 
 ?>

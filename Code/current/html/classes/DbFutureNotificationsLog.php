@@ -36,17 +36,7 @@ class DbfutureNotificationLog {
 	public function deleteLogs(){
 		$sql = "DELETE FROM futureNotificationLog WHERE *";
 		mysql_query($sql);
-	}	
-
-	//close the connection
-	public function disconnectdb(){
-		mysql_close($this->dbhandle);
 	}
-
-	public function __destruct(){
-		$this->disconnectdb();
-	}
-
 }
 
 ?>

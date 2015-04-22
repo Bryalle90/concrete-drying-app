@@ -175,15 +175,6 @@ class DbWeather {
 		$sql = "UPDATE weather SET windSpeed = '$windSpeed' WHERE zipcode = '$zip' AND weatherTime = '$time'";
 		mysql_query($sql);
 	}
-
-	//close the connection
-	public function disconnectdb(){
-		mysql_close($this->dbhandle);
-	}
-
-	public function __destruct(){
-		$this->disconnectdb();
-	}
 }
 
 ?>
