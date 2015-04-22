@@ -22,12 +22,12 @@ class DbProject {
 	}
 	
 	//Adds to project table then adds to project lookup table
-	public function addToProjectTable($projectName, $location, $ownerID, $zipcode, $unit){
+	public function addToProjectTable($projectName, $location, $ownerID, $zipcode, $unit, $reminder){
 		$time = date('Y-m-d H:i:s', strtotime('now'));
 		
 		//project table
-		$sql = "INSERT INTO project (projectName, location, ownerID, zipcode, unit, addedTime)
-		VALUES ('$projectName', '$location', '$ownerID', '$zipcode', '$unit', '$time')";
+		$sql = "INSERT INTO project (projectName, location, ownerID, zipcode, unit, addedTime, reminder)
+		VALUES ('$projectName', '$location', '$ownerID', '$zipcode', '$unit', '$time', '$reminder')";
 		$result = mysql_query($sql);
 		
 		$sql = "SELECT projectID FROM project WHERE projectName = '$projectName' AND ownerID = '$ownerID'";
@@ -73,6 +73,11 @@ class DbProject {
 
 	public function changeProjectTime($projectID, $time){
 		$sql = "UPDATE project SET addedTime = '$time' WHERE projectID = '$projectID'";
+		mysql_query($sql);
+	}
+
+	public function changeReminder($projectID, $time){
+		$sql = "UPDATE project SET reminder = '$time' WHERE projectID = '$projectID'";
 		mysql_query($sql);
 	}
 
@@ -134,6 +139,7 @@ class DbProject {
 			$projects[$pID]['userIDs'] = $this->getUsersOfProject($pID);
 			$projects[$pID]['unit'] = $this->getUnit($pID);
 			$projects[$pID]['accepted'] = $this->getAccepted($pID, $userID);
+			$projects[$pID]['reminder'] = $this->getReminder($pID);
 		}
 		return $projects;
 	}
@@ -167,49 +173,96 @@ class DbProject {
 	public function getName($projectID){
 		$sql = "SELECT projectName FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
 		$result = mysql_result($result, 0);
+
 		return $result;
 	}
 
 	public function getLocation($projectID){
 		$sql = "SELECT location FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
 		$result = mysql_result($result, 0);
+
 		return $result;
 	}
 
 	public function getZipcode($projectID){
 		$sql = "SELECT zipcode FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
 		$result = mysql_result($result, 0);
+
 		return $result;
 	}
 
 	public function getOwner($projectID){
 		$query = "SELECT ownerID FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($query);
-		$ownerID = mysql_result($result, 0);
-		return $ownerID;
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
+		$result = mysql_result($result, 0);
+
+		return $result;
 	}
 
 	public function getUnit($projectID){
 		$sql = "SELECT unit FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
 		$result = mysql_result($result, 0);
+
 		return $result;
 	}
 
 	public function getAccepted($projectID, $userID){
 		$sql = "SELECT accepted FROM userProjectLookup WHERE projectID = '$projectID' AND userID = '$userID'";
 		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
 		$result = mysql_result($result, 0);
+
 		return $result;
 	}
 
 	public function getTime($projectID){
 		$sql = "SELECT addedTime FROM project WHERE projectID = '$projectID'";
 		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
 		$result = mysql_result($result, 0);
+
+		return $result;
+	}
+
+	public function getReminder($projectID){
+		$sql = "SELECT reminder FROM project WHERE projectID = '$projectID'";
+		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+
+		$result = mysql_result($result, 0);
+
 		return $result;
 	}
 

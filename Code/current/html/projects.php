@@ -11,11 +11,13 @@
 		<script src="bootstrap/js/bootstrap.min.js"></script>
 		
 		<!-- Bootstrap core CSS -->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<!-- Bootstrap theme -->
 		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
+		<link href="bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+		
 		<style>
 			.btn-xl {
 				padding: 18px 28px;
@@ -58,7 +60,7 @@
 				};
 				
 				this.editProject = function () {
-					var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="hidden" name="edit" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /><input type="hidden" name="newName" value="'+document.getElementById("editName-"+this.index).value+'" /><input type="hidden" name="newZip" value="'+document.getElementById("editZip-"+this.index).value+'" /><input type="hidden" name="newUnit" value="'+document.getElementById("editUnit-"+this.index).value+'" /></form>');
+					var formElement = $('<form action="/projects.php" method="post" style="display:none;"><input type="hidden" name="edit" value=""/><input type="hidden" name="projectID" value="'+this.projectID+'" /><input type="hidden" name="newName" value="'+document.getElementById("editName-"+this.index).value+'" /><input type="hidden" name="newZip" value="'+document.getElementById("editZip-"+this.index).value+'" /><input type="hidden" name="newUnit" value="'+document.getElementById("editUnit-"+this.index).value+'" /><input type="hidden" name="newReminder" value="'+document.getElementById("editReminder-"+this.index).value+'" /></form>');
 					$('body').append(formElement);
 					$(formElement).submit();
 					
@@ -127,37 +129,38 @@
 									$weatherService->getWeatherData();
 									$location = $city.', '.$state;
 									$title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
-									$unit = $_POST['newProjectUnit'] = 'Standard' ? 'S' : 'M';
-									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], $unit);
+									$unit = $_POST['newProjectUnit'] == 'Standard' ? 'S' : 'M';
+									$reminder = $_POST['reminder'] == '' ? NULL : $_POST['reminder'];
+									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], $unit, $reminder);
 									
 									echo '
 									<div class="alert alert-success" role="alert">
-										Your new project has been added!
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										Your new project has been added!
 									</div>
 									';
 								}
 								catch (Exception $error){
 									echo '
 									<div class="alert alert-danger" role="alert">
-										invalid zipcode: Could not get data for zip code
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										invalid zipcode: Could not get data for zip code
 									</div>
 									';
 								}
 							} else {
 								echo '
 								<div class="alert alert-danger" role="alert">
-									invalid zipcode: Could not get coordinates for zip code
 									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									invalid zipcode: Could not get coordinates for zip code
 								</div>
 								';
 							}
 						} else {
 							echo '
 							<div class="alert alert-danger" role="alert">
-								You must enter a zip code to create a project
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								You must enter a zip code to create a project
 							</div>
 							';
 						}
@@ -225,6 +228,15 @@
 								</div>
 								';
 							}
+							if($projectdb->getReminder($_POST['projectID']) != $_POST['newReminder']){
+								$projectdb->changeReminder($_POST['projectID'], $_POST['newReminder']);
+								echo '
+								<div class="alert alert-success" role="alert">
+									The reminder for your project has been changed
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								</div>
+								';
+							}
 						} else {
 							echo '
 							<div class="alert alert-danger" role="alert">
@@ -287,11 +299,11 @@
 	<div class="modal fade" id="newProjectModal" tabindex="-1" role="dialog" aria-labelledby="newProjectLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content container-fluid">
-				<form class="form-horizontal" action="/projects.php" method="post">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h4 class="modal-title" id="newProjectLabel">Create New Project</h4>
 					</div>
+				<form class="form-horizontal" action="/projects.php" method="post">
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-xs-12">
@@ -314,16 +326,25 @@
 									</select>
 								</div>
 								<div class="form-group">
-									<label for="newProjectZip" class="control-label">Future Date?</label>
-									<div class="input-group">
-										<span class="input-group-addon">
-											<input type="checkbox" title="Get notified when this date is in range.">
-										</span>
-										<input name="futureDay" type="text" class="form-control" placeholder="Day">
-										<input name="futureMonth" type="text" class="form-control" placeholder="Month">
-										<input name="futureYear" type="text" class="form-control" placeholder="Year">
+									<label for="reminder" class="control-label">Remind me</label>
+									<div class="input-group date form_date col-xs-12" data-date="" data-date-format="yyyy-mm-dd" data-link-field="reminder" data-link-format="yyyy-mm-dd">
+										<input class="form-control" type="text" name="reminder" value="" readonly>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 									</div>
 								</div>
+								<script type="text/javascript" src="bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+								<script type="text/javascript" src="bootstrap/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+								<script>
+								$('.form_date').datetimepicker({
+									language:  'en',
+									startDate: new Date(),
+									weekStart: 0,
+									autoclose: 1,
+									startView: 3,
+									minView: 2,
+								});
+								</script>
 							</div>
 						</div>
 					</div>
