@@ -47,7 +47,10 @@ function Main(zipCode, metric) {
         humidPercent = humidity / 100;
         atemp = Math.pow(airTemperature, 2.5);
         wspd = 1 + (0.4 * windSpeed);
-        evap = (ctemp - (humidPercent * atemp)) * wspd * Math.pow(10, -6)
+        evap = (ctemp - (humidPercent * atemp)) * wspd * Math.pow(10, -6);
+        if (evap < 0.00) {
+            evap = 0;
+        }
         return (evap);
     };
     
@@ -181,6 +184,19 @@ function Main(zipCode, metric) {
 
     this.getCloudCoverArray = function() {
         return this.cloudCoverArray;
+    };
+    
+    this.getColor = function(numberOfSeries) {
+        seriesColor = '';
+      if (numberOfSeries == 1) { seriesColor = 'rgba(48,156,252,1)'; }
+			else if (numberOfSeries == 2) { seriesColor = 'rgba(176,115,7,1)'; }
+			else if (numberOfSeries == 3) { seriesColor = 'rgba(237,175,57,1)'; }
+			else if (numberOfSeries == 4) { seriesColor = 'rgba(212,52,194,1)'; }
+			else if (numberOfSeries == 5) { seriesColor = 'rgba(100,26,252,1)'; }
+			else if (numberOfSeries == 6) { seriesColor = 'rgba(251,133,13,1)'; }
+			else if (numberOfSeries == 7) { seriesColor = 'rgba(212,129,130,1)'; }
+			else { seriesColor = 'rgba(1,1,1,1)'; }
+                        return seriesColor;
     };
 }
 

@@ -1,68 +1,56 @@
 <!--
 Author: Daniel Grote
 file - graph.html
-uses: 
-
 
 Desc: This file generates the graph
 -->
 
-<!--Add Notfication Button. onSubmit check to make sure it is the orginal data -->
-<!--$_POST['projectID'] if set thats project. 
-<!--Container that the chart is in -->
 <div class="bs-example">
-    <div class="alert alert-success" id='notifSuccess' role="alert" align="center">
-        <a href="#" class="close" >&times;</a>
-        <strong>Success!</strong> Your notification has successfully been saved.
-    </div>
+	<div class="alert alert-success" id='notifSuccess' role="alert" align="center">
+		<a href="#" class="close" >&times;</a>
+		<strong>Success!</strong> Your notification has successfully been saved.
+	</div>
 </div>
 <div class="bs-example">
-    <div class="alert alert-success" id='emailSuccess' role="alert" align="center">
-        <a href="#" class="close">&times;</a>
-        <strong>Success!</strong> Your E-mail has succesfully been sent.
-    </div>
+	<div class="alert alert-success" id='emailSuccess' role="alert" align="center">
+		<a href="#" class="close">&times;</a>
+		<strong>Success!</strong> Your E-mail has succesfully been sent.
+	</div>
 </div>
-
-
 
 <?php
-
 if(isset($_POST['projectID']))
 {
 	?>
 	<script> var isProject = true;</script>
+	
 	<?php
 	include($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
 	include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
 	$projectID = $_POST['projectID'];
-
 	$projectdb= new DbProject();
-	
 	$userdb = new DbUser();
 	$userID = $_SESSION['id'];
+	
 	if($projectdb->getOwner($projectID) == $userID)
 	{
 		$isOwner = true;
-		
 		if ($userdb->getSeenNotificationMsg($userID) == 0)
 		{
-		
-		
 		?>
-		
 		<div class="alert alert-info" id ='notifInfo' role="alert" align="center">
-		<a href="#" class="close">&times;</a>
-		Click a point to add a notification
-		<br>
-		<input type="checkbox" name="checkbox" id='checkbox' value="0" onclick=<?php $userdb->seenNotificationMsg($userID); ?>> Check this box to never display this message 
+			<a href="#" class="close">&times;</a>Click a point to add a notification<br>
+			<input type="checkbox" name="checkbox" id='checkbox' value="0" onclick=<?php $userdb->seenNotificationMsg($userID); ?>> Check this box to never display this message 
 		</div>
 		<?php
 		}
 	}
+	
 	else
 	{
 		$isOwner = false;
 	}
+	
 	$name = $projectdb->getName($_POST['projectID']);
 	?>
 	<script>
@@ -71,13 +59,11 @@ if(isset($_POST['projectID']))
 	var isOwner = (<?php echo json_encode($isOwner)?>);
 	var userID = (<?php echo json_encode($userID)?>);
 	var yLevel = 30;
-	
-	
 	</script>
 	<?php
-	
 }
-else {
+else
+{
 	?>
 	<script>
 	var isProject = false;
@@ -87,15 +73,14 @@ else {
 	</script>
 	<?php
 }
-
 ?>
 
 <div id="report"></div>
+
+<!--Container that the chart is in -->
 <div id="container" style="height:70vh; min-height:400px; min-width: 1050px;"></div>
 
 <script>
-
-	
 	var currentZone;
 	var notifTimeID;
 	var seriesNotifID;
@@ -108,7 +93,6 @@ else {
 	var city = main.getCity();
 	var state = main.getState();
 	var resetButton = false;
-	
 	var plotBandUpperBoundary = 5.0000;
 	var plotBandRedYellowBoundary = 0.2001;
 	var plotBandYellowGreenBoundary = 0.1501
@@ -128,7 +112,6 @@ $(function () {
 	var cloudCoverArray = main.getCloudCoverArray();
 	var windSpeedArray = main.getWindSpeedArray();
 	var originalWindSpeedArray = windSpeedArray;
-
 	var zipCode = main.getZipCode();
 	var isMetric = main.isMetric();	
 	var arrayLength = evapArray.length;
@@ -186,13 +169,14 @@ $(function () {
 	var evaporationRateLabel = "";
 	var temperatureLabel = "";
 	var windLabel = "";
-	if (projectName == null) {
+	
+	if (projectName == null)
+	{
 		var title = city + ', ' + state + ' ' + zipCode;
 	}
 	else if (projectName != null) {
 		var title = 'Project: ' + projectName + '<br>' +city + ', ' + state + ' ' + zipCode;
 	}
-	
 	
 	//Add suffixes of labels 
 	//If metric assign metric labels
@@ -202,14 +186,11 @@ $(function () {
 		evaporationRateLabel = ' kg/m'+'\xB2'+'/hr</b>';
 		temperatureLabel = '\xB0'+'C';
 		windLabel = 'kph';
-		
 		lowerBoundConcreteTemp = 4.4;
 		upperBoundConcreteTemp = 37.2;
 		lowerBoundWindSpeed = 0.0;
 		upperBoundWindSpeed = 56.3;
 		
-	
-	
 		for (i = 0; i< arrayLength; i++)
 		{
 			insideWindSpeed[i] = 1.61;
@@ -232,14 +213,12 @@ $(function () {
 		{
 			insideWindSpeed[i] = 1;
 		}
-		
 	}
 	
 	document.getElementById("concreteTemp").min = lowerBoundConcreteTemp;
 	document.getElementById("concreteTemp").max = upperBoundConcreteTemp;
 	document.getElementById("cTempLabel").innerHTML = temperatureLabel;
 
-	
 	//Format dates and times
 	for (var i=0; i<arrayLength; i++)
 	{
@@ -249,34 +228,7 @@ $(function () {
 		month[i] = partsArray[1];
 		day[i] = partsArray[2];
 		hour[i] = partsArray[3];
-
 		var d = new Date(partsArray[0], ((partsArray[1]) - 1), partsArray[2], partsArray[3], 0, 0, 0);
-
-		//Convert 24 hour time to 12 hour time
-		/*
-		if (hour[i] > 12)
-		{
-			hour[i] = (hour[i] - 12)+ 'PM';// PM';
-		}
-		
-		else if (hour[i] == 0 )
-		{
-			hour[i] = 12 + 'AM';
-			//+ ':00 AM';
-		}
-
-		else if (hour[i] == 12)
-		{
-			hour[i] = 'Noon';
-		}
-		
-		else
-		{
-			//Subtracting 0 formats date correctly.
-			hour[i] = (hour[i] - 0) + 'AM';
-			//+ ':00 AM';
-		}
-		*/
 		year[i] = d.getFullYear().toString().substr(2,2);
 		nameOfMonth[i] = monthname[d.getMonth()];
 		nameOfDay[i] = weekday[d.getDay()];
@@ -289,7 +241,6 @@ $(function () {
 	var fullDate = [];
 	groupedLabels = [];
 	d = []
-	
 	var j=0;
 	var x=0;
 	dayName = [];
@@ -303,123 +254,58 @@ $(function () {
 	var six = [];
 	var seven = [];
 	zero[0] = hour[0];
+	
 	//Set Labels for x-axis
-	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + day[0] + " " + hour[0] + ":00";
-
+	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + day[0] + " at " + hour[0] + ":00";
 	labelDate[0] = hour[0] +", "+ nameOfDay[0];
 	
 	for (var i = 1; i < arrayLength; i++)
 	{
-		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + day[i] + " " + hour[i] + ":00";
+		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + day[i] + " at " + hour[i] + ":00";
 		labelDate[i] = hour[i] +", "+ nameOfDay[i];
 	
 		if (nameOfDay[i] == nameOfDay[i-1])
 		{
 			x += 1;
-			if (j == 0)
-			{
-				zero[x] = hour[i];
-			}
-			
-			if (j == 1)
-			{
-				one[x] = hour[i];
-			}
-			
-			if (j == 2)
-			{
-				two[x] = hour[i];
-			}
-			
-			if (j == 3)
-			{
-				three[x] = hour[i];
-			}
-			
-			if (j == 4)
-			{
-				four[x] = hour[i];
-			}
-			
-			if (j == 5)
-			{
-				five[x] = hour[i];
-			}
-			
-			if (j == 6)
-			{
-				six[x] = hour[i];
-			}
-			
-			if (j == 7)
-			{
-				seven[x] = hour[i];
-			}
+			if (j == 0) { zero[x] = hour[i]; }
+			if (j == 1) { one[x] = hour[i]; }
+			if (j == 2) { two[x] = hour[i]; }
+			if (j == 3) { three[x] = hour[i]; }
+			if (j == 4) { four[x] = hour[i]; }
+			if (j == 5) { five[x] = hour[i]; }
+			if (j == 6) { six[x] = hour[i]; }
+			if (j == 7) { seven[x] = hour[i]; }
 		}
 		
 		else
 		{
 			x = 0;
 			j += 1;
-			
-			if (j == 0)
-			{
-				zero[0] = hour[i];
-			}
-			
-			if (j == 1)
-			{
-				one[0] = hour[i];
-			}
-			
-			if (j == 2)
-			{
-				two[0] = hour[i];
-			}
-			
-			if (j == 3)
-			{
-				three[0] = hour[i];
-			}
-			
-			if (j == 4)
-			{
-				four[0] = hour[i];
-			}
-			
-			if (j == 5)
-			{
-				five[0] = hour[i];
-			}
-			
-			if (j == 6)
-			{
-				six[0] = hour[i];
-			}
-			
-			if (j == 7)
-			{
-				seven[0] = hour[i];
-			}
-			
+			if (j == 0) { zero[0] = hour[i]; }
+			if (j == 1) { one[0] = hour[i]; }
+			if (j == 2) { two[0] = hour[i]; }
+			if (j == 3) { three[0] = hour[i]; }
+			if (j == 4) { four[0] = hour[i]; }
+			if (j == 5) { five[0] = hour[i]; }
+			if (j == 6) { six[0] = hour[i]; }
+			if (j == 7) { seven[0] = hour[i]; }
 			dayName[j] = nameOfDay[i]; 
 		}
-	
-	
 	}
 
 	//Chart Configuration
 	$('#container').highcharts
 	({
-		chart: {
+		chart:
+		{
 			//type: 'scatter'
 		},
+		
 		//title configuration
 		title: 
 		{
 			text: title,
 			 x: -40 //center
-			 
 		},
 
 		//Subtitle configuration
@@ -446,7 +332,6 @@ $(function () {
 			layout: 'vertical',
 			y: 50,
 			x: 10
-			
 		},
 
 		//x-axis configuration
@@ -454,9 +339,8 @@ $(function () {
 		{
 			minPadding: 0,
 			maxPadding: 0,
-			title:{
-				text: timezone
-			},
+			
+			title: { text: timezone },
 			
 			//x axis labels
 			categories:
@@ -500,16 +384,11 @@ $(function () {
 				categories: seven
 			}],
 			
-			
 			//x axis label configuration
 			labels:
 			{
 				rotation: 0,
-
-				style:
-				{
-					fontSize: '11px'
-				},
+				style: { fontSize: '11px' },
 			},
 		},
 		
@@ -523,10 +402,7 @@ $(function () {
 			maxPadding: 0,
 			
 			//Title of y-axis
-			title:
-			{
-				text: yaxislabel
-			},
+			title: { text: yaxislabel },
 
 			//Plot band configuration
 			plotBands:
@@ -603,10 +479,7 @@ $(function () {
 			borderWidth: 0,
 			//padding: 5,
 			//z: 20,
-			style:
-			{
-				padding: 0
-			},
+			style: { padding: 0 },
 
 			//Tooltip Formatter
 			formatter: function()
@@ -619,23 +492,14 @@ $(function () {
 				var index = this.point.series.xData.indexOf(this.point.x);
 				
 				//Sets border color of tooltip
-				// If evap rate is over .2 then Red tooltip border
-				if (this.y > ModerateRiskBoundary)
-				{
-					tmpColor = red;
-				}
+				//If evap rate is over .2 then Red tooltip border
+				if (this.y > ModerateRiskBoundary) { tmpColor = red; }
 				
 				//yellow border
-				else if (this.y > lowRiskBoundary && this.y <= ModerateRiskBoundary)
-				{
-					tmpColor = yellow;
-				}
+				else if (this.y > lowRiskBoundary && this.y <= ModerateRiskBoundary) { tmpColor = yellow; }
 				
 				//Green border
-				else
-				{
-					tmpColor = green;
-				}
+				else { tmpColor = green; }
 				
 				if (this.series.name == 'Original Prediction')
 				{
@@ -648,45 +512,41 @@ $(function () {
 					wind = insideWindSpeed;
 					concreteTemp = concTempArray;
 				}
+				
 				else if (this.series.name.length >= 26)
 				{
 					str = this.series.name
-					if (isMetric) {
-						
-						newConcreteTemp = parseFloat(str.match(/[\d\.]+/))
-						//newConcreteTemp = newConcreteTemp.join("");
+					
+					if (isMetric)
+					{
+						newConcreteTemp = parseFloat(str.match(/[\d\.]+/));
 					}
-					else{
 					
+					else
+					{
 					newConcreteTemp = str.match(/\d/g);
-					
 					newConcreteTemp = newConcreteTemp.join("");
 					}
 
 					//Inside
 					if (str.indexOf("Inside") > -1)
-					
 					{
 						for (var i=0; i <arrayLength; i++)
 						{
 							concreteTemp[i] = newConcreteTemp;
 							wind[i] = insideWindSpeed[i];
 						}
-
 					}
 					
 					//Outside
 					else
 					{
-						//alert('asdfasdf');
 						for (var i=0; i <arrayLength; i++)
 						{
 							concreteTemp[i] = newConcreteTemp;
 							wind[i] = windSpeedArray[i];
 						}
-
-					}
-					
+					}	
 				}
 				
 				var s = '<div style= "padding: 10px; border: 3px solid '+tmpColor+';">';
@@ -708,7 +568,6 @@ $(function () {
 						suggestedModConcTemp = main.getLowerRiskTemp(ModerateRiskBoundary, wind[index], humidityArray[index], airTempArray[index] );
 						s+= '<br/> \u2022 Concrete temp needed for moderate risk: ' + main.round(suggestedModConcTemp, 2) + temperatureLabel;
 						s+= '<br/> \u2022 Concrete temp needed for low risk: ' + main.round(suggestedLowConcTemp, 2) + temperatureLabel;
-
 					}
 
 					//If evaporationg rate has a moderate risk
@@ -719,10 +578,13 @@ $(function () {
 					}
 					
 					//Add hot/cold weather warnings
-					if (concreteTemp[index] <= coldWeatherConcTemp) {
+					if (concreteTemp[index] <= coldWeatherConcTemp)
+					{
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting<div>';
 					}
-					else if (concreteTemp[index] >= hotWeatherConcTemp) {
+					
+					else if (concreteTemp[index] >= hotWeatherConcTemp)
+					{
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting<div>';
 					}
 				}//end if
@@ -747,28 +609,29 @@ $(function () {
 					}
 					
 					//Add hot/cold weather warnings
-					if (main.convertCtoF(concreteTemp[index]) <= coldWeatherConcTemp) {
+					if (main.convertCtoF(concreteTemp[index]) <= coldWeatherConcTemp)
+					{
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting<div>';
 					}
-					else if (main.convertCtoF(concreteTemp[index]) >= hotWeatherConcTemp) {
+					
+					else if (main.convertCtoF(concreteTemp[index]) >= hotWeatherConcTemp)
+					{
 						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting<div>';
 					}
-				}//end else
+				}//end else metric
 				
 				//return tooltip string
-				s+= '</div>'
+				s+= '</div>';
 				return s;
-			},
-		},
+			}, //End tooltip formatter
+		}, //End Tooltip
 		
 		//Plot Configuration
 		plotOptions:
 		{
-			
 			//Series Configurations
 			series:
 			{
-				
 				color: 'black',
 				cursor: 'pointer',
 				allowPointSelect: true,
@@ -776,33 +639,44 @@ $(function () {
 				
 				events:
 				{
-
-				
 					hide: function()
 					{
 						this.show();
+						
 						if (this.name == 'Original Prediction')
 						{
 							alert('Can not delete Original Prediction');
 						}
 						else
 						{
-							
+							//If a project delete from the database and remove from graph
+							if (isProject)
+							{
+								$.ajax({
+									url: '/removeSeries.php',
+									type: 'post',
+									data: {sID: this.options.id},
+									
+									success: function(response)
+									{
+										
+									}
+									});
+							}
+							//Else just remove the series
+							else { this.remove(); }
 							this.remove();
 						}
+						
+						
 					},
 				},
+				
 				point:
 				{
-					
 					events:
 					{
-						mouseout: function()
-						{
-							this.chart.tooltip.hide();
-						},
-						
-			
+						mouseout: function() { this.chart.tooltip.hide(); },
 						
 						click: function()
 						{
@@ -810,62 +684,52 @@ $(function () {
 							{
 								if (isOwner == true)
 								{
-
-								
-								notifTimeID = fullDate[this.x];
-								seriesNotifID = this.series.name;
-								//alert(this.series[0].id);
-								
-								
-								//code
+									//c =$('#container').highcharts();
+									notifTimeID = fullDate[this.x];
+									seriesNotifID = this.series.options.id;
+									document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ fullDate[this.x];
 							
-							document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ fullDate[this.x];
+									if (this.y <= 0.15)
+									{
+										currentZone = 'Low Risk';
+										document.getElementById("notif1").innerHTML = 'Moderate Risk';
+										document.getElementById("notif2").innerHTML = 'High Risk';
+										document.getElementById("notif3").innerHTML = 'Moderate or High Risk';
+									}
 							
-							//riskZone = main.findRiskZone(this.y);
-							 if (this.y <= 0.15)
-							 {
-								currentZone = 0;
-								document.getElementById("notif1").innerHTML = 'Moderate Risk';
-								document.getElementById("notif2").innerHTML = 'High Risk';
-								document.getElementById("notif3").innerHTML = 'Moderate or High Risk';
-							}
+									else if (this.y <= 0.20)
+									{
+										currentZone = 'Moderate Risk';
+										document.getElementById("notif1").innerHTML = 'Low Risk';
+										document.getElementById("notif2").innerHTML = 'High Risk';
+										document.getElementById("notif3").innerHTML = 'Low or High Risk';
+									}
 							
-							 else if (this.y <= 0.20)
-							 {
-								currentZone = 1;
-								document.getElementById("notif1").innerHTML = 'Low Risk';
-								document.getElementById("notif2").innerHTML = 'High Risk';
-								document.getElementById("notif3").innerHTML = 'Low or High Risk';
-							}
-							else
-							{
-								currentZone = 2;
-								document.getElementById("notif1").innerHTML = 'Low Risk';
-								document.getElementById("notif2").innerHTML = 'Moderate Risk';
-								document.getElementById("notif3").innerHTML = 'Low or Moderate Risk';
-							}
+									else
+									{
+										currentZone = 'High Risk';
+										document.getElementById("notif1").innerHTML = 'Low Risk';
+										document.getElementById("notif2").innerHTML = 'Moderate Risk';
+										document.getElementById("notif3").innerHTML = 'Low or Moderate Risk';
+									}
 							
-							
-							$(document).ready(function(){
-							$("#notificationModal").modal('show');}
-							);
+									$(document).ready(function(){
+									$("#notificationModal").modal('show');});
 								}
-								else {
+								
+								else
+								{
 									alert('Must be project owner to add a notification.')
 								}
 							}
-							
-						}
+						}//end click event
 					}
-				}
-			},
-		},
+				}//end point
+			},//end series
+		},//end plot options
 
 		//Credits disabled
-		credits:
-		{
-			enabled: false
-		},
+		credits: { enabled: false },
 
 		//Data - Evaporation rates for times
 		series:
@@ -873,7 +737,7 @@ $(function () {
 			name: 'Original Prediction',
 			data: evapArray,
 			lineWidth: 2,
-			//id: 0
+			id: 'original'
 		}],
 
 		lang:
@@ -881,7 +745,6 @@ $(function () {
 			download_key: 'Click here to download the graph',
 			email_key: 'Click here to email the graph',
 			print_key: 'Click here to print the graph'
-			
 		},
 		
 		navigation:
@@ -894,33 +757,21 @@ $(function () {
 					stroke: 'silver',
 					states:
 					{
-						hover:
-						{
-							//fill: '#bada55'
-						},
-						select:
-						{
-							stroke: '#039',
-							//fill: '#bada55'
-						}
+						hover: { },
+						select: { stroke: '#039', }
 					}
 				}
 			},
-        },
+		}, //end navigation
 		
 		//Exporting options. Added "Options" text next to export button.
 		exporting:
 		{
 			buttons:
 			{
-				contextButton:
-				{
-					//text: "Options",
-					//_titleKey: 'some_key',
-					//x: -160,
-					enabled: false
-
-				},
+				contextButton: { enabled: false },
+				
+				//Download Graph Button
 				exportButton:
 				{
 					text: 'Download Graph',
@@ -930,19 +781,17 @@ $(function () {
 					menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2)
 				},
 				
+				//Print Graph Button
 				printButton:
 				{
 					text: 'Print Graph',
 					_titleKey: 'print_key',
 					x: -279,
 					y: yLevel,
-					onclick: function ()
-					{
-
-						this.print();
-					}
+					onclick: function () { this.print(); }
 				},
 				
+				//Email Graph Button
 				emailButton:
 				{
 					text: 'Email Graph',
@@ -954,30 +803,13 @@ $(function () {
 							$(document).ready(function(){
 							$("#emailModal").modal('show');});
 						}
-					
 				}
-				/*
-				customButton:
-				{
-					onclick: function ()
-					{
-						var chartN = $('#container').highcharts();
-						chartN.series[1].hide();
-
-					},
-					text: 'Reset Graph',
-					enabled: resetButton
-
-				},
-				*/
-
 			}
-		}
-	});
+		} //end exporting
+	}); //end chart config
 
 	$("#ResetButton").click(function()
 	{
-		
 		var chartN = $('#container').highcharts();
 		chartN.redraw();
 		for (var ii = 0; ii < arrayLength; ii++)
@@ -985,193 +817,330 @@ $(function () {
 			evapArray[ii] = originalEvapArray[ii];
 			concTempArray[ii] = originalConcTempArray[ii];
 			windSpeedArray[ii] = originalWindSpeedArray[ii];
-			
 			//Update chart
-			
 			//chartN.series[0].data[ii].update(evapArray[ii]);
 			//chartN.series[0].update(chartN.series[0].data[ii].options);
 			//chart.tooltip.refresh(chart.series[0].points[ii]);
 		}
-		
 		//chart.series[0].setData(originalEvapArray)
-
 		chartN.redraw();
 		isOriginalGraph = true;
 	});
 	
 	$("#sbutton").click(function()
 	{
-		
 		cTemp = document.getElementById("concreteTemp").value;
 		
-		if (isMetric) {
-			if (cTemp != '') {
-				cTemp = parseFloat(cTemp).toFixed(2);
-			}
-			
+		if (isMetric)
+		{
+			if (cTemp != '') { cTemp = parseFloat(cTemp).toFixed(2); }	
 		}
-		else{
-			if (cTemp != '') {
+		
+		else
+		{
+			if (cTemp != '')
+			{
 				//TODO handle if ctemp = 0 and in standard
 				cTemp = parseInt(cTemp);
 			}
 		}
 	
-		
 		windS = document.getElementById("windSpeed").value;
 		
-		if (cTemp < lowerBoundConcreteTemp && cTemp != '') {
+		if (cTemp < lowerBoundConcreteTemp && cTemp != '')
+		{
 			alert('Concrete temperature must be higher than '+ lowerBoundConcreteTemp + temperatureLabel);
 		}
-		else if (cTemp > upperBoundConcreteTemp && cTemp != '') {
+		
+		else if (cTemp > upperBoundConcreteTemp && cTemp != '')
+		{
 			alert('Concrete temperature must be lower than than '+ upperBoundConcreteTemp + temperatureLabel);
 		}
+		
 		else
 		{
-		
-		seriesName = '';
-		newEvapArray = [];
-		seriesColor = 'rgba(1,1,1,1)';
-		var chart = $('#container').highcharts();
-		
-		if (numberOfSeries == 1) {
-			seriesColor = 'rgba(48,156,252,1)';
-		}
-		else if (numberOfSeries == 2) {
-			seriesColor = 'rgba(176,115,7,1)';
-		}
-				else if (numberOfSeries == 3) {
-			seriesColor = 'rgba(237,175,57,1)';
-		}
-				else if (numberOfSeries == 4) {
-			seriesColor = 'rgba(212,52,194,1)';
-		}
-				else if (numberOfSeries == 5) {
-			seriesColor = 'rgba(100,26,252,1)';
-				}
-				else if (numberOfSeries == 6) {
-			seriesColor = 'rgba(251,133,13,1)';
-		}
-				else if (numberOfSeries == 7) {
-			seriesColor = 'rgba(212,129,130,1)';
-		}
-				else {
+			seriesName = '';
+			newEvapArray = [];
 			seriesColor = 'rgba(1,1,1,1)';
-		}
+			var chart = $('#container').highcharts();
 		
-		//If only outside is checked
-		if (windS == 'Outside' && cTemp == '') {
-			alert("Series already exists");
-			
-		}
+			if (numberOfSeries == 1) { seriesColor = 'rgba(48,156,252,1)'; }
+			else if (numberOfSeries == 2) { seriesColor = 'rgba(176,115,7,1)'; }
+			else if (numberOfSeries == 3) { seriesColor = 'rgba(237,175,57,1)'; }
+			else if (numberOfSeries == 4) { seriesColor = 'rgba(212,52,194,1)'; }
+			else if (numberOfSeries == 5) { seriesColor = 'rgba(100,26,252,1)'; }
+			else if (numberOfSeries == 6) { seriesColor = 'rgba(251,133,13,1)'; }
+			else if (numberOfSeries == 7) { seriesColor = 'rgba(212,129,130,1)'; }
+			else { seriesColor = 'rgba(1,1,1,1)'; }
+		
+			//If only outside and default concrete temp
+			if (windS == 'Outside' && cTemp == '') { alert("Series already exists"); }
 	
-		// Else if inside is checked and empy concrete temp
-		else if (windS == 'Inside' && cTemp == '')
-		{
-			numberOfSeries = numberOfSeries + 1;
-			//alert ('Inside Wind Speed');
-			seriesName = 'Inside';
-			for (i = 0; i < arrayLength; i++)
+			// Else if inside and default concrete temp
+			else if (windS == 'Inside' && cTemp == '')
 			{
+				numberOfSeries = numberOfSeries + 1;
+				seriesName = 'Inside';
+			
+				for (i = 0; i < arrayLength; i++)
+				{
+					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], concTempArray[i]);
+				}
+			
+				chart.addSeries({
+					name: seriesName,
+					data: newEvapArray,
+					color: seriesColor,
+					dashStyle: 'dot',
+					lineWidth: 2
+					
+				}, false);
 				
-				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], concTempArray[i]);
-			}
-			chart.addSeries({
-				name: seriesName,
-				data: newEvapArray,
-				color: seriesColor,
-				dashStyle: 'dot',
-				lineWidth: 2
+				if (projectName != null)
+				{
+					if (cTemp == '') { cTemp = 'null'; }
+			
+					$.ajax({
+						url: '/addSeries.php',
+						type: 'post',
+						data: {pID: projectID,
+						isOriginal: 'n',
+						concrete: cTemp,
+						wind: windS},
 				
-			}, false);
-		}
+						success: function(response)
+						{
+							if (response != 'success')
+							{
+								alert('Series not saved to database');
+							}
+						}
+					});
+				}
+			} //end if inside and defualt concrete temp
 		
-		//Outisde checked and conc temp filled in
-		else if (windS == 'Outside' && cTemp != '')
-		{
-			numberOfSeries = numberOfSeries + 1;
-			//alert('Outside and conc temp fillled in');
-			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Outside Wind Speed';
-			for (i = 0; i < arrayLength; i++)
+			//Outside and new Concrete Temp
+			else if (windS == 'Outside' && cTemp != '')
 			{
-				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], cTemp);
-			}
+				numberOfSeries = numberOfSeries + 1;
+				seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Outside Wind Speed';
 			
-			chart.addSeries({
-				name: seriesName,
-				data: newEvapArray,
-				color: seriesColor,
-				dashStyle: 'dot',
-				lineWidth: 2,
+				for (i = 0; i < arrayLength; i++)
+				{
+					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], cTemp);
+				}
 			
-			}, false);
-		}
+				chart.addSeries({
+					name: seriesName,
+					data: newEvapArray,
+					color: seriesColor,
+					dashStyle: 'dot',
+					lineWidth: 2,
+				}, false);
+			
+				//If project
+				if (projectName != null)
+				{
+					if (cTemp == '') { cTemp = 'null'; }
 		
-		//Inside true cTemp filled in
-		else if (windS == 'Inside' && cTemp != '')
-		{
-			numberOfSeries = numberOfSeries + 1;
-			//alert('Inside and ctemp filed in');
-			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside';
-			cTempOffset = cTemp.length
-			windOffset = 1;
+					$.ajax({
+						url: '/addSeries.php',
+						type: 'post',
+						data: {pID: projectID,
+						isOriginal: 'n',
+						concrete: cTemp,
+						wind: windS},
 			
-			for (i = 0; i < arrayLength; i++)
+						success: function(response)
+						{
+							if (response != 'success')
+							{
+								alert('Series not saved to database');
+							}
+						}
+					});
+				}	
+			}//end outside and new concrete temp
+		
+			//Inside and new concrete temp
+			else if (windS == 'Inside' && cTemp != '')
 			{
-				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], cTemp);	
-			}
+				numberOfSeries = numberOfSeries + 1;
+				seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside';
+				cTempOffset = cTemp.length
+				windOffset = 1;
 			
-			chart.addSeries({
-				name: seriesName,
-				data: newEvapArray,
-				color: seriesColor,
-				dashStyle: 'dot',
-				lineWidth: 2
-			}, false);
-		}
+				for (i = 0; i < arrayLength; i++)
+				{
+					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], cTemp);	
+				}
+				
+				chart.addSeries({
+					name: seriesName,
+					data: newEvapArray,
+					color: seriesColor,
+					dashStyle: 'dot',
+					lineWidth: 2
+				}, false);		
+			
+				if (projectName != null)
+				{
+					if (cTemp == '') { cTemp = 'null'; }
 		
-		chart.redraw();
+					$.ajax({
+						url: '/addSeries.php',
+						type: 'post',
+						data: {pID: projectID,
+						isOriginal: 'n',
+						concrete: cTemp,
+						wind: windS},
+			
+						success: function(response)
+						{
+							if (response != 'success')
+							{
+								alert('Series not saved to database');
+							}
+						}
+					});
+				}
+			}//end Inside and new concrete
 		
-		
+			chart.redraw();
 		}
 		return false;
-	});
+	});//end sbutton click
 	
-	$("#checkbox").click(function()
-	{
-		$("#notifInfo").hide();
-	});
+	$("#checkbox").click(function() { $("#notifInfo").hide(); });
 	
 	$("#addNotif").click(function()
 	{
 		var c = $('#container').highcharts();
-		var notif = document.getElementById("notif").value;
-		//alert('zone wanted= ' + notif + ' CurrentZone=' + currentZone + ' time=' + notifTimeID + ' projectID= '+ projectID + ' seriesID=' + seriesNotifID);
-		
-		//alert('Notification Added');
-		
+		var notif = document.getElementById("notif").value;		
+	
+		$.ajax({
+			url: '/addNotif.php',
+			type: 'post',
+			data: {zWanted: notif,
+				zCurrent: currentZone,
+				time: notifTimeID,
+				pID: projectID,
+				sID: seriesNotifID},
+			
+			success: function(response)
+			{
+				alert(response);
+			}
+		});
 		$("#notifSuccess").show();
 		$('#notificationModal').modal('toggle');
 	});
 	
-	$( document ).ready(function() {
-		alert('woo');
-		if (isProject == true) {
+	$( document ).ready(function()
+	{
+		//If project
+		if (isProject == true)
+		{
+			$.ajax({
+				url: '/getSeries.php',
+				data: {pID: projectID},
+				type: 'post',
+				
+				success: function(response)
+				{
+					if (response != 'None')
+					{
+						var obj = JSON.parse(response)
+						var sid = obj.id;
+						var concrete = obj.concrete;
+						var wind = obj.wind;
+						var addtoChart = $('#container').highcharts();
+						var chart = $('#container').highcharts();
+
+						for (i =0; i <sid.length; i++)
+						{
+							var name ='';
+							var tmpConcrete = '';
+							var tmpWind = '';
+							var tmpEvapArray = [];
+							var tmpColor = main.getColor(i);
+							
+							//IF CONCRETE = 0 use default prediciton
+							//IF WIND = 0 use default prediciton
+							if (concrete[i] == 0 && wind[i] == 1)
+							{
+								name = 'Inside';
+								for (j = 0; j < arrayLength; j++)
+								{
+									tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], insideWindSpeed[j], concTempArray[j]);
+								}
+								chart.addSeries({
+									name: name,
+									data: tmpEvapArray,
+									color: tmpColor,
+									id: sid[i],
+									dashStyle: 'dot',
+									lineWidth: 2
+								}, false);
+							}
+							
+							else if (concrete[i] !=0 && wind[i] == 0)
+							{
+								name = 'Concrete temp ' + concrete[i] + ' ' + temperatureLabel + '<br>Outside Wind Speed';
+								for (j = 0; j < arrayLength; j++)
+								{
+									tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], windSpeedArray[j], concrete[i]);
+								}
 			
-			//If number of series > 1 and numbOfNotif == 0
-				//for (i=0; i< numbOfSeries)
-			//If number of series == 1 and numbOfNotif > 0
+								chart.addSeries({
+									name: name,
+									data: tmpEvapArray,
+									color: tmpColor,
+									id: sid[i],
+									dashStyle: 'dot',
+									lineWidth: 2,
+									}, false);
+							}
+							
+							else if (concrete[i] !=0 && wind[i] == 1)
+							{
+								name = 'Concrete temp ' + concrete[i] + ' ' + temperatureLabel + '<br>Inside';
+								for (j = 0; j < arrayLength; j++)
+								{
+									tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], insideWindSpeed[j], concrete[i]);
+								}
 			
+								chart.addSeries({
+									name: name,
+									data: tmpEvapArray,
+									color: tmpColor,
+									id: sid[i],
+									dashStyle: 'dot',
+									lineWidth: 2,
+									}, false);
+							}
+							chart.redraw();
+						}
+					}
+				}
+			});
 			
+			$.ajax({
+				url: '/getNotif.php',
+				type: 'post',
+				data: {pID: projectID},
+			
+				success: function(response)
+				{
+					alert(response);
+				}
+				});
 		}
 	});
 	
 	$("#notifSuccess").hide();
 	$("#emailSuccess").hide();
-	$('.alert .close').on('click', function(e)
-	{
-		$(this).parent().hide();
-	});
+	$('.alert .close').on('click', function(e) { $(this).parent().hide(); });
 
 	$("#emailGraph").click(function()
 	{
@@ -1181,113 +1150,96 @@ $(function () {
 		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 		
 		//validate email
-		if (email == '' || emailReg.test(email) == false) {
-			alert('Invalid e-mail address');
-		}
+		if (email == '' || emailReg.test(email) == false) { alert('Invalid e-mail address'); }
 		
 		//else send email
 		else
 		{
 			var url = window.location.href;
-			
-
 			$("#emailSuccess").show();
 			$('#emailModal').modal('toggle');
 		}
 	});
-});
-
-
+});//End function
 </script>
 
-		
-
-					
-	
-	<form class="form-horizontal" id="weatherChangeForm" action=none>
-		<div class="form-group">
-			 <h4>Add series</h4>
-			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Create a new series with a custom concrete temperature/wind speed for the entire series.
-			<br><br>
-			<div class="row">
-				
-				<div class="col-xs-12 col-sm-4 col-md-5 col-lg-5">
-					
-					<label for="concreteTemp" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Concrete Temperature: </label>
-					<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
-						<div class='input-group' col-md-6>
-						<input type="number" class="form-control" id="concreteTemp" maxlength="3" placeholder="Default" siz>
-						<span id="cTempLabel" class="input-group-addon"></span>
-						
-						</div>
-						<p class=help-block>If blank it defaults to orginal predicted concrete temperature</p>
+<form class="form-horizontal" id="weatherChangeForm" action=none>
+	<div class="form-group">
+		<h4>Add series</h4>
+		Create a new series with a custom concrete temperature/wind speed for the entire series.
+		<br><br>
+		<div class="row">
+			<div class="col-xs-12 col-sm-4 col-md-5 col-lg-5">
+				<label for="concreteTemp" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Concrete Temperature: </label>
+				<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
+					<div class='input-group' col-md-6>
+						<input type="number" class="form-control" id="concreteTemp" maxlength="3" placeholder="Default">
+							<span id="cTempLabel" class="input-group-addon"></span>
 					</div>
-					
-					<label for="windSpeed" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Wind Speed: </label>
-					<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
-						<select  id="windSpeed" class="form-control">
-							<option id = "Outside">Outside</option>
-							<option id = "Inside">Inside</option>
-						</select>
+					<p class=help-block>If blank it defaults to orginal predicted concrete temperature</p>
+				</div>
+				<label for="windSpeed" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Wind Speed: </label>
+				<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
+					<select id="windSpeed" class="form-control">
+						<option id = "Outside">Outside</option>
+						<option id = "Inside">Inside</option>
+					</select>
 					<p class=help-block>If placing concrete inside change to Inside.</p>
-
-					</div>
-					<div class="col-xs-offset-0 col-sm-offset-7 col-md-offset-6 col-lg-offset-7 col-xs-12">
-						<button class="btn btn-primary"  type='button' id='sbutton'>Submit</button>
-					</div>
+				</div>
+				<div class="col-xs-offset-0 col-sm-offset-7 col-md-offset-6 col-lg-offset-7 col-xs-12">
+					<button class="btn btn-primary"  type='button' id='sbutton'>Submit</button>
 				</div>
 			</div>
 		</div>
-	</form>
-	
-</div>
+	</div>
+</form>
+
 <div id ="button"></div>
 
 <div id="emailModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Email Graph</h4>
-            </div>
-            <div class="modal-body">
-                <form onsubmit="return false;">
-		<input class="form-control" id="email" type="text" placeholder='E-mail Address' required>
-
-		<textarea name = "message" id = 'message' class="form-control" placeholder="Add message...." ></textarea>
-            </div>
-            <div class="modal-footer">
-		<button type="button" class="btn btn-primary" id='emailGraph'>Send E-mail</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-	    </form>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Email Graph</h4>
+			</div>
+			<div class="modal-body">
+				<form onsubmit="return false;">
+					<input class="form-control" id="email" type="text" placeholder='E-mail Address' required>
+						<textarea name = "message" id = 'message' class="form-control" placeholder="Add message...." ></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id='emailGraph'>Send E-mail</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+				</form>
+		</div>
 	</div>
-    </div>
 </div>
 
 <div id="notificationModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="a" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id = notiftitle>Add Notification</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-			Receive an e-mail when the predicted risk changes to
-		<select id='notif'> 
-			<option id = notif1> </option>
-			<option id = notif2> </option>
-			<option id = notif3> </option>
-		</select>
-	    </div>
-	    <div class = "modal-footer">
-                <button type="button" class="btn btn-primary" id="addNotif" >Add Notification</button>
-		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		</form>
-	    </div>  
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="a" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id = notiftitle>Add Notification</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					Receive an e-mail when the predicted risk changes to
+					<select id='notif'>
+						<option id = notif1> </option>
+						<option id = notif2> </option>
+						<option id = notif3> </option>
+					</select>
+			</div>
+			<div class = "modal-footer">
+				<button type="button" class="btn btn-primary" id="addNotif" >Add Notification</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 
