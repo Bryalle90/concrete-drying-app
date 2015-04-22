@@ -29,7 +29,7 @@ class DbUser {
 		$code = $this->createCode();
 
 		$sql = "INSERT INTO user (name, email, userPass, code, forgotCode, createdTime, isAdmin, isValidated, seenNotifMsg, forceNewPass)
-		VALUES ('$name', '$email', '$hashedPass', '$code', '$time', '$isAdmin', 0, 0, 0)";
+		VALUES ('$name', '$email', '$hashedPass', '$code', NULL, '$time', '$isAdmin', 0, 0, 0)";
 		mysql_query($sql);
 
 		$id = $this->isUser($email);
