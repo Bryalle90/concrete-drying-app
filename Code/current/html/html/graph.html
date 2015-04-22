@@ -653,7 +653,7 @@ $(function () {
 							if (isProject)
 							{
 								$.ajax({
-									url: '/removeSeries.php',
+									url: '/php/removeSeries.php',
 									type: 'post',
 									data: {sID: this.options.id},
 									
@@ -901,7 +901,7 @@ $(function () {
 					if (cTemp == '') { cTemp = 'null'; }
 			
 					$.ajax({
-						url: '/addSeries.php',
+						url: '/php/addSeries.php',
 						type: 'post',
 						data: {pID: projectID,
 						isOriginal: 'n',
@@ -944,7 +944,7 @@ $(function () {
 					if (cTemp == '') { cTemp = 'null'; }
 		
 					$.ajax({
-						url: '/addSeries.php',
+						url: '/php/addSeries.php',
 						type: 'post',
 						data: {pID: projectID,
 						isOriginal: 'n',
@@ -988,7 +988,7 @@ $(function () {
 					if (cTemp == '') { cTemp = 'null'; }
 		
 					$.ajax({
-						url: '/addSeries.php',
+						url: '/php/addSeries.php',
 						type: 'post',
 						data: {pID: projectID,
 						isOriginal: 'n',
@@ -1019,7 +1019,7 @@ $(function () {
 		var notif = document.getElementById("notif").value;		
 	
 		$.ajax({
-			url: '/addNotif.php',
+			url: '/php/addNotif.php',
 			type: 'post',
 			data: {zWanted: notif,
 				zCurrent: currentZone,
@@ -1042,7 +1042,7 @@ $(function () {
 		if (isProject == true)
 		{
 			$.ajax({
-				url: '/getSeries.php',
+				url: '/php/getSeries.php',
 				data: {pID: projectID},
 				type: 'post',
 				
@@ -1126,7 +1126,7 @@ $(function () {
 			});
 			
 			$.ajax({
-				url: '/getNotif.php',
+				url: '/php/getNotif.php',
 				type: 'post',
 				data: {pID: projectID},
 			
