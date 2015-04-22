@@ -8,19 +8,21 @@
 //require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
 
 class DbSeries {
-	
-	private $dbhandle;
-	private $HOST = '127.0.0.1:3666';
+		private $dbhandle;
+
+	private $HOST = '127.0.0.1';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = 'a1b2c3';
+	private $PASSWORD = '';
 	private $DATABASE = 'plasticcracks';
+
 	public function __construct(){
-        $this->connectdb();
-    }
+		$this->connectdb();
+	}
 
 	//connect to the database
 	public function connectdb(){			
 		$this->dbhandle = mysql_connect($this->HOST, $this->ACCOUNT, $this->PASSWORD);
+					
 		$selected = mysql_select_db($this->DATABASE, $this->dbhandle);
 	}
 
@@ -98,8 +100,9 @@ class DbSeries {
 	}
 
 	//close the connection
+	//close the connection
 	public function disconnectdb(){
-		mysql_close(this->$dbhandle);
+		mysql_close($this->dbhandle);
 	}
 
 	public function _destruct(){
