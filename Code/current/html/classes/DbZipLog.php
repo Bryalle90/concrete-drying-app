@@ -45,7 +45,7 @@ class DbZipLog {
 		mysql_close($this->dbhandle);
 	}
 
-	public function _destruct(){
+	public function __destruct(){
 		$this->disconnectdb();
 	}
 

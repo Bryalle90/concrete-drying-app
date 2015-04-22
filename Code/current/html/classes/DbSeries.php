@@ -5,14 +5,13 @@
 //by: zach smith
 //last edited: 4/24/15
 
-//require $_SERVER['DOCUMENT_ROOT']."/../libraries/password-compat/lib/password.php";
-
 class DbSeries {
-		private $dbhandle;
+	
+	private $dbhandle;
 
-	private $HOST = '127.0.0.1';
+	private $HOST = '127.0.0.1:3666';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = '';
+	private $PASSWORD = 'a1b2c3';
 	private $DATABASE = 'plasticcracks';
 
 	public function __construct(){
@@ -50,7 +49,7 @@ class DbSeries {
 	}
 	
 	public function getOriginalSeriesID($projectID){
-			$sql = "SELECT `seriesID` FROM `series` WHERE `isOriginal` = 'y' AND `projectID` = $projectID";
+			$sql = "SELECT seriesID FROM series WHERE isOriginal = 'y' AND projectID = '$projectID'";
 			$result = mysql_query($sql);
         	if (!$result || !mysql_num_rows($result))
             return(Null);
@@ -60,8 +59,7 @@ class DbSeries {
 	
 	//Gets all of the series ID's besides the original
 	public function getSeriesID($projectID){
-		//$sql = "SELECT 'seriesID' FROM series WHERE projectID = '$projectID' AND isOriginal = 'n'";
-		$sql = "SELECT `seriesID` FROM `series` WHERE `isOriginal` = 'n' AND `projectID` = $projectID";
+		$sql = "SELECT seriesID FROM series WHERE isOriginal = 'n' AND projectID = '$projectID'";
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
@@ -100,12 +98,11 @@ class DbSeries {
 	}
 
 	//close the connection
-	//close the connection
 	public function disconnectdb(){
 		mysql_close($this->dbhandle);
 	}
 
-	public function _destruct(){
+	public function __destruct(){
 		$this->disconnectdb();
 	}
 
