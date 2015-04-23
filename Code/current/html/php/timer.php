@@ -37,7 +37,7 @@
 				$projectdb->changeReminder($projectID, "");
 			}
 			elseif($reminder == $today){
-				sendReminderEmail($projectID, $reminder);
+				sendReminderEmail($projectID);
 			}
 		}
 	}
@@ -115,7 +115,7 @@
 		return $level;
 	}
 	
-	function sendReminderEmail($projectID, $reminder){
+	function sendReminderEmail($projectID){
 		global $projectdb, $userdb, $mailer;
 		$projectName = $projectdb->getName($projectID);
 		$zip = $projectdb->getZipcode($projectID);
@@ -124,7 +124,7 @@
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
 			$projectdb->changeReminder($projectID, "");
-			$mailer->futureNotif($email, $projectName, $zip, $reminder);
+			$mailer->futureNotif($email, $projectName, $zip);
 		}
 	}
 	

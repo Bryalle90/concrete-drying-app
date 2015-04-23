@@ -7,7 +7,7 @@ class Email
 		$verifyURL = $verifyURL.'/verify.php';
 		
 		$subject = 'Welcome';
-		$body = "Hello, \r\n\r\nThank you for creating an account! Please click the link below to verify your account. If you did not create an account at this site you can simply ignore this message.\r\n\r\n" . $url . 
+		$body = "Hello, \r\n\r\nThank you for creating an account! Please click the link below to verify your account. If you did not create an account at this site, you can simply ignore this message.\r\n\r\n" . $url . 
 							"\r\n\r\nIf you are unable to visit the URL, please go to ".$verifyURL." and enter your email address and code: ".$code.
 							"\r\n\r\nThanks!";
 		$this->sendMessage($email, $subject, $body);
@@ -15,7 +15,7 @@ class Email
 	public function forgotVerify($email, $url)
 	{
 		$subject = 'Password Reset Verification';
-		$body = "Hello, \r\n\r\nWe just wanted to verify that you intended to reset your password. Please click the link below to have a new password generated and sent to you. \r\n\r\n" . $url .
+		$body = "Hello, \r\n\r\nWe just wanted to verify that you intended to reset your password. Please click the link below to have a new password generated and sent to you. If you did not request a new password, you can simply ignore this message.\r\n\r\n" . $url .
 							"\r\n\r\nThanks!";
 		$this->sendMessage($email, $subject, $body);
 	}
@@ -36,8 +36,8 @@ class Email
 		$url = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
 		$url = $url.'/projects.php';
 		
-		$subject = 'You have been added to a Project!';
-		$body = "Hello,\r\n\r\nYou have been invited to a project. Please click the link below and navigate to ".$projectName." where you can accept or decline the project invite.\r\n\r\n" . $url.
+		$subject = 'You have been invited to a Project!';
+		$body = "Hello,\r\n\r\nYou have been invited to a project. Please click the link below and navigate to ".$projectName." where you can accept or decline the project invite. If you accept the invite you will receive notifications and reminders that are set for this project.\r\n\r\n" . $url.
 						" \r\n\r\nThanks!";
 		$this->sendMessage($email, $subject, $body);
 	}
@@ -50,7 +50,7 @@ class Email
 		$this->sendMessage($email, $subject, $body);
 	} 
 
-	public function futureNotif($email, $projectName, $zipcode, $date) 
+	public function futureNotif($email, $projectName, $zipcode) 
 	{
 		$url = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
 		$url = $url.'/projects.php';
