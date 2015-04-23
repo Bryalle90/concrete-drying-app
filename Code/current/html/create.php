@@ -44,9 +44,12 @@
 									$code = $userdb->getCode($userID);
 									$email = $_POST['tb_email'];
 
-									//TODO: send email to user with link and code
 									$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
 									$link = $link.'/verify.php?email='.$email.'&code='.$code;
+									
+									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+									$mailer = new Email();
+									$mailer->newAccount($email, $link, $code);
 
 									echo '
 									<div class="alert alert-success" role="alert">

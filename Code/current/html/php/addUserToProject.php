@@ -12,8 +12,11 @@
 			if($newUserID != Null){ // check if user email exists in database
 				if($userdb->getIsValidated($newUserID)){ // check if user email is verified
 					if(!$projectdb->isUserInProject($_POST['projectID'], $newUserID)){ // check if user is already in project
-						// TODO: send email stating that user has been added to a project and tell them to sign in to accept
 						$projectdb->addUserToSharedProject($_POST['projectID'], $newUserID, 0);
+						require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+						$mailer = new Email();
+						$mailer->addUserToProject($email, $projectName);
+						
 						echo 'user was invited to the project';
 					} else {
 						echo 'user is already in project or already invited';
