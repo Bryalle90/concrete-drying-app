@@ -1,8 +1,0 @@
-USE Account;
-CREATE TABLE futureNotification (
-	futureID int UNIQUE NOT NULL AUTO_INCREMENT,
-	projectID int,
-	futureDate varchar(16),
-	createdDate varchar(16),
-	PRIMARY KEY(futureID)
-);

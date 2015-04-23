@@ -1,27 +1,7 @@
 CREATE DATABASE plasticcracks;
 
 USE plasticcracks;
-CREATE TABLE zipinfo (
-	zipcode int NOT NULL,
-	city varchar(40),
-	state varchar(40),
-	latitude float,
-	longitude float,
-	PRIMARY KEY(zipcode)
-);
 
-USE plasticcracks;
-LOAD DATA INFILE '/home/s002457/download/zipinfo.csv'
-IGNORE INTO TABLE zipinfo
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS
-(zipcode, city, state, latitude, longitude);
-
-USE plasticcracks;
-DELETE FROM zipinfo WHERE zipcode = 0;
-
-USE plasticcracks;
 CREATE TABLE project (
 	projectID int UNIQUE NOT NULL AUTO_INCREMENT,
 	projectName varchar(40),
@@ -30,10 +10,19 @@ CREATE TABLE project (
 	zipcode int,
 	unit varchar(1),
 	addedTime varchar(16),
+	reminder varchar(16),
 	PRIMARY KEY(projectID)
 );
 
-USE plasticcracks;
+CREATE TABLE series (
+	seriesID int UNIQUE NOT NULL AUTO_INCREMENT,
+	projectID int,
+	isOriginal varchar(1),
+	concreteTemp double,
+	windSpeed double,
+	PRIMARY KEY(seriesID)
+);
+
 CREATE TABLE user (
 	userID int UNIQUE NOT NULL AUTO_INCREMENT,
 	name varchar(40),
@@ -49,7 +38,6 @@ CREATE TABLE user (
 	PRIMARY KEY(userID)
 );
 
-USE plasticcracks;
 CREATE TABLE userProjectLookup (
 	userID int NOT NULL,
 	projectID int NOT NULL,
@@ -57,7 +45,6 @@ CREATE TABLE userProjectLookup (
 	PRIMARY KEY(userID, projectID)
 );
 
-USE plasticcracks;
 CREATE TABLE weather (
 	zipcode int NOT NULL,
 	evapRate double,
@@ -70,9 +57,54 @@ CREATE TABLE weather (
 	PRIMARY KEY(zipcode, weatherTime)
 );
 
-USE plasticcracks;
 CREATE TABLE zipUpdate (
 	zipcode int NOT NULL,
 	updateTime varchar(16),
 	PRIMARY KEY(zipcode)
 );
+
+CREATE TABLE changeInStateNotification (
+	changeInStateNotificationID int UNIQUE NOT NULL AUTO_INCREMENT,	
+	projectID int,
+	seriesID int,
+	time varchar(16),
+	currentZone tinyint(1),
+	notifyZone tinyint(1),
+	createdDate varchar(16),
+	PRIMARY KEY(changeInStateNotificationID)
+);
+
+CREATE TABLE changeInStateNotificationLog (
+	changeInStateNotificationID int,
+	dateSent varchar(16),
+	PRIMARY KEY(changeInStateNotificationID)
+);
+
+CREATE TABLE futureNotificationLog (
+	futureID int,
+	dateSent varchar(16),
+	PRIMARY KEY(futureID)
+);
+
+CREATE TABLE zipcodeLog (
+	zipcode int,
+	userType varchar(1),
+	date varchar(16),
+	PRIMARY KEY(zipcode, userType, date)
+);
+
+CREATE TABLE zipinfo (
+	zipcode int NOT NULL,
+	city varchar(40),
+	state varchar(40),
+	latitude float,
+	longitude float,
+	PRIMARY KEY(zipcode)
+);
+
+LOAD DATA INFILE '/home/s002457/download/zipinfo1.csv'
+IGNORE INTO TABLE zipinfo
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(zipcode, city, state, latitude, longitude);
