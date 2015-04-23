@@ -32,12 +32,53 @@ class DbChangeInStateNotification {
 		VALUES ('$projectID', '$seriesID', '$time', '$currentZone', '$notifyZone', '$createdDate')";
 		mysql_query($sql);		
 	}
+        
+        public function checkNotification($projectID, $seriesID, $time, $currentZone, $notifyZone){
+		$sql = "SELECT count(*) FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID' AND time = '$time'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$result = mysql_result($result, 0);
+		return $result;			
+	}
 
 	//delete notification from table
 	public function deleteNotification($changeInStateNotificationID){
 		$sql = "DELETE FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
 		mysql_query($sql);
-	}	
+	}
+        
+        	//gets the changeInStateNotificationID by using the project id
+	public function getALLStateNotificationID()
+        {
+		$sql = "SELECT changeInStateNotificationID FROM changeInStateNotification";
+		$result = mysql_query($sql);	
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['changeInStateNotificationID'];
+		}
+		return $array;
+		}
+                
+                	//Gets all notifcations
+	public function getAllNotif()
+	{
+		$notifIDarray = $this->getAllStateNotificationID();
+		if($notifIDarray == Null)
+			return Null;
+		foreach($notifIDarray as $pID){
+			$projects[$pID]['changeInStateNotificationID'] = $pID;
+			$projects[$pID]['projectID'] = $this->getProjectID($pID);
+			$projects[$pID]['seriesID'] = $this->getSeries($pID);
+			$projects[$pID]['time'] = $this->getTime($pID);
+			$projects[$pID]['currentZone'] = $this->getCurrentZone($pID);
+			$projects[$pID]['notifyZone'] = $this->getNotifyZone($pID);
+		}
+		return $projects;
+	}
+                
 
 	//gets the changeInStateNotificationID by using the project id
 	public function getchangeInStateNotificationID($projectID){
@@ -65,6 +106,15 @@ class DbChangeInStateNotification {
 		}
 		return $projects;
 	}
+        
+            public function getNumbOfNotificationID($projectID){
+		$sql = "SELECT count(*) FROM changeInStateNotification WHERE projectID = '$projectID'";
+		$result = mysql_query($sql);
+                 if (!$result || !mysql_num_rows($result))
+                    return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
+		}
 	
 	public function getSeries($changeInStateNotificationID){
 		$sql = "SELECT seriesID FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
@@ -89,6 +139,15 @@ class DbChangeInStateNotification {
 		$result = mysql_query($sql);
         if (!$result || !mysql_num_rows($result))
             return(Null);
+		$result = mysql_result($result, 0);
+		return $result;
+	}
+        
+            public function getProjectID($changeInStateNotificationID){
+		$sql = "SELECT projectID FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
+		$result = mysql_query($sql);
+                if (!$result || !mysql_num_rows($result))
+                return(Null);
 		$result = mysql_result($result, 0);
 		return $result;
 	}

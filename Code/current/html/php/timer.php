@@ -31,17 +31,13 @@
 	// -- future notifications --
 	$projects = $projectdb->getProjectsWithReminders();
 	if($projects){
-		foreach($projects as $pID){
-			$reminder = $projectdb->getReminder($pID);
-			if($reminder == $today){
-				$projectName = $projectdb->getName($pID);
-				$zip = $projectdb->getZipcode($pID);
-				
-				$users = $projectdb->getUsersOfProject($pID);
-				foreach($users as $userID){
-					$email = $userdb->getEmail($userID);
-					// $mailer->FutureNotif($email, $projectName, $zip, $reminder);
-				}
+		foreach($projects as $projectID){
+			$reminder = $projectdb->getReminder($projectID);
+			if($reminder < $today){
+				$projectdb->changeReminder($projectID, "");
+			}
+			elseif($reminder == $today){
+				sendReminderEmail($projectID, $reminder);
 			}
 		}
 	}
@@ -85,9 +81,6 @@
 					
 					$oldRisk = $notification['currentZone'];
 					
-					echo $notification['notifyZone'];
-					echo $newRisk.'<br>';
-					
 					$users = $projectdb->getUsersOfProject($notification['projectID']);
 					if($notification['notifyZone'] == $newRisk){
 						sendRiskEmail($notification['projectID'], $nID, $notification['time'], $oldRisk, $newRisk);
@@ -122,6 +115,19 @@
 		return $level;
 	}
 	
+	function sendReminderEmail($projectID, $reminder){
+		global $projectdb, $userdb, $mailer;
+		$projectName = $projectdb->getName($projectID);
+		$zip = $projectdb->getZipcode($projectID);
+		
+		$users = $projectdb->getUsersOfProject($projectID);
+		foreach($users as $userID){
+			$email = $userdb->getEmail($userID);
+			$projectdb->changeReminder($projectID, "");
+			$mailer->futureNotif($email, $projectName, $zip, $reminder);
+		}
+	}
+	
 	function sendRiskEmail($projectID, $notificationID, $time, $oldRisk, $newRisk){
 		global $projectdb, $userdb, $riskdb, $mailer;
 		$oldRisk = getRiskLevel($oldRisk);
@@ -132,7 +138,7 @@
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
 			$riskdb->deleteNotification($notificationID);
-			//$mailer->ChangeInRiskNotif($email, $projectName, $zip, $time, $oldRisk, $newRisk);
+			$mailer->changeInRiskNotif($email, $projectName, $zip, $time, $oldRisk, $newRisk);
 		}
 	}
 ?>
