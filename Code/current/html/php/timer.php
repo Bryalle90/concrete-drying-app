@@ -47,6 +47,7 @@
 	if($notifications){
 		foreach($notifications as $nID => $notification){
 			$zip = $projectdb->getZipcode($notification['projectID']);
+			$unit = $projectdb->getUnit($notification['projectID']);
 			$cTemp = $seriesdb->getConcreteTemp($notification['seriesID']);
 			$isIndoors = $seriesdb->getWindSpeed($notification['seriesID']);
 			
@@ -63,12 +64,17 @@
 			if(array_key_exists($notification['time'], $evapRates)){
 				$newRisk = $evapRates[$notification['time']];
 				if($newRisk){
-					if($cTemp or $isIndoors){
-						$concTemp = $cTemp ? $cTemp : $weatherService->getHourlyConcTemp()[$notification['time']];
-						$windspeed = $isIndoors ? $isIndoors : $weatherService->getHourlyWindSpeed()[$notification['time']] ;
-						$airTemp = $weatherService->getHourlyAirTemp()[$notification['time']];
-						$humidity = $weatherService->getHourlyHumidity()[$notification['time']];
-						$newRisk = $weatherService->calcEvap($concTemp, $humidity, $airTemp, $windspeed);
+					if($cTemp != 0 or $isIndoors == 1){
+						$concTemps = $weatherService->getHourlyConcTemp();
+						$wSpeeds = $weatherService->getHourlyWindSpeed();
+						$airTemps = $weatherService->getHourlyAirTemp();
+						$humidities = $weatherService->getHourlyHumidity();
+						
+						$concTemp = $cTemp ? $cTemp : $concTemps[$notification['time']];
+						$windspeed = $isIndoors ? $isIndoors : $wSpeeds[$notification['time']] ;
+						$airTemp = $airTemps[$notification['time']];
+						$humidity = $humidities[$notification['time']];
+						$newRisk = $weatherService->calcEvap($unit == 'S' ? $concTemp : $weatherService->convertFtoC($concTemp), $humidity, $airTemp, $windspeed);
 					}
 					
 					// see what risk the evap rate is at

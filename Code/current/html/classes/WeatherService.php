@@ -149,6 +149,11 @@ class WeatherService{
 		return($evap);
 	}
 	
+	public function convertFtoC($temp){
+        $conversion_factor = 5/9;
+        return (($temp-32)*$conversion_factor);
+    }
+	
 	public function getTimeLayout(){
 		return ($this->time_layout);
 	}
