@@ -25,6 +25,7 @@ class DbUser {
 	//inserts a new user to the table
 	public function addUser($name, $email, $userPass, $isAdmin){
 		$hashedPass = $this->hashPass($userPass);
+		date_default_timezone_set('America/New_York');
 		$time = date('Y-m-d H:i:s', strtotime('now'));
 		$code = $this->createCode();
 

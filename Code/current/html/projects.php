@@ -18,6 +18,8 @@
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
 		<link href="bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 		
+		<?php session_start(); ?>
+		
 		<style>
 			.btn-xl {
 				padding: 18px 28px;
@@ -52,10 +54,7 @@
 						type: "POST",
 						url: '/php/addUserToProject.php',
 						data: { projectID: this.projectID, email: document.getElementById("addUserEmail-"+this.index).value },
-						success: function(data) {
-							if(data){ alert(data); }
-							document.getElementById("addUserEmail-"+this.index).value = "";
-						}
+						success: function(data) { if(data){ alert(data); } }
 					});
 				};
 				
@@ -92,7 +91,6 @@
 			<div class="row">
 				<div class="col-xs-offset-0 col-xs-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
 					<?php
-					session_start();
 					
 					// send user to index if not logged in
 					if(!isset($_SESSION['id'])){
@@ -130,8 +128,7 @@
 									$location = $city.', '.$state;
 									$title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
 									$unit = $_POST['newProjectUnit'] == 'Standard' ? 'S' : 'M';
-									$reminder = $_POST['reminder'] == '' ? NULL : $_POST['reminder'];
-									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], $unit, $reminder);
+									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], $unit, $_POST['reminder']);
 									
 									echo '
 									<div class="alert alert-success" role="alert">

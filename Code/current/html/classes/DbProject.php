@@ -23,6 +23,7 @@ class DbProject {
 	
 	//Adds to project table then adds to project lookup table
 	public function addToProjectTable($projectName, $location, $ownerID, $zipcode, $unit, $reminder){
+		date_default_timezone_set('America/New_York');
 		$time = date('Y-m-d H:i:s', strtotime('now'));
 		
 		//project table
@@ -129,6 +130,18 @@ class DbProject {
 		$array = array();
 		while ($row = mysql_fetch_array($result)) {
 			$array[] = $row['userID'];
+		}
+		return $array;
+	}
+	
+	public function getProjectsWithReminders(){
+		$sql = "SELECT * FROM project WHERE reminder != ''";
+		$result = mysql_query($sql);	
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['projectID'];
 		}
 		return $array;
 	}
