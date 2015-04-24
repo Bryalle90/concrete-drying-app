@@ -38,6 +38,25 @@ CREATE TABLE user (
 	PRIMARY KEY(userID)
 );
 
+INSERT INTO user (
+	name,
+	email,
+	userPass,
+	code,
+	forgotCode,
+	createdTime,
+	isAdmin,
+	isValidated,
+	seenNotifMsg,
+	forceNewPass
+)
+VALUES (
+	'Admin',
+	'root@admin',
+	'$2y$10$urUDd05ycU//DjAZhZr6yeLMFiF7Fq/CAgd.2tyPOXDKbVAmX6n2i',
+	NULL, NULL, '', 'y', 1, 1, 1
+);
+
 CREATE TABLE userProjectLookup (
 	userID int NOT NULL,
 	projectID int NOT NULL,
