@@ -1,5 +1,9 @@
 <?php
-	$root = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '/home/s002457/html';
+	if($_SERVER['DOCUMENT_ROOT']){
+		?><script> window.location.replace("/index.php"); </script><?php
+		exit();
+	}
+	$root = '/home/s002457/html';
 	require_once($root.'/classes/DbChangeInStateNotification.php');
 	require_once($root.'/classes/WeatherService.php');
 	require_once($root.'/classes/DataService.php');
