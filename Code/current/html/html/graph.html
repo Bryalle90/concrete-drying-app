@@ -480,8 +480,8 @@ $(function () {
 			useHTML: true,
 			//crosshair: [true, true],
 			//shared: false,
-			//snap: 40,
-			stickyTracking: false,
+			snap: 1,
+			hideDelay: 1,
 			borderWidth: 0,
 			//padding: 5,
 			//z: 20,
@@ -643,6 +643,7 @@ $(function () {
 				cursor: 'pointer',
 				allowPointSelect: true,
 				selected: true,
+				stickyTracking: false,
 				marker: {
 					enabled: true,
 					
@@ -692,7 +693,7 @@ $(function () {
 						{
 							if (isProject)
 							{
-								if (isOwner == true)
+								if (isOwner)
 								{
 									
 									//c =$('#container').highcharts();
