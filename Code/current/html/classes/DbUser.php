@@ -7,9 +7,9 @@ class DbUser {
 	
 	private $dbhandle;
 
-	private $HOST = '127.0.0.1:3666';
+	private $HOST = '127.0.0.1';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = 'a1b2c3';
+	private $PASSWORD = '';
 	private $DATABASE = 'plasticcracks';
 
 	public function __construct(){
@@ -25,6 +25,8 @@ class DbUser {
 
 	//inserts a new user to the table
 	public function addUser($name, $email, $userPass, $isAdmin){
+		$name = mysql_real_escape_string($name);
+		$email = mysql_real_escape_string($email);
 		$hashedPass = $this->hashPass($userPass);
 		$email = strtolower($email);
 		date_default_timezone_set('America/New_York');

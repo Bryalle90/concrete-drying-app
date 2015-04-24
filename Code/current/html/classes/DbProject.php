@@ -5,9 +5,9 @@ class DbProject {
 	//These 3 variables will need to be changed to specific case
 	private $dbhandle;
 
-	private $HOST = '127.0.0.1:3666';
+	private $HOST = '127.0.0.1';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = 'a1b2c3';
+	private $PASSWORD = '';
 	private $DATABASE = 'plasticcracks';
 
 	public function __construct(){
@@ -23,6 +23,7 @@ class DbProject {
 	
 	//Adds to project table then adds to project lookup table
 	public function addToProjectTable($projectName, $location, $ownerID, $zipcode, $unit, $reminder){
+		$projectName = mysql_real_escape_string($projectName);
 		date_default_timezone_set('America/New_York');
 		$time = date('Y-m-d H:i:s', strtotime('now'));
 		
