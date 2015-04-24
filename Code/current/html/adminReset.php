@@ -35,7 +35,7 @@
 					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
 					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbAdmin.php');
 					
-					if(isset($_POST['btn_create'])){ // if the create button was pressed
+					if(isset($_POST['btn_yes'])){ // if the create button was pressed
 						if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""	&& $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
 							$userdb = new DbUser();
 							$admindb = new DbAdmin();
@@ -106,12 +106,31 @@
 								</div>
 							</div>
 							<div align="center" class="row">
-								<button class="btn btn-danger" type="submit" name="btn_create">Reset System</button>
+								<a class="btn btn-danger" type="button" data-toggle="modal" title="Reset System" data-target="#youSure">Reset System</a>
+							</div>
+							<!-- Are You Sure Modal -->
+							<div class="modal fade" id="youSure" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+											<h4 class="modal-title" id="youSureLabe;">Are you sure you want to reset the system?</h4>
+										</div>
+										<div class="modal-body">
+											<?php
+												echo 'This will delete all information stored.';
+											?>
+										</div>
+										<div class="modal-footer">
+											<input class="btn btn-danger" name="btn_yes" type="submit"/>
+											<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+										</div>
+									</div>
+								</div>
 							</div>
 						</form>
 					</div>
-				</div>
-				<div class="col-xs-0 col-sm-2 col-md-3 col-lg-4"></div>
+				</div>				
 			</div>
 		</div>
 	</body>
