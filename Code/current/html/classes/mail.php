@@ -72,7 +72,6 @@ class Email
 	
 	public function sendMessage($email, $subject, $body){
 		$header = 'From: plasticcracks@siue.edu' . "\r\n";
-		$email = 'bryanpallen90+mailtest@gmail.com';
 		mail($email, $subject, $body, $header);
 	}
 }
