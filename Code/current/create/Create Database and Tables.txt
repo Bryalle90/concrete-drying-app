@@ -93,23 +93,13 @@ CREATE TABLE changeInStateNotification (
 	PRIMARY KEY(changeInStateNotificationID)
 );
 
-CREATE TABLE changeInStateNotificationLog (
-	changeInStateNotificationID int,
-	dateSent varchar(16),
-	PRIMARY KEY(changeInStateNotificationID)
-);
-
-CREATE TABLE futureNotificationLog (
-	projectID int,
-	dateSent varchar(16),
-	PRIMARY KEY(projectID)
-);
-
-CREATE TABLE zipcodeLog (
-	zipcode int,
-	userType tinyint(1),
-	date varchar(16),
-	PRIMARY KEY(zipcode, userType, date)
+CREATE TABLE log (
+	logID int UNIQUE NOT NULL AUTO_INCREMENT,
+	type tinyint(1),
+	zip int,
+	logTime varchar(16),
+	time varchar(16),
+	PRIMARY KEY(logID)
 );
 
 CREATE TABLE zipinfo (

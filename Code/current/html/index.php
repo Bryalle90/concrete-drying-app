@@ -125,15 +125,15 @@
 								<?php
 								
 								// add to log
-								require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbZipLog.php');
+								require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
 								if(isset($_POST['projectID']))
 									$userType = $PROJECT;
 								elseif(isset($_SESSION['id']))
 									$userType = $USER;
 								else
 									$userType = $GUEST;
-								$ziplog = new DbZipLog();
-								$ziplog->add($zip, $userType);
+								$logger = new DbLog();
+								$logger->addView($zip, $userType);
 				
 								// draw graph
 								include $_SERVER['DOCUMENT_ROOT']."/html/graph.html";
