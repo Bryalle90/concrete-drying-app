@@ -14,6 +14,7 @@
 					if(!$projectdb->isUserInProject($_POST['projectID'], $newUserID)){ // check if user is already in project
 						$projectdb->addUserToSharedProject($_POST['projectID'], $newUserID, 0);
 						
+						$email = $_POST['email'];
 						$projectName = $projectdb->getName($_POST['projectID']);
 						
 						require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
