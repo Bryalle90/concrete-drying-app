@@ -136,7 +136,7 @@
 
 				?>
 
-				<div class="well well-lg row" align="center">
+				<div class="well well-lg row <?php echo (isset($_SESSION['verified']) && $_SESSION['verified']) ? 'hidden' : '' ?>" align="center">
 					<h4>Verify your account</h4>
 					Please click the link sent to your email or enter the validation code from your email below.
 					<form class="form-inline col-xs-12" action="/verify.php" method="get">
@@ -150,7 +150,7 @@
 					</form>
 				</div>
 
-				<div class="well well-lg row" align="center">
+				<div class="well well-lg row <?php echo (isset($_SESSION['verified']) && $_SESSION['verified']) ? 'hidden' : '' ?>" align="center">
 					<h4>Send new verification email</h4>
 					<form class="form-inline col-xs-12" action="/verify.php" method="post">
 						<div class="form-group">
