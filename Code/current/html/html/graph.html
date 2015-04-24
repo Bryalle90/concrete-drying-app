@@ -169,13 +169,19 @@ $(function () {
 	var evaporationRateLabel = "";
 	var temperatureLabel = "";
 	var windLabel = "";
-	
-	if (projectName == null)
-	{
-		var title = city + ', ' + state + ' ' + zipCode;
+
+	var subtitle = city + ', ' + state + ' ' + zipCode;
+	if (isProject) {
+		if(projectName){
+			var title = projectName;
+		}
+		else{
+			var title = subtitle;
+		}
 	}
-	else if (projectName != null) {
-		var title = 'Project: ' + projectName;
+	else{
+		var title = subtitle;
+		var subtitle = '';
 	}
 	
 	//Add suffixes of labels 
@@ -233,13 +239,6 @@ $(function () {
 		nameOfMonth[i] = monthname[d.getMonth()];
 		nameOfDay[i] = weekday[d.getDay()];
 	}
-	if (isProject) {
-		var subtitle = city + ', ' + state + ' ' + zipCode;
-	}
-	else {
-		var subtitle = '';
-	}
-	//var subtitle = city + ', ' + state + ' ' + zipCode;
 	
 	var timezone = 'Local time of ' + city + ', ' + state + '<br>' +  nameOfMonth[0] + " " + day[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1];
 
