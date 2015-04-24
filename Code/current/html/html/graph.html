@@ -1058,7 +1058,7 @@ $(function () {
 						onclick: function ()
 						{
 							$(document).ready(function(){
-							$("#addSeriesModal").modal('show');});
+							$("#weatherChangeModal").modal('show');});
 						}
 				}
 			}
@@ -1086,6 +1086,7 @@ $(function () {
 	
 	$("#sbutton").click(function()
 	{
+		$('#weatherChangeModal').modal('hide');
 		cTemp = document.getElementById("concreteTemp").value;
 		
 		if (isMetric)
@@ -1410,190 +1411,190 @@ $(function () {
 		}
 	});
 
-function AddSeries(cTemp, windS)
-{
-	seriesName = '';
-	newEvapArray = [];
-	seriesColor = main.getColor(numberOfSeries);
-	var chart = $('#container').highcharts();
-		
-	//If only outside and default concrete temp
-	if (windS == 'Outside' && cTemp == '') { alert("Series already exists");}
-	
-	// if inside and default concrete temp
-	else if (windS == 'Inside' && cTemp == '')
+	function AddSeries(cTemp, windS)
 	{
+		seriesName = '';
+		newEvapArray = [];
+		seriesColor = main.getColor(numberOfSeries);
+		var chart = $('#container').highcharts();
+			
+		//If only outside and default concrete temp
+		if (windS == 'Outside' && cTemp == '') { alert("Series already exists");}
 		
+		// if inside and default concrete temp
+		else if (windS == 'Inside' && cTemp == '')
+		{
+			
+				//numberOfSeries = numberOfSeries + 1;
+				seriesName = 'Inside';
+				
+				for (i = 0; i < arrayLength; i++)
+				{
+					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], concTempArray[i]);
+				}
+						
+				if (isProject)
+				{
+					if (cTemp == '') { cTemp = 'null'; }
+					//alert(projectID);
+					$.ajax({
+						url: '/php/addSeries.php',
+						type: 'post',
+						data: {pID: projectID,
+						isOriginal: 'n',
+						concrete: cTemp,
+						wind: windS},
+					
+						success: function(seriesID)
+						{
+							//alert (seriesID);
+							if (seriesID != '')
+							{
+								chart.addSeries({
+									name: seriesName,
+									data: newEvapArray,
+									color: seriesColor,
+									marker: { symbol: 'circle' },
+									id: seriesID,
+									dashStyle: 'dot',
+									lineWidth: 2
+								}, false);
+								chart.redraw();
+							}
+						}
+					});
+				}
+					
+				else
+				{
+					chart.addSeries({
+						name: seriesName,
+						data: newEvapArray,
+						color: seriesColor,
+						marker: { symbol: 'circle' },
+						dashStyle: 'dot',
+						lineWidth: 2
+					}, false);
+					chart.redraw();
+				}
+		} //end if inside and defualt concrete temp
+		
+		//Outside and new Concrete Temp
+		else if(windS == 'Outside' && cTemp != '')
+		{
 			//numberOfSeries = numberOfSeries + 1;
-			seriesName = 'Inside';
+			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Outside Wind Speed';
 			
 			for (i = 0; i < arrayLength; i++)
 			{
-				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], concTempArray[i]);
+				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], cTemp);
+			}
+				
+			//If project
+			if (isProject)
+			{
+				if (cTemp == '') { cTemp = 'null'; }
+			
+				$.ajax({
+					url: '/php/addSeries.php',
+					type: 'post',
+					data: {pID: projectID,
+					isOriginal: 'n',
+					concrete: cTemp,
+					wind: windS},
+					
+					success: function(seriesID)
+					{
+						if (seriesID != '')
+						{
+							chart.addSeries({
+								name: seriesName,
+								data: newEvapArray,
+								color: seriesColor,
+								marker: { symbol: 'circle' },
+								id: seriesID,
+								dashStyle: 'dot',
+								lineWidth: 2
+							}, false);
+							chart.redraw();
+						}
+					}
+				});
 			}
 					
-			if (isProject)
-			{
-				if (cTemp == '') { cTemp = 'null'; }
-				//alert(projectID);
-				$.ajax({
-					url: '/php/addSeries.php',
-					type: 'post',
-					data: {pID: projectID,
-					isOriginal: 'n',
-					concrete: cTemp,
-					wind: windS},
-				
-					success: function(seriesID)
-					{
-						//alert (seriesID);
-						if (seriesID != '')
-						{
-							chart.addSeries({
-								name: seriesName,
-								data: newEvapArray,
-								color: seriesColor,
-								marker: { symbol: 'circle' },
-								id: seriesID,
-								dashStyle: 'dot',
-								lineWidth: 2
-							}, false);
-							chart.redraw();
-						}
-					}
-				});
-			}
-				
 			else
-			{
+			{	
 				chart.addSeries({
 					name: seriesName,
 					data: newEvapArray,
-					color: seriesColor,
 					marker: { symbol: 'circle' },
+					symbol: 'circle',
 					dashStyle: 'dot',
 					lineWidth: 2
 				}, false);
 				chart.redraw();
-			}
-	} //end if inside and defualt concrete temp
-	
-	//Outside and new Concrete Temp
-	else if(windS == 'Outside' && cTemp != '')
-	{
-		//numberOfSeries = numberOfSeries + 1;
-		seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Outside Wind Speed';
-		
-		for (i = 0; i < arrayLength; i++)
-		{
-			newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], cTemp);
-		}
+			}	
+		}//end outside and new concrete temp
 			
-		//If project
-		if (isProject)
+		//Inside and new concrete temp
+		else if (windS == 'Inside' && cTemp != '')
 		{
-			if (cTemp == '') { cTemp = 'null'; }
-		
-			$.ajax({
-				url: '/php/addSeries.php',
-				type: 'post',
-				data: {pID: projectID,
-				isOriginal: 'n',
-				concrete: cTemp,
-				wind: windS},
+				//numberOfSeries = numberOfSeries + 1;
+				seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside';
+				cTempOffset = cTemp.length
+				windOffset = 1;
 				
-				success: function(seriesID)
+				for (i = 0; i < arrayLength; i++)
 				{
-					if (seriesID != '')
-					{
-						chart.addSeries({
-							name: seriesName,
-							data: newEvapArray,
-							color: seriesColor,
-							marker: { symbol: 'circle' },
-							id: seriesID,
-							dashStyle: 'dot',
-							lineWidth: 2
-						}, false);
-						chart.redraw();
-					}
+					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], cTemp);	
 				}
-			});
-		}
+					
+				if (isProject)
+				{
+					if (cTemp == '') { cTemp = 'null'; }
 				
-		else
-		{	
-			chart.addSeries({
-				name: seriesName,
-				data: newEvapArray,
-				marker: { symbol: 'circle' },
-				symbol: 'circle',
-				dashStyle: 'dot',
-				lineWidth: 2
-			}, false);
-			chart.redraw();
-		}	
-	}//end outside and new concrete temp
-		
-	//Inside and new concrete temp
-	else if (windS == 'Inside' && cTemp != '')
-	{
-			//numberOfSeries = numberOfSeries + 1;
-			seriesName = 'Concrete temp ' + cTemp + ' ' + temperatureLabel + '<br>Inside';
-			cTempOffset = cTemp.length
-			windOffset = 1;
-			
-			for (i = 0; i < arrayLength; i++)
-			{
-				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], cTemp);	
-			}
-				
-			if (isProject)
-			{
-				if (cTemp == '') { cTemp = 'null'; }
-			
-				$.ajax({
-					url: '/php/addSeries.php',
-					type: 'post',
-					data: {pID: projectID,
-					isOriginal: 'n',
-					concrete: cTemp,
-					wind: windS},
-				
-					success: function(seriesID)
-					{
-						if (seriesID != '')
+					$.ajax({
+						url: '/php/addSeries.php',
+						type: 'post',
+						data: {pID: projectID,
+						isOriginal: 'n',
+						concrete: cTemp,
+						wind: windS},
+					
+						success: function(seriesID)
 						{
-							chart.addSeries({
-								name: seriesName,
-								data: newEvapArray,
-								color: seriesColor,
-								marker: { symbol: 'circle' },
-								id: seriesID,
-								dashStyle: 'dot',
-								lineWidth: 2
-							}, false);
-							chart.redraw();
+							if (seriesID != '')
+							{
+								chart.addSeries({
+									name: seriesName,
+									data: newEvapArray,
+									color: seriesColor,
+									marker: { symbol: 'circle' },
+									id: seriesID,
+									dashStyle: 'dot',
+									lineWidth: 2
+								}, false);
+								chart.redraw();
+							}
 						}
-					}
-				});
-			}
-				
-			else
-			{
-				chart.addSeries({
-					name: seriesName,
-					data: newEvapArray,
-					marker: { symbol: 'circle' },
-					color: seriesColor,
-					dashStyle: 'dot',
-					lineWidth: 2
-				}, false);
-				chart.redraw();
-			}
-	}//end Inside and new concrete
-	numberOfSeries = numberOfSeries + 1;
-}
+					});
+				}
+					
+				else
+				{
+					chart.addSeries({
+						name: seriesName,
+						data: newEvapArray,
+						marker: { symbol: 'circle' },
+						color: seriesColor,
+						dashStyle: 'dot',
+						lineWidth: 2
+					}, false);
+					chart.redraw();
+				}
+		}//end Inside and new concrete
+		numberOfSeries = numberOfSeries + 1;
+	}
 
 
 });//End function
@@ -1686,37 +1687,50 @@ function AddSeries(cTemp, windS)
 	</div>
 </div>
 
-<form class="form-horizontal" id="weatherChangeForm" action=none>
-	<div class="form-group">
-		<h4>Add series</h4>
-		Create a new series with a custom concrete temperature/wind speed for the entire series.
-		<br><br>
-		<div class="row">
-			<div class="col-xs-12 col-sm-4 col-md-5 col-lg-5">
-				<label for="concreteTemp" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Concrete Temperature: </label>
-				<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
-					<div class='input-group' col-md-6>
-						<input type="number" class="form-control" id="concreteTemp" maxlength="3" placeholder="Default">
-							<span id="cTempLabel" class="input-group-addon"></span>
-					</div>
-					<p class=help-block>If blank it defaults to orginal predicted concrete temperature</p>
-				</div>
-				<label for="windSpeed" class="col-xs-12 col-sm-7 col-md-6 col-lg-5 control-label">Wind Speed: </label>
-				<div class="col-xs-12 col-sm-5 col-md-4 col-lg-7">
-					<select id="windSpeed" class="form-control">
-						<option id = "Outside">Outside</option>
-						<option id = "Inside">Inside</option>
-					</select>
-					<p class=help-block>If placing concrete inside change to Inside.</p>
-				</div>
-				<div class="col-xs-offset-0 col-sm-offset-7 col-md-offset-6 col-lg-offset-7 col-xs-12">
-					<button class="btn btn-primary"  type='button' id='sbutton'>Submit</button>
-				</div>
+<div class="modal fade" id="weatherChangeModal">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content container-fluid">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="newProjectLabel">Add series</h4>
+				Create a new series with a custom concrete temperature/wind speed for the entire series.
 			</div>
+			<form class="form-horizontal" id="weatherChangeForm" action=none>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label for="concreteTemp" class="control-label">Concrete Temperature</label>
+								<div class='input-group'>
+									<input type="number" class="form-control" id="concreteTemp" maxlength="3" placeholder="Default" title="If blank it defaults to orginal predicted concrete temperature.">
+									<span id="cTempLabel" class="input-group-addon"></span>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label for="windSpeed" class="control-label">Wind Speed</label>
+								<select id="windSpeed" class="form-control" title="If placing concrete inside change to Inside.">
+									<option id="Outside">Outside</option>
+									<option id="Inside">Inside</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-xs-7" align="left">
+							<button type="button" class="btn btn-primary" id="sbutton">Submit</button>
+						</div>
+						<div class="col-xs-5" align="right">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
-</form>
-
-
+</div>
 
 
