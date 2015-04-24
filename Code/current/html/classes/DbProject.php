@@ -5,9 +5,9 @@ class DbProject {
 	//These 3 variables will need to be changed to specific case
 	private $dbhandle;
 
-	private $HOST = '127.0.0.1';
+	private $HOST = '127.0.0.1:3666';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = '';
+	private $PASSWORD = 'a1b2c3';
 	private $DATABASE = 'plasticcracks';
 
 	public function __construct(){
@@ -60,6 +60,7 @@ class DbProject {
 	}
 
 	public function changeProjectName($projectID, $projectName){
+		$projectName = mysql_real_escape_string($projectName);
 		$sql = "UPDATE project SET projectName = '$projectName' WHERE projectID = '$projectID'";
 		mysql_query($sql);
 	}

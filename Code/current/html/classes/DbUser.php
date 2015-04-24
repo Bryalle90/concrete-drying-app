@@ -7,9 +7,9 @@ class DbUser {
 	
 	private $dbhandle;
 
-	private $HOST = '127.0.0.1';
+	private $HOST = '127.0.0.1:3666';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = '';
+	private $PASSWORD = 'a1b2c3';
 	private $DATABASE = 'plasticcracks';
 
 	public function __construct(){
@@ -178,12 +178,14 @@ class DbUser {
 
 	//changes the users name in the table
 	public function changeName($userID, $name){
+		$name = mysql_real_escape_string($name);
 		$sql = "UPDATE user SET name = '$name' WHERE userID = '$userID'";
 		mysql_query($sql);
 	}
 
 	//changes the users email in the table
 	public function changeEmail($userID, $email){
+		$email = mysql_real_escape_string($email);
 		$email = strtolower($email);
 		$sql = "UPDATE user SET email = '$email' WHERE userID = '$userID'";
 		mysql_query($sql);
