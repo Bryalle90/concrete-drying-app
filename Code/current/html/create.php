@@ -33,7 +33,7 @@
 						
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
-					
+				
 					if(isset($_POST['btn_create'])){ // if the create button was pressed
 						if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""	&& $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
 							$userdb = new DbUser();
@@ -111,9 +111,37 @@
 									<input type="password" class="form-control" name="tb_pass2" placeholder="*******">
 								</div>
 							</div>
-							<div align="center" class="row">
-								<button class="btn btn-primary" type="submit" name="btn_create">Create Account</button>
+							<div class="row" align="center">								
+								<a class="btn btn-default pull-left" type="button" data-toggle="modal" title="why" data-target="#why">Why?</a>
+								<button class="btn btn-primary pull-right" type="submit" name="btn_create">Create Account</button>															</div>
 							</div>
+							<!-- Why Modal -->
+							<div class="modal fade" id="why" tabindex="-1" role="dialog" aria-labelledby="whyModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+											<h4 class="modal-title" id="whyLabel;">Why you should create an account?</h4>
+										</div>
+										<h5>
+											<div class="modal-body">
+												<?php
+													echo 'Creating an account has four major advantages. <br> <br>';
+													echo '1. You can save a zipcode you visit often as a project. <br> <br>';
+													echo '2. You can share projects with other users. <br> <br>';
+													echo '3. You can recieve notifications if the risk changes for one of your projects. <br> <br>';
+													echo '4. You can be notified when your project becomes in the prediction range. <br> <br>';
+												?>
+											</div>
+										</h5>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							
 						</form>
 					</div>
 				</div>
