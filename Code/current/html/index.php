@@ -21,7 +21,7 @@
 		<!-- Custom styles for this template -->
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
 	</head>
-	<body style="background-color: #DBDBDB">
+	<body>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-0 col-md-0 col-lg-0"></div>
@@ -126,6 +126,8 @@
 						}
 					}
 					?>
+					<div class="footer navbar-fixed-bottom">
+					</div>
 				</div>
 				<div class="col-xs-0 col-md-0 col-lg-0"></div>
 			</div>
