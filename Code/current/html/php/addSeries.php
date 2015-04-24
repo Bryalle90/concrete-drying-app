@@ -24,7 +24,7 @@ if ($concTemp == 'null')
 }
 
 $seriesdb->addSeries($projectID, $isOriginal, $concTemp, $windSpeed);
-
+$id = $seriesdb->getID($projectID, $concTemp, $windSpeed);
 //return seriesID
-echo 'success';
+echo $id;
 ?>
