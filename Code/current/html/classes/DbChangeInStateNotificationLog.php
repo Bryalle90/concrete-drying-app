@@ -26,9 +26,11 @@ class DbChangeInStateNotificationLog {
 	}
 
 	//inserts a new log to the table
-	public function addLog($changeInStateNotificationID, $dateSent){
+	public function add($changeInStateNotificationID){
+		date_default_timezone_set('America/New_York');
+		$time = date('Y-m-d H:i:s', strtotime('now'));
 		$sql = "INSERT INTO changeInStateNotificationLog (changeInStateNotificationID, dateSent)
-		VALUES ('$changeInStateNotificationID', '$dateSent')";
+		VALUES ('$changeInStateNotificationID', '$time')";
 		mysql_query($sql);		
 	}
 

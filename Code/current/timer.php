@@ -12,6 +12,9 @@
 	require_once($root.'/classes/DbUser.php');
 	require_once($root.'/classes/mail.php');
 	
+	require_once($root.'/classes/DbChangeInStateNotificationLog.php');
+	require_once($root.'/classes/DbFutureNotificationsLog.php');
+	
 	$LOWRISKBOUND = 0.15;
 	$MODRISKBOUND = 0.20;
 	
@@ -28,6 +31,9 @@
 	$seriesdb = new DbSeries();
 	$userdb = new DbUser();
 	$mailer = new Email();
+	
+	$riskLog = new DbChangeInStateNotificationLog();
+	$reminderLog = new DbFutureNotificationsLog();
 	
 	date_default_timezone_set('America/New_York');
 	$today = date('Y-m-d', strtotime('now'));
@@ -126,7 +132,7 @@
 	}
 	
 	function sendReminderEmail($projectID){
-		global $projectdb, $userdb, $mailer;
+		global $projectdb, $userdb, $reminderLog, $mailer;
 		$projectName = $projectdb->getName($projectID);
 		$zip = $projectdb->getZipcode($projectID);
 		
@@ -134,20 +140,23 @@
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
 			$projectdb->changeReminder($projectID, "");
+			$reminderLog->add($projectID);
 			$mailer->futureNotif($email, $projectName, $zip);
 		}
 	}
 	
 	function sendRiskEmail($projectID, $notificationID, $time, $oldRisk, $newRisk){
-		global $projectdb, $userdb, $riskdb, $mailer;
+		global $projectdb, $userdb, $riskdb, $riskLog, $mailer;
 		$oldRisk = getRiskLevel($oldRisk);
 		$newRisk = getRiskLevel($newRisk);
 		$projectName = $projectdb->getName($projectID);
 		$zip = $projectdb->getZipcode($projectID);
+		
 		$users = $projectdb->getUsersOfProject($projectID);
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
 			$riskdb->deleteNotification($notificationID);
+			$riskLog->add($notificationID);
 			$mailer->changeInRiskNotif($email, $projectName, $zip, $time, $oldRisk, $newRisk);
 		}
 	}

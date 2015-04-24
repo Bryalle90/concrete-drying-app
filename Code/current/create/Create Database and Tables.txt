@@ -100,9 +100,9 @@ CREATE TABLE changeInStateNotificationLog (
 );
 
 CREATE TABLE futureNotificationLog (
-	futureID int,
+	projectID int,
 	dateSent varchar(16),
-	PRIMARY KEY(futureID)
+	PRIMARY KEY(projectID)
 );
 
 CREATE TABLE zipcodeLog (

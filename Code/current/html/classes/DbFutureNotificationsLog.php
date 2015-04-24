@@ -26,9 +26,11 @@ class DbfutureNotificationLog {
 	}
 
 	//inserts a new log to the table
-	public function addLog($futureID, $dateSent){
-		$sql = "INSERT INTO futureNotificationLog (futureID, dateSent)
-		VALUES ('$futureID', '$dateSent')";
+	public function add($projectID){
+		date_default_timezone_set('America/New_York');
+		$time = date('Y-m-d H:i:s', strtotime('now'));
+		$sql = "INSERT INTO futureNotificationLog (projectID, dateSent)
+		VALUES ('$projectID', '$time')";
 		mysql_query($sql);		
 	}
 
