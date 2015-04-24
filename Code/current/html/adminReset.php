@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<base href="">
-		<title>Create Account</title>
+		<title>Reset System</title>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="bootstrap/js/bootstrap.min.js"></script>
@@ -28,51 +28,45 @@
 					session_start();
 					
 					// send user to index if logged in
-					if(isset($_SESSION['user']))
+					if(!$_SESSION['admin'])
 						header("Location: /index.php");
 						
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
+					include($_SERVER['DOCUMENT_ROOT'].'/classes/DbAdmin.php');
 					
 					if(isset($_POST['btn_create'])){ // if the create button was pressed
 						if($_POST['tb_email'] != "" && $_POST['tb_pass'] != ""	&& $_POST['tb_pass2'] != "" ){ // if email, pass, pass2 fields not blank
 							$userdb = new DbUser();
-							
-							if($userdb->isUser($_POST['tb_email']) == Null){ // email not already used
-								if ($_POST['tb_pass'] == $_POST['tb_pass2']){
-									$userID = $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
-									$code = $userdb->getCode($userID);
-									$email = $_POST['tb_email'];
+							$admindb = new DbAdmin();
 
-									$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
-									$link = $link.'/verify.php?email='.$email.'&code='.$code;
+							if ($_POST['tb_pass'] == $_POST['tb_pass2']){
 									
-									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
-									$mailer = new Email();
-									$mailer->newAccount($email, $link, $code);
+								$admindb->dropAll();	
+	
+								$userID = $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'y');
+								$code = $userdb->getCode($userID);
+								$email = $_POST['tb_email'];
+								$userdb->validate($userID);
 
-									echo '
-									<div class="alert alert-success" role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										Your account has been created and an email has been sent to verify your address
-									</div>
-									';
-								} else { // passwords did not match
-									echo '
-									<div class="alert alert-danger" role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										Passwords do not match
-									</div>
-									';
-								}
-							} else {
+								
+								$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
+								$link = $link.'/verify.php?email='.$email.'&code='.$code;
+
+								echo '
+								<div class="alert alert-success" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									Your account has been created and the database has been cleaned.'; echo '
+								</div>
+								';
+							} else { // passwords did not match
 								echo '
 								<div class="alert alert-danger" role="alert">
 									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									Email address is already in use
+									Passwords do not match
 								</div>
 								';
-							}
+							}							
 						} else { // some fields are empty
 							echo '
 							<div class="alert alert-danger" role="alert">
@@ -85,7 +79,7 @@
 
 					?>
 					<div class=" well well-lg row">
-						<form class="form-horizontal col-sm-12" action="/create.php" method="post">
+						<form class="form-horizontal col-sm-12" action="/adminReset.php" method="post">
 							<div class="form-group row">
 								<label for="tb_name" class="control-label">Display Name</label>
 								<input type="text" class="form-control" name="tb_name" value="<?php echo (isset($_POST['tb_name']) ? $_POST['tb_name'] : "");?>" placeholder="Display Name">
@@ -112,7 +106,7 @@
 								</div>
 							</div>
 							<div align="center" class="row">
-								<button class="btn btn-primary" type="submit" name="btn_create">Create Account</button>
+								<button class="btn btn-danger" type="submit" name="btn_create">Reset System</button>
 							</div>
 						</form>
 					</div>

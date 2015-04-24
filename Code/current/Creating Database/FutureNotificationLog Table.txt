@@ -1,6 +1,0 @@
-USE Account;
-CREATE TABLE futureNotificationLog (
-	futureID int,
-	dateSent varchar(16),
-	PRIMARY KEY(futureID)
-);

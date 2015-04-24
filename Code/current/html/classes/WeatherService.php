@@ -1,7 +1,8 @@
 <?php
-require $_SERVER['DOCUMENT_ROOT'].'/libraries/simplenws/SimpleNWS.php';
-include $_SERVER['DOCUMENT_ROOT'].'/classes/DbWeather.php';
-include $_SERVER['DOCUMENT_ROOT'].'/classes/DbZipUpdate.php';
+$root = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '/home/s002457/html';
+require $root.'/libraries/simplenws/SimpleNWS.php';
+include $root.'/classes/DbWeather.php';
+include $root.'/classes/DbZipUpdate.php';
 
 class WeatherService{
 	private $zipcode;
@@ -148,6 +149,16 @@ class WeatherService{
 		$evap = ($concTemp - ($humidPercent * $airTemperature)) * $wspd * pow(10, -6);
 		return($evap);
 	}
+	
+	public function convertFtoC($temp){
+        $conversion_factor = 5/9;
+        return (($temp-32)*$conversion_factor);
+    }
+    
+    public function convertCtoF($temp){
+        $conversion_factor = 9/5;
+        return (($temp*$conversion_factor)+32);
+    }
 	
 	public function getTimeLayout(){
 		return ($this->time_layout);

@@ -15,7 +15,7 @@
 				<ul class="nav navbar-nav navbar-left">
 					<li><a role="button" href="/index.php">Home</a></li>
 					<?php if(isset($_SESSION['user'])){
-						echo '<li><a href="projects.php">Projects'; if($_SESSION['unacceptedProjects'] > 0){ echo '<span class="badge">'; echo $_SESSION['unacceptedProjects']; echo '</span>'; } echo '</a></li>';
+						echo '<li><a href="projects.php">Projects'; if($_SESSION['unacceptedProjects'] > 0){ echo ' <span class="badge">'; echo $_SESSION['unacceptedProjects']; echo '</span>'; } echo '</a></li>';
 					} ?>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">

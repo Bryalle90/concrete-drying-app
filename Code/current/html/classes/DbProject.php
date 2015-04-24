@@ -101,6 +101,9 @@ class DbProject {
 			
 			$sql = "DELETE FROM userProjectLookup WHERE projectID = '$projectID'";
 			mysql_query($sql);
+			
+			$sql = "DELETE FROM changeInStateNotification WHERE projectID = '$projectID'";
+			mysql_query($sql);
 		}
 	}
 	

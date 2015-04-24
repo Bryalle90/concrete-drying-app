@@ -42,13 +42,17 @@
 						$userID = $userdb->checkForgotCode($_GET['email'], $_GET['code']);
 
 						if($userID){
+							$email = $userdb->getEmail($userID);
 							$newPass = $userdb->resetPass($userID);
 							
-							// TODO: send email with new password
+							require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+							$mailer = new Email();
+							$mailer->ForgotPassword($email, $newPass);
+							
 							echo '
 							<div class="alert alert-success" role="alert">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								A new password has been sent to your account '; echo $newPass; echo '
+								A new password has been sent to your account
 							</div>
 							';
 						} else {
@@ -68,14 +72,16 @@
 							$email = $_POST['tb_forgotEmail'];
 							$code = $userdb->createForgotCode($userID);
 
-							//TODO: send email to user with link and code
 							$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
 							$link = $link.'/forgot.php?email='.$email.'&code='.$code;
+							require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+							$mailer = new Email();
+							$mailer->forgotVerify($email, $link);
 							
 							echo '
 							<div class="alert alert-success" role="alert">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								An email has been sent to the address provided. '; echo $link; echo '
+								An email has been sent to the address provided.
 							</div>
 							';
 						} else {

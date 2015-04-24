@@ -1,12 +1,16 @@
 <?php
-
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbChangeInStateNotification.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/WeatherService.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DataService.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbSeries.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+	if($_SERVER['DOCUMENT_ROOT']){
+		?><script> window.location.replace("/index.php"); </script><?php
+		exit();
+	}
+	$root = '/home/s002457/html';
+	require_once($root.'/classes/DbChangeInStateNotification.php');
+	require_once($root.'/classes/WeatherService.php');
+	require_once($root.'/classes/DataService.php');
+	require_once($root.'/classes/DbProject.php');
+	require_once($root.'/classes/DbSeries.php');
+	require_once($root.'/classes/DbUser.php');
+	require_once($root.'/classes/mail.php');
 	
 	$LOWRISKBOUND = 0.15;
 	$MODRISKBOUND = 0.20;
@@ -31,17 +35,13 @@
 	// -- future notifications --
 	$projects = $projectdb->getProjectsWithReminders();
 	if($projects){
-		foreach($projects as $pID){
-			$reminder = $projectdb->getReminder($pID);
-			if($reminder == $today){
-				$projectName = $projectdb->getName($pID);
-				$zip = $projectdb->getZipcode($pID);
-				
-				$users = $projectdb->getUsersOfProject($pID);
-				foreach($users as $userID){
-					$email = $userdb->getEmail($userID);
-					// $mailer->FutureNotif($email, $projectName, $zip, $reminder);
-				}
+		foreach($projects as $projectID){
+			$reminder = $projectdb->getReminder($projectID);
+			if($reminder < $today){
+				$projectdb->changeReminder($projectID, "");
+			}
+			elseif($reminder == $today){
+				sendReminderEmail($projectID);
 			}
 		}
 	}
@@ -51,6 +51,7 @@
 	if($notifications){
 		foreach($notifications as $nID => $notification){
 			$zip = $projectdb->getZipcode($notification['projectID']);
+			$unit = $projectdb->getUnit($notification['projectID']);
 			$cTemp = $seriesdb->getConcreteTemp($notification['seriesID']);
 			$isIndoors = $seriesdb->getWindSpeed($notification['seriesID']);
 			
@@ -67,12 +68,17 @@
 			if(array_key_exists($notification['time'], $evapRates)){
 				$newRisk = $evapRates[$notification['time']];
 				if($newRisk){
-					if($cTemp or $isIndoors){
-						$concTemp = $cTemp ? $cTemp : $weatherService->getHourlyConcTemp()[$notification['time']];
-						$windspeed = $isIndoors ? $isIndoors : $weatherService->getHourlyWindSpeed()[$notification['time']] ;
-						$airTemp = $weatherService->getHourlyAirTemp()[$notification['time']];
-						$humidity = $weatherService->getHourlyHumidity()[$notification['time']];
-						$newRisk = $weatherService->calcEvap($concTemp, $humidity, $airTemp, $windspeed);
+					if($cTemp != 0 or $isIndoors == 1){
+						$concTemps = $weatherService->getHourlyConcTemp();
+						$wSpeeds = $weatherService->getHourlyWindSpeed();
+						$airTemps = $weatherService->getHourlyAirTemp();
+						$humidities = $weatherService->getHourlyHumidity();
+						
+						$concTemp = $cTemp ? $cTemp : $concTemps[$notification['time']];
+						$windspeed = $isIndoors ? $isIndoors : $wSpeeds[$notification['time']] ;
+						$airTemp = $airTemps[$notification['time']];
+						$humidity = $humidities[$notification['time']];
+						$newRisk = $weatherService->calcEvap($unit == 'S' ? $concTemp : $weatherService->convertCtoF($concTemp), $humidity, $airTemp, $windspeed);
 					}
 					
 					// see what risk the evap rate is at
@@ -84,9 +90,6 @@
 						$newRisk = $HIGH;
 					
 					$oldRisk = $notification['currentZone'];
-					
-					echo $notification['notifyZone'];
-					echo $newRisk.'<br>';
 					
 					$users = $projectdb->getUsersOfProject($notification['projectID']);
 					if($notification['notifyZone'] == $newRisk){
@@ -122,6 +125,19 @@
 		return $level;
 	}
 	
+	function sendReminderEmail($projectID){
+		global $projectdb, $userdb, $mailer;
+		$projectName = $projectdb->getName($projectID);
+		$zip = $projectdb->getZipcode($projectID);
+		
+		$users = $projectdb->getUsersOfProject($projectID);
+		foreach($users as $userID){
+			$email = $userdb->getEmail($userID);
+			$projectdb->changeReminder($projectID, "");
+			$mailer->futureNotif($email, $projectName, $zip);
+		}
+	}
+	
 	function sendRiskEmail($projectID, $notificationID, $time, $oldRisk, $newRisk){
 		global $projectdb, $userdb, $riskdb, $mailer;
 		$oldRisk = getRiskLevel($oldRisk);
@@ -132,7 +148,7 @@
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
 			$riskdb->deleteNotification($notificationID);
-			//$mailer->ChangeInRiskNotif($email, $projectName, $zip, $time, $oldRisk, $newRisk);
+			$mailer->changeInRiskNotif($email, $projectName, $zip, $time, $oldRisk, $newRisk);
 		}
 	}
 ?>

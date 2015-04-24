@@ -1,6 +1,0 @@
-USE Account;
-CREATE TABLE changeInStateNotificationLog (
-	changeInStateNotificationID int,
-	dateSent varchar(16),
-	PRIMARY KEY(changeInStateNotificationID)
-);

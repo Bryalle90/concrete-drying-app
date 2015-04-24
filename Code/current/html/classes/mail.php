@@ -1,57 +1,78 @@
 <?php
 class Email
 {
+	public function newAccount($email, $url, $code)
+	{
+		$verifyURL = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
+		$verifyURL = $verifyURL.'/verify.php';
+		
+		$subject = 'Welcome';
+		$body = "Hello, \r\n\r\nThank you for creating an account! Please click the link below to verify your account. If you did not create an account at this site, you can simply ignore this message.\r\n\r\n" . $url . 
+							"\r\n\r\nIf you are unable to visit the URL, please go to ".$verifyURL." and enter your email address and code: ".$code.
+							"\r\n\r\nThanks!";
+		$this->sendMessage($email, $subject, $body);
+	}
+	public function forgotVerify($email, $url)
+	{
+		$subject = 'Password Reset Verification';
+		$body = "Hello, \r\n\r\nWe just wanted to verify that you intended to reset your password. Please click the link below to have a new password generated and sent to you. If you did not request a new password, you can simply ignore this message.\r\n\r\n" . $url .
+							"\r\n\r\nThanks!";
+		$this->sendMessage($email, $subject, $body);
+	}
 
-public function NewAccount($emailacc, $url)
-{
-$headers = 'From: plasticcracks@siue.edu' . "\r\n";
-$subject = 'Welcome';
-$welcomeMessage = "Hello, \r\n\r\nThank you for creating an account! Please click the link below to verify your account. \r\n\r\n" . $url . "\r\n\r\nThanks!";
-mail($emailacc, $subject, $welcomeMessage, $headers);
-}
+	public function forgotPassword($email, $pass) 
+	{
+		$url = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
+		$url = $url.'/login_page.php';
+		
+		$subject = 'New Password';
+		$body ="Hello,\r\n\r\nYou have requested to reset your password. You may now log in with the following password: ".$pass."\r\n\r\n  Once you log in you will be prompted to change your password.\r\n\r\n" .$url.
+							" \r\n\r\nThanks!";
+		$this->sendMessage($email, $subject, $body);
+	}
 
-public function ForgotPassword($emailacc, $url) 
-{
-$subject = 'Forgot Password';
-$headers = 'From: plasticcracks@siue.edu' . "\r\n";
-$forgotMessage ="Hello,\r\n\r\nYou have requested to reset your password. Please click the link below to reset your password.\r\n\r\n" .$url." \r\n\r\nThanks!";
-mail($emailacc, $subject, $forgotMessage, $headers);
-}
+	public function addUserToProject($email, $projectName) 
+	{
+		$url = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
+		$url = $url.'/projects.php';
+		
+		$subject = 'You have been invited to a Project!';
+		$body = "Hello,\r\n\r\nYou have been invited to a project. Please click the link below and navigate to ".$projectName." where you can accept or decline the project invite. If you accept the invite you will receive notifications and reminders that are set for this project.\r\n\r\n" . $url.
+						" \r\n\r\nThanks!";
+		$this->sendMessage($email, $subject, $body);
+	}
 
-public function AddUserToProject($emailacc, $projectName) 
-{
-$subject = 'You have been added to a Project!';
-$url = 'https://plasticcracks.siue.edu/projects.php';
-$addMessage = "Hello,\r\n\r\nYou have been added to a project. Please click the link below and navigate to ".$projectName." where you can join the project.\r\n\r\n" . $url . "\r\n\r\nIf you don't have an account you will have to create one with this e-mail address.\r\n\r\nThanks!";
-$headers = 'From: plasticcracks@siue.edu' . "\r\n";
-mail($emailacc, $subject, $addMessage, $headers);
-}
+	public function emailGraph($email, $url, $zipcode, $name, $usrmsg) 
+	{
+		$subject = 'Plastic Shinkage Cracks';
+		$body = "Hello,\r\n\r\n".$name." has sent you the probablility that concrete will form plastic shinkage cracks for zip code: ".$zipcode.".\r\n\r\n".$name." said: ".addslashes($usrmsg)."\r\n\r\nClick the link below to see the predictions.\r\n\r\n" . $url .
+					"\r\n\r\nThanks!";
+		$this->sendMessage($email, $subject, $body);
+	} 
 
-public function EmailGraph($emailacc, $url, $zipcode, $name, $usrmsg) 
-{
-$subject = 'Plastic Shinkage Cracks';
-$headers = 'From: plasticcracks@siue.edu' . "\r\n";
-$msg = "Hello,\r\n\r\n".$name." has sent you the probablility that concrete will form plastic shinkage cracks for zip code ".$zipcode.".\r\n\r\n".$name." said: ".$usrmsg."\r\n\r\nClick the link below to see the predictions.\r\n\r\n" . $url . "\r\n\r\nThanks!";
-mail($emailacc, $subject, $msg, $headers);
-} 
+	public function futureNotif($email, $projectName, $zipcode) 
+	{
+		$url = 'https://plasticcracks.siue.edu/projects.php';
+		
+		$subject = "Project Reminder";
+		$body = "Hello,\r\n\r\nThis is your reminder for project: ".$projectName." at zip code: ".$zipcode.".\r\n\r\nClick the link below and click the view button under ".$projectName." to view the predictions.\r\n\r\n".$url.
+						"\r\n\r\nThanks!";
+		$this->sendMessage($email, $subject, $body);
+	}
 
-public function FutureNotif($emailacc, $projectName, $zipcode, $date) 
-{
-$subject = "Your predictions are ready!";
-$headers = 'From: plasticcracks@siue.edu' . "\r\n";
-$url = 'https://plasticcracks.siue.edu/projects.php';
-$futureMSG = "Hello,\r\n\r\nYour predictions are ready for ".$projectName." at zip code ".$zipcode.".\r\n\r\nClick the link below and select ".$projectName." to view the predictions.\r\n\r\n".$url."\r\n\r\nThanks!";
-mail($emailacc, $subject, $futureMSG, $headers);
-}
-
-public function ChangeInRiskNotif($emailacc, $projectName, $zipcode, $date, $oldRisk, $newRisk) 
-{
-$url = 'https://plasticcracks.siue.edu/projects.php';
-$headers = 'From: plasticcracks@siue.edu' . "\r\n";
-$subject = "Change In Risk Notification";
-$notifMSG = "Hello,\r\n\r\nThe predicted risk for ".$projectName." on ".$date." has changed from ".$oldRisk." risk to ".$newRisk." risk.\r\n\r\nClick the link below and select view on ".$projectName." to view the changes.\r\n\r\n".$url."\r\n\r\nThanks!";
-mail($emailacc, $subject, $notifMSG, $headers);
-}
-
+	public function changeInRiskNotif($email, $projectName, $zipcode, $date, $oldRisk, $newRisk) 
+	{
+		$url = 'https://plasticcracks.siue.edu/projects.php';
+		
+		$subject = "Change In Risk Notification";
+		$body = "Hello,\r\n\r\nThe predicted risk for ".$projectName." on ".$date." has changed from ".$oldRisk." risk to ".$newRisk." risk.\r\n\r\nClick the link below and click the view button under ".$projectName." to view the changes.\r\n\r\n".$url.
+					"\r\n\r\nThanks!";
+		$this->sendMessage($email, $subject, $body);
+	}
+	
+	public function sendMessage($email, $subject, $body){
+		$header = 'From: plasticcracks@siue.edu' . "\r\n";
+		mail($email, $subject, $body, $header);
+	}
 }
 ?>

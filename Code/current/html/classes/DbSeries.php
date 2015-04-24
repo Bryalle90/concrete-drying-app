@@ -29,8 +29,28 @@ class DbSeries {
 	public function addSeries($projectID, $isOriginal, $concreteTemp, $windSpeed){
 		$sql = "INSERT INTO series (projectID, isOriginal, concreteTemp, windSpeed)
 		VALUES ('$projectID', '$isOriginal', '$concreteTemp', '$windSpeed')";
-		mysql_query($sql);	
-			
+		mysql_query($sql);		
+	}
+	
+	//get id of series
+	public function getID($projectID, $concreteTemp, $windSpeed)
+	{
+		$sql = "SELECT seriesID FROM series WHERE projectID = '$projectID' AND isOriginal = 'n' AND concreteTemp = '$concreteTemp' And windSpeed = '$windSpeed'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$result = mysql_result($result, 0);
+		return $result;	
+	}
+	
+	//Check for duplicates
+	public function checkDuplicates($projectID, $concreteTemp, $windSpeed){
+		$sql = "SELECT count(*) FROM series WHERE projectID = '$projectID' AND isOriginal = 'n' AND concreteTemp = '$concreteTemp' And windSpeed = '$windSpeed'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$result = mysql_result($result, 0);
+		return $result;	
 	}
 
 	//delete series from table
@@ -51,8 +71,8 @@ class DbSeries {
 	public function getOriginalSeriesID($projectID){
 			$sql = "SELECT seriesID FROM series WHERE isOriginal = 'y' AND projectID = '$projectID'";
 			$result = mysql_query($sql);
-        	if (!$result || !mysql_num_rows($result))
-            return(Null);
+			if (!$result || !mysql_num_rows($result))
+				return(Null);
 			$result = mysql_result($result, 0);
 			return $result;
 	}
