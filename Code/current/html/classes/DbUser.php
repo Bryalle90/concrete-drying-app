@@ -26,6 +26,7 @@ class DbUser {
 	//inserts a new user to the table
 	public function addUser($name, $email, $userPass, $isAdmin){
 		$hashedPass = $this->hashPass($userPass);
+		$email = strtolower($email);
 		date_default_timezone_set('America/New_York');
 		$time = date('Y-m-d H:i:s', strtotime('now'));
 		$code = $this->createCode();
@@ -67,6 +68,7 @@ class DbUser {
 	}
 
 	public function checkCode($email, $code){
+		$email = strtolower($email);
 		$sql = "SELECT userID FROM user WHERE code = '$code' AND email = '$email'";
 		$result = mysql_query($sql);
 
@@ -136,6 +138,7 @@ class DbUser {
 	}
 
 	public function checkForgotCode($email, $code){
+		$email = strtolower($email);
 		$sql = "SELECT userID FROM user WHERE forgotCode = '$code' AND email = '$email'";
 		$result = mysql_query($sql);
 
@@ -179,6 +182,7 @@ class DbUser {
 
 	//changes the users email in the table
 	public function changeEmail($userID, $email){
+		$email = strtolower($email);
 		$sql = "UPDATE user SET email = '$email' WHERE userID = '$userID'";
 		mysql_query($sql);
 	}
@@ -263,6 +267,7 @@ class DbUser {
 	}
 	
 	public function verifyLogin($email, $userPass){
+		$email = strtolower($email);
 		$id = $this->isUser($email);
 		if($id != Null){
 			$hash = $this->getUserPass($id);
@@ -274,6 +279,7 @@ class DbUser {
 
 	//checks to see if email exists and return userID if they do, returns NULL if not
 	public function isUser($email){
+		$email = strtolower($email);
 		$sql = "SELECT userID FROM user WHERE email = '$email'";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
