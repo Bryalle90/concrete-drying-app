@@ -256,14 +256,13 @@
 					?>
 					<div class="addbtn row">
 						<div class="col-xs-12" align="center">
-							<?php
-							// if there are no projects we show a button with a popup telling the user to add one
-							if($numProjects > 0)
-								echo '<button class="btn btn-primary btn-xl" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project">Add Project</button>';
-							else
-								echo '<button class="btn btn-primary btn-xl popover-show" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project" data-trigger="focus" data-container="body" data-content="You have no projects, click here to add one" data-placement="bottom">Add Project</button>';
-							?>
-							<script>$(function () { $('.popover-show').popover('show');});</script>
+							<button class="btn btn-primary btn-xl popover-show" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project" data-trigger="focus click" data-container="body" data-content="You have no projects, click here to add one" data-placement="bottom">Add Project</button>
+							<script>
+								// if there are no projects we show a popup telling the user to add one
+								if(<?php echo $numProjects ?> < 1){
+									$('.popover-show').popover('show');
+								}
+							</script>
 						</div>
 					</div>
 					<script>pPanels = new Array();</script>
@@ -296,10 +295,10 @@
 	<div class="modal fade" id="newProjectModal" tabindex="-1" role="dialog" aria-labelledby="newProjectLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content container-fluid">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="newProjectLabel">Create New Project</h4>
-					</div>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="newProjectLabel">Create New Project</h4>
+				</div>
 				<form class="form-horizontal" action="/projects.php" method="post">
 					<div class="modal-body">
 						<div class="row">
