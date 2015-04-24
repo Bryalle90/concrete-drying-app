@@ -52,7 +52,7 @@
 							echo '
 							<div class="alert alert-success" role="alert">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								A new password has been sent to your account '; echo $newPass; echo '
+								A new password has been sent to your account
 							</div>
 							';
 						} else {
@@ -81,7 +81,7 @@
 							echo '
 							<div class="alert alert-success" role="alert">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								An email has been sent to the address provided. '; echo $link; echo '
+								An email has been sent to the address provided.
 							</div>
 							';
 						} else {

@@ -54,7 +54,7 @@
 									echo '
 									<div class="alert alert-success" role="alert">
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										Your account has been created and an email has been sent to verify your address '; echo $link; echo '
+										Your account has been created and an email has been sent to verify your address
 									</div>
 									';
 								} else { // passwords did not match

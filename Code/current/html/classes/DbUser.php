@@ -1,6 +1,7 @@
 <?php
 
-require $_SERVER['DOCUMENT_ROOT'].'/libraries/password-compat/lib/password.php';
+$root = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '/home/s002457/html';
+require $root.'/libraries/password-compat/lib/password.php';
 
 class DbUser {
 	

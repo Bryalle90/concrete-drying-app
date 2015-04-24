@@ -52,19 +52,17 @@ class Email
 
 	public function futureNotif($email, $projectName, $zipcode) 
 	{
-		$url = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
-		$url = $url.'/projects.php';
+		$url = 'https://plasticcracks.siue.edu/projects.php';
 		
-		$subject = "Your predictions are ready!";
-		$body = "Hello,\r\n\r\nYour predictions are ready for ".$projectName." at zip code: ".$zipcode.".\r\n\r\nClick the link below and click the view button under ".$projectName." to view the predictions.\r\n\r\n".$url.
+		$subject = "Project Reminder";
+		$body = "Hello,\r\n\r\nThis is your reminder for project: ".$projectName." at zip code: ".$zipcode.".\r\n\r\nClick the link below and click the view button under ".$projectName." to view the predictions.\r\n\r\n".$url.
 						"\r\n\r\nThanks!";
 		$this->sendMessage($email, $subject, $body);
 	}
 
 	public function changeInRiskNotif($email, $projectName, $zipcode, $date, $oldRisk, $newRisk) 
 	{
-		$url = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
-		$url = $url.'/projects.php';
+		$url = 'https://plasticcracks.siue.edu/projects.php';
 		
 		$subject = "Change In Risk Notification";
 		$body = "Hello,\r\n\r\nThe predicted risk for ".$projectName." on ".$date." has changed from ".$oldRisk." risk to ".$newRisk." risk.\r\n\r\nClick the link below and click the view button under ".$projectName." to view the changes.\r\n\r\n".$url.

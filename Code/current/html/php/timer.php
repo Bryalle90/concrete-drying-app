@@ -1,12 +1,12 @@
 <?php
-
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbChangeInStateNotification.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/WeatherService.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DataService.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbSeries.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+	$root = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '/home/s002457/html';
+	require_once($root.'/classes/DbChangeInStateNotification.php');
+	require_once($root.'/classes/WeatherService.php');
+	require_once($root.'/classes/DataService.php');
+	require_once($root.'/classes/DbProject.php');
+	require_once($root.'/classes/DbSeries.php');
+	require_once($root.'/classes/DbUser.php');
+	require_once($root.'/classes/mail.php');
 	
 	$LOWRISKBOUND = 0.15;
 	$MODRISKBOUND = 0.20;
@@ -74,7 +74,7 @@
 						$windspeed = $isIndoors ? $isIndoors : $wSpeeds[$notification['time']] ;
 						$airTemp = $airTemps[$notification['time']];
 						$humidity = $humidities[$notification['time']];
-						$newRisk = $weatherService->calcEvap($unit == 'S' ? $concTemp : $weatherService->convertFtoC($concTemp), $humidity, $airTemp, $windspeed);
+						$newRisk = $weatherService->calcEvap($unit == 'S' ? $concTemp : $weatherService->convertCtoF($concTemp), $humidity, $airTemp, $windspeed);
 					}
 					
 					// see what risk the evap rate is at
