@@ -49,7 +49,9 @@
 					
 					<?php
 					$ZIPPATTERN = "/\b\d{5}\b/"; // usa zip code regex
-					
+					$GUEST = 0;
+					$USER = 1;
+					$PROJECT = 2;
 				
 					// show top nav bar and zipcode input
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
@@ -65,6 +67,7 @@
 							while(!$zipInfodb->checkZip((int)$zip))
 								$zip = (string)rand(60001, 60499);
 						}
+						
 						// if the zip code provided is valid
 						if (preg_match($ZIPPATTERN, $zip)){
 							
@@ -120,6 +123,17 @@
 								var graphShown = true;
 								</script>
 								<?php
+								
+								// add to log
+								require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbZipLog.php');
+								if(isset($_POST['projectID']))
+									$userType = $PROJECT;
+								elseif(isset($_SESSION['id']))
+									$userType = $USER;
+								else
+									$userType = $GUEST;
+								$ziplog = new DbZipLog();
+								$ziplog->add($zip, $userType);
 				
 								// draw graph
 								include $_SERVER['DOCUMENT_ROOT']."/html/graph.html";

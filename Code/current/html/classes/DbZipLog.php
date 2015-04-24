@@ -26,9 +26,11 @@ class DbZipLog {
 	}
 
 	//inserts a new log to the table
-	public function addLog($zipcode, $userType, $date){
+	public function add($zipcode, $userType){
+		date_default_timezone_set('America/New_York');
+		$time = date('Y-m-d H:i:s', strtotime('now'));
 		$sql = "INSERT INTO zipcodeLog (zipcode, userType, date)
-		VALUES ('$zipcode', '$userType', '$date')";
+		VALUES ('$zipcode', '$userType', '$time')";
 		mysql_query($sql);		
 	}
 
