@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<base href="">
 		<title>Home</title>
+		<?php session_start(); ?>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
 		<script src="bootstrap/js/bootstrap.min.js"></script>
@@ -110,11 +111,13 @@
 									<?php
 								}
 								
-								// fill in city and state
 								?>
 								<script>
+								// fill in city and state
 								main.setCity(<?php echo json_encode($city)?>);
 								main.setState(<?php echo json_encode($state)?>);
+								// clear zipcode popover
+								var graphShown = true;
 								</script>
 								<?php
 				
@@ -143,10 +146,38 @@
 					}
 					?>
 					<div class="footer navbar-fixed-bottom">
+						asodifjasodifj
 					</div>
 				</div>
 				<div class="col-xs-0 col-md-0 col-lg-0"></div>
 			</div>
 		</div>
+		
+		
+		<script>
+			if(!graphShown){
+				$('#zipinput').popover('show');
+				$('#zipinput').focus(
+					function() {
+						$('#zipinput').popover('hide');
+					}
+				);
+				$('#zipinput').focusout(
+					function() {
+						if(!$('#zipinput').val()){
+							$('#zipinput').popover('show');
+						}
+					}
+				);
+				$('.navbar-toggle').focus(
+					function() {
+						$('#zipinput').popover('hide');
+					}
+				);
+			}
+		</script>
+		
 	</body>
+	
+	
 </html>
