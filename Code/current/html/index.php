@@ -22,20 +22,36 @@
 		<link href="bootstrap/css/theme.css" rel="stylesheet">
 	</head>
 	<body>
+
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-0 col-md-0 col-lg-0"></div>
 				<div class="col-xs-12 col-md-12 col-lg-12">
+					
+					<div align="center">
+						<form class="form-inline <?php echo isset($_POST['projectID']) ? 'hidden' : '' ?>" action="/index.php" method="get">
+							<div class="form-group">
+								<label class="sr-only" for="zipinput">Zip Code</label>
+								<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view the forcast of shrinkage crack risk.">
+								<script> var graphShown = false; </script>
+								<div class="input-group">
+									<span class="input-group-addon">Unit</span>
+									<select name="unit" class="form-control">
+										<option>Standard</option>
+										<option>Metric</option>
+									</select>
+								</div>
+								<button class="btn btn-primary form-control" type="submit">Go!</button>
+							</div>
+						</form>
+					</div>
+					
 					<?php
 					$ZIPPATTERN = "/\b\d{5}\b/"; // usa zip code regex
 					
-					// start session
-					session_start();
 				
 					// show top nav bar and zipcode input
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
-					if(!isset($_POST['projectID']))
-						include $_SERVER['DOCUMENT_ROOT']."/html/enterzip.html";
 					
 					// require classes
 					require_once($_SERVER['DOCUMENT_ROOT'].'/classes/WeatherService.php');
