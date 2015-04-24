@@ -188,15 +188,18 @@ function Main(zipCode, metric) {
     
     this.getColor = function(numberOfSeries) {
         seriesColor = '';
-      if (numberOfSeries == 1) { seriesColor = 'rgba(48,156,252,1)'; }
-			else if (numberOfSeries == 2) { seriesColor = 'rgba(176,115,7,1)'; }
-			else if (numberOfSeries == 3) { seriesColor = 'rgba(237,175,57,1)'; }
-			else if (numberOfSeries == 4) { seriesColor = 'rgba(212,52,194,1)'; }
-			else if (numberOfSeries == 5) { seriesColor = 'rgba(100,26,252,1)'; }
-			else if (numberOfSeries == 6) { seriesColor = 'rgba(251,133,13,1)'; }
-			else if (numberOfSeries == 7) { seriesColor = 'rgba(212,129,130,1)'; }
-			else { seriesColor = 'rgba(1,1,1,1)'; }
-                        return seriesColor;
+        if (numberOfSeries == 1) { seriesColor = 'rgb(0, 0, 255)'; }
+       else if (numberOfSeries == 2) { seriesColor = 'rgb(0, 0, 128)'; }
+        else if (numberOfSeries == 3) { seriesColor = 'rgb(128, 0, 128)'; }
+	else if (numberOfSeries == 4) { seriesColor = 'rgb(0,128,128)'; }
+	else if (numberOfSeries == 5) { seriesColor = 'rgb(169, 169, 169)'; }
+	
+	else if (numberOfSeries == 6) { seriesColor = 'rgb(85, 107, 47)'; }
+	else if (numberOfSeries == 7) { seriesColor = 'rgb(123, 104, 238)'; }
+        else if (numberOfSeries == 8) { seriesColor = 'rgb(255, 20, 147)'; }
+	else if (numberOfSeries == 9) { seriesColor = 'rgb(47, 79, 79)'; }
+        else { seriesColor = 'rgba(1,1,1,1)'; }
+        return seriesColor;
     };
 }
 
