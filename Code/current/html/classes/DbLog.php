@@ -24,14 +24,39 @@ class DbLog{
 		$this->add($type, $zipcode, NULL);
 	}
 
-	public function addReminder($zipcode){
+	public function addReminderSent($zipcode){
 		$type = 3;
 		$this->add($type, $zipcode, NULL);
 	}
 
-	public function addRisk($zipcode, $time){
+	public function addRiskEmailSent($zipcode, $time){
 		$type = 4;
 		$this->add($type, $zipcode, $time);
+	}
+
+	public function addReminderCreated($zipcode){
+		$type = 5;
+		$this->add($type, $zipcode, NULL);
+	}
+
+	public function addRiskCreated($zipcode, $time){
+		$type = 6;
+		$this->add($type, $zipcode, $time);
+	}
+
+	public function addUserCreated(){
+		$type = 7;
+		$this->add($type, NULL, NULL);
+	}
+
+	public function addUserVerified(){
+		$type = 8;
+		$this->add($type, NULL, NULL);
+	}
+
+	public function addProjectCreated($zipcode){
+		$type = 9;
+		$this->add($type, $zipcode, NULL);
 	}
 	
 	private function add($type, $zip, $time){
@@ -39,7 +64,7 @@ class DbLog{
 		$logTime = date('Y-m-d H:i:s', strtotime('now'));
 		
 		$sql = "INSERT INTO log (type, zip, logTime, time)
-		VALUES ('$type', '$zipcode', '$logTime', '$time')";
+		VALUES ('$type', '$zip', '$logTime', '$time')";
 		mysql_query($sql);
 	}
 

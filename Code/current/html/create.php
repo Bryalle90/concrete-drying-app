@@ -50,6 +50,10 @@
 									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
 									$mailer = new Email();
 									$mailer->newAccount($email, $link, $code);
+									
+									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
+									$logger = new DbLog();
+									$logger->addUserCreated();
 
 									echo '
 									<div class="alert alert-success" role="alert">

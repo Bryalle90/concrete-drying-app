@@ -128,7 +128,16 @@
 									$location = $city.', '.$state;
 									$title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
 									$unit = $_POST['newProjectUnit'] == 'Standard' ? 'S' : 'M';
-									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], (int)$_POST['newProjectZip'], $unit, $_POST['reminder']);
+									$zip = (int)$_POST['newProjectZip'];
+									
+									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
+									$logger = new DbLog();
+									$logger->addProjectCreated($zip);
+									if($_POST['reminder'] != ''){
+										$logger->addReminderCreated($zip);
+									}
+									
+									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], $zip, $unit, $_POST['reminder']);
 									
 									echo '
 									<div class="alert alert-success" role="alert">
@@ -227,6 +236,13 @@
 							}
 							if($projectdb->getReminder($_POST['projectID']) != $_POST['newReminder']){
 								$projectdb->changeReminder($_POST['projectID'], $_POST['newReminder']);
+								
+								if($_POST['newReminder'] != ''){
+									$zip = $projectdb->getZipcode($_POST['projectID']);
+									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
+									$logger = new DbLog();
+									$logger->addReminderCreated($zip);
+								}
 								echo '
 								<div class="alert alert-success" role="alert">
 									The reminder for your project has been changed

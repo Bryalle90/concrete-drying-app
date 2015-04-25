@@ -38,6 +38,9 @@
 					if($userID){
 						// set verified in userdb
 						$userdb->validate($userID);
+						require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
+						$logger = new DbLog();
+						$logger->addUserVerified();
 
 						echo '
 						<div class="alert alert-success" role="alert">
