@@ -9,9 +9,9 @@ class DbChangeInStateNotification {
 	
 	private $dbhandle;
 
-	private $HOST = '127.0.0.1';
+	private $HOST = '127.0.0.1:3666';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = '';
+	private $PASSWORD = 'a1b2c3';
 	private $DATABASE = 'plasticcracks';
 	
 	public function __construct(){
