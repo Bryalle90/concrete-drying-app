@@ -9,9 +9,9 @@ class DbChangeInStateNotification {
 	
 	private $dbhandle;
 
-	private $HOST = '127.0.0.1:3666';
+	private $HOST = '127.0.0.1';
 	private $ACCOUNT = 'root';
-	private $PASSWORD = 'a1b2c3';
+	private $PASSWORD = '';
 	private $DATABASE = 'plasticcracks';
 	
 	public function __construct(){
@@ -41,6 +41,20 @@ class DbChangeInStateNotification {
 		$result = mysql_result($result, 0);
 		return $result;			
 	}
+        
+         public function getID($projectID, $seriesID, $time){
+		$sql = "SELECT changeInStateNotificationID FROM changeInStateNotification WHERE projectID = '$projectID' AND seriesID = '$seriesID' AND time = '$time'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$result = mysql_result($result, 0);
+		return $result;			
+	}
+        
+        public function editNotif($changeInStateNotificationID, $notifyZone) {
+            $sql = "UPDATE changeInStateNotification SET notifyZone = '$notifyZone' WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
+            mysql_query($sql);
+        }
 
 	//delete notification from table
 	public function deleteNotification($changeInStateNotificationID){
@@ -124,6 +138,8 @@ class DbChangeInStateNotification {
 		$result = mysql_result($result, 0);
 		return $result;
 	}
+        
+        
 	
 		public function getTime($changeInStateNotificationID){
 		$sql = "SELECT time FROM changeInStateNotification WHERE changeInStateNotificationID = '$changeInStateNotificationID'";
