@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
-		<form class="form-horizontal col-xs-12" action="/../verify.php" method="post">
-			<input name="tb_email" id="email" type="email" class="form-control col-xs-12" placeholder="Email address" autocomplete="off">
-			<input name="tb_pass" id="pass" type="password" class="form-control col-xs-12" placeholder="Password" autocomplete="off">
-			<button type="submit" name="btn_signin" class="btn btn-primary col-xs-12">Login</button>
-			<li><a href="/forgot.php">Forgot Password?</a></li>
-			<li><a href="/create.php">Create Account</a></li>
+	<div class="col-xs-12">
+		<form class="form-horizontal" action="/../verify.php" method="post">
+			<input name="tb_email" id="email" type="email" class="form-control" placeholder="Email address">
+			<input name="tb_pass" id="pass" type="password" class="form-control" placeholder="Password" autocomplete="off">
+			<button type="submit" name="btn_signin" class="btn btn-primary form-control">Login</button>
+			<div class="row">
+				<div class="col-xs-6">
+					<li><a href="/forgot.php"><p class="text-left">Forgot Password?</p></a></li>
+				</div>
+				<div class="col-xs-6">
+					<li><a href="/create.php"><p class="text-right">Create Account</p></a></li>
+				</div>
+			</div>
 		</form>
-		
-		<script id="hiddenlpsubmitdiv" style="display: none;"></script><script>try{for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++){ var lastpass_f = document.forms[lastpass_iter]; if(typeof(lastpass_f.lpsubmitorig2)=="undefined"){ lastpass_f.lpsubmitorig2 = lastpass_f.submit; lastpass_f.submit = function(){ var form=this; var customEvent = document.createEvent("Event"); customEvent.initEvent("lpCustomEvent", true, true); var d = document.getElementById("hiddenlpsubmitdiv"); if (d) {for(var i = 0; i < document.forms.length; i++){ if(document.forms[i]==form){ d.innerText=i; } } d.dispatchEvent(customEvent); }form.lpsubmitorig2(); } } }}catch(e){}</script>
+	</div>
+	<script id="hiddenlpsubmitdiv" style="display: none;"></script><script>try{for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++){ var lastpass_f = document.forms[lastpass_iter]; if(typeof(lastpass_f.lpsubmitorig2)=="undefined"){ lastpass_f.lpsubmitorig2 = lastpass_f.submit; lastpass_f.submit = function(){ var form=this; var customEvent = document.createEvent("Event"); customEvent.initEvent("lpCustomEvent", true, true); var d = document.getElementById("hiddenlpsubmitdiv"); if (d) {for(var i = 0; i < document.forms.length; i++){ if(document.forms[i]==form){ d.innerText=i; } } d.dispatchEvent(customEvent); }form.lpsubmitorig2(); } } }}catch(e){}</script>
 
 </html>
