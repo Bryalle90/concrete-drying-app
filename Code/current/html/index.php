@@ -160,7 +160,7 @@
 					}
 					?>
 					<div class="footer navbar-fixed-bottom">
-						asodifjasodifj
+						<font color="red">The results provided by the calculator are intended for educational and informational purposes only.</font>
 					</div>
 				</div>
 				<div class="col-xs-0 col-md-0 col-lg-0"></div>
@@ -183,7 +183,7 @@
 						}
 					}
 				);
-				$('.navbar-toggle').focus(
+				$('.hidezippop').focus(
 					function() {
 						$('#zipinput').popover('hide');
 					}
