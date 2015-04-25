@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<base href="">
-		<title>Create Account</title>
+		<title>Plastic Crack Risk Calculator - Create Account</title>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
