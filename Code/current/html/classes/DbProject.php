@@ -96,6 +96,9 @@ class DbProject {
 		$query = "DELETE FROM userProjectLookup WHERE projectID = '$projectID' AND userID = '$userID'";
 		mysql_query($query);
 
+		$query = "DELETE FROM series WHERE projectID = '$projectID'";
+		mysql_query($query);
+
 		$ownerID = $this->getOwner($projectID);
 		if($ownerID == $userID){
 			$sql = "DELETE FROM project WHERE projectID = '$projectID'";
