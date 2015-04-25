@@ -9,32 +9,31 @@
 		<?php session_start(); ?>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
-		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
 		<script src="javascript/highcharts.js"></script>
 		<script src="javascript/exporting.js"></script>
 		<script src="javascript/grouped-categories.js"></script>
 		<script src="javascript/GraphFunctions.js"></script>
 		
 		<!-- Bootstrap core CSS -->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<!-- Bootstrap theme -->
-		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
-		<link href="bootstrap/css/theme.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
 	</head>
 	<body>
 
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-xs-0 col-md-0 col-lg-0"></div>
-				<div class="col-xs-12 col-md-12 col-lg-12">
-					
+				<div class="col-xs-12">
+					<?php 
+						// show top nav bar and zipcode input
+						include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
+					?>
 					<div align="center">
 						<form class="form-inline <?php echo isset($_POST['projectID']) ? 'hidden' : '' ?>" action="/index.php" method="get">
 							<div class="form-group">
-								<label class="sr-only" for="zipinput">Zip Code</label>
-								<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view the forcast of shrinkage crack risk.">
-								<script> var graphShown = false; </script>
 								<div class="input-group">
 									<span class="input-group-addon">Unit</span>
 									<select name="unit" class="form-control">
@@ -42,7 +41,14 @@
 										<option>Metric</option>
 									</select>
 								</div>
-								<button class="btn btn-primary form-control" type="submit">Go!</button>
+								<label class="sr-only" for="zipinput">Zip Code</label>
+								<div class="input-group">
+									<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view the forcast of shrinkage crack risk.">
+									<span class="input-group-btn">
+										<button class="btn btn-primary" type="submit">Go!</button>
+									</span>
+								</div>
+								<script> var graphShown = false; </script>
 							</div>
 						</form>
 					</div>
@@ -52,9 +58,6 @@
 					$GUEST = 0;
 					$USER = 1;
 					$PROJECT = 2;
-				
-					// show top nav bar and zipcode input
-					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					
 					// require classes
 					require_once($_SERVER['DOCUMENT_ROOT'].'/classes/WeatherService.php');
@@ -143,8 +146,8 @@
 								if( $error->getMessage() == "Invalid coordinates."){
 									echo '
 									<div class="alert alert-danger" role="alert">
-										Invalid zipcode: Could not get data for zip code
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										Invalid zipcode: Could not get data for zip code
 									</div>
 									';
 								}
@@ -152,8 +155,8 @@
 						} else {
 							echo '
 							<div class="alert alert-danger" role="alert">
-								Please enter 5-digit numerical zip code
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								Please enter 5-digit numerical zip code
 							</div>
 							';
 						}
@@ -163,7 +166,6 @@
 						<font color="red">The results provided by the calculator are intended for educational and informational purposes only.</font>
 					</div>
 				</div>
-				<div class="col-xs-0 col-md-0 col-lg-0"></div>
 			</div>
 		</div>
 		

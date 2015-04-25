@@ -8,15 +8,15 @@
 		<title>Projects</title>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
 		
 		<!-- Bootstrap core CSS -->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="libraries/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<!-- Bootstrap theme -->
-		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
-		<link href="bootstrap/css/theme.css" rel="stylesheet">
-		<link href="bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 		
 		<?php session_start(); ?>
 		
@@ -347,18 +347,6 @@
 										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 									</div>
 								</div>
-								<script type="text/javascript" src="bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-								<script type="text/javascript" src="bootstrap/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
-								<script>
-								$('.form_date').datetimepicker({
-									language:  'en',
-									startDate: new Date(),
-									weekStart: 0,
-									autoclose: 1,
-									startView: 3,
-									minView: 2,
-								});
-								</script>
 							</div>
 						</div>
 					</div>
@@ -376,4 +364,17 @@
 			</div>
 		</div>
 	</div>
+	
+	<script type="text/javascript" src="libraries/bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="libraries/bootstrap/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+	<script>
+	$('.form_date').datetimepicker({
+		language:  'en',
+		startDate: new Date(),
+		weekStart: 0,
+		autoclose: 1,
+		startView: 3,
+		minView: 2,
+	});
+	</script>
 </html>

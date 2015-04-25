@@ -8,14 +8,14 @@
 		<title>Reset System</title>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
 		
 		<!-- Bootstrap core CSS -->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<!-- Bootstrap theme -->
-		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
-		<link href="bootstrap/css/theme.css" rel="stylesheet">
+		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
 	</head>
 
 	<body style="background-color: #DBDBDB">
