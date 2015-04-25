@@ -14,38 +14,55 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-left">
 					<li><a role="button" href="/index.php">Home</a></li>
-					<?php if(isset($_SESSION['user'])){
-						echo '<li><a href="projects.php">Projects'; if($_SESSION['unacceptedProjects'] > 0){ echo ' <span class="badge">'; echo $_SESSION['unacceptedProjects']; echo '</span>'; } echo '</a></li>';
-					} ?>
+					<?php
+						if(isset($_SESSION['user'])){
+							?>
+							<li><a href="projects.php">Projects 
+								<?php
+									if($_SESSION['unacceptedProjects'] > 0){ 
+										?><span class="badge"><?php echo $_SESSION['unacceptedProjects'] ?></span><?php 
+									}
+								?>
+							</a></li>
+							<?php
+						}
+					?>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<?php if(!isset($_SESSION['user'])){
-						echo 
-						'<li class="dropdown">
-							<a href="#" class="dropdown-toggle hidezippop" data-toggle="dropdown" role="button" aria-expanded="false">Log in<span class="caret"></span></a>
-							<ul style="width:310px" class="dropdown-menu container" role="menu">
-								<li>';include $_SERVER['DOCUMENT_ROOT']."/html/login.html"; echo '</li>
-							</ul>
-						</li>';
-					}?>
-					<?php if(isset($_SESSION['user'])){
-						echo '
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle hidezippop" data-toggle="dropdown" role="button" aria-expanded="false">';echo $_SESSION['user']; echo '<span class="caret"></span></a>
-							<ul style="width:200px" class="dropdown-menu" role="menu">';
-								if ($_SESSION['admin']){
-									echo '
-										<li><a href="admin.php">Admin Options</a></li>
-										<li class="divider"></li>
-									';
-								}
-								echo '
-								<li><a href="edit.php">Edit Account</a></li>
-								<li class="divider"></li>
-								<li><a href="/../php/logout.php">Log Out</a></li>
-							</ul>
-						</li>
-					';}?>
+					<?php
+						if(!isset($_SESSION['user'])){
+							?>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle hidezippop" data-toggle="dropdown" role="button" aria-expanded="false">Log in<span class="caret"></span></a>
+								<ul style="width:310px" class="dropdown-menu container" role="menu">
+									<li><?php include $_SERVER['DOCUMENT_ROOT']."/html/login.html" ?></li>
+								</ul>
+							</li>
+							<?php
+						}
+					?>
+					<?php
+						if(isset($_SESSION['user'])){
+							?>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle hidezippop" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo $_SESSION['user'] ?><span class="caret"></span></a>
+								<ul style="width:200px" class="dropdown-menu" role="menu">
+									<?php
+										if ($_SESSION['admin']){
+											?>
+											<li><a href="admin.php">Admin Options</a></li>
+											<li class="divider"></li>
+											<?php
+										}
+									?>
+									<li><a href="edit.php">Edit Account</a></li>
+									<li class="divider"></li>
+									<li><a href="/../php/logout.php">Log Out</a></li>
+								</ul>
+							</li>
+							<?php
+						}
+					?>
 					<li><a href="#" data-toggle="modal" data-target="#aboutModal" role="button" class="hidezippop">About</a></li>
 				</ul>
 			</div>
