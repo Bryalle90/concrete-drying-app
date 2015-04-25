@@ -129,15 +129,16 @@
 									$title = $_POST['newProjectName'] == '' ? $location : $_POST['newProjectName'];
 									$unit = $_POST['newProjectUnit'] == 'Standard' ? 'S' : 'M';
 									$zip = (int)$_POST['newProjectZip'];
+									$time = $_POST['reminder'];
 									
 									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
 									$logger = new DbLog();
 									$logger->addProjectCreated($zip);
 									if($_POST['reminder'] != ''){
-										$logger->addReminderCreated($zip);
+										$logger->addReminderCreated($zip, $time);
 									}
 									
-									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], $zip, $unit, $_POST['reminder']);
+									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], $zip, $unit, $time);
 									
 									echo '
 									<div class="alert alert-success" role="alert">
@@ -236,12 +237,13 @@
 							}
 							if($projectdb->getReminder($_POST['projectID']) != $_POST['newReminder']){
 								$projectdb->changeReminder($_POST['projectID'], $_POST['newReminder']);
+								$time = $_POST['newReminder'];
 								
-								if($_POST['newReminder'] != ''){
+								if($time != ''){
 									$zip = $projectdb->getZipcode($_POST['projectID']);
 									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
 									$logger = new DbLog();
-									$logger->addReminderCreated($zip);
+									$logger->addReminderCreated($zip, $time);
 								}
 								echo '
 								<div class="alert alert-success" role="alert">

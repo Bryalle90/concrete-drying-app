@@ -24,9 +24,9 @@ class DbLog{
 		$this->add($type, $zipcode, NULL);
 	}
 
-	public function addReminderSent($zipcode){
+	public function addReminderSent($zipcode, $time){
 		$type = 3;
-		$this->add($type, $zipcode, NULL);
+		$this->add($type, $zipcode, $time);
 	}
 
 	public function addRiskEmailSent($zipcode, $time){
@@ -34,9 +34,9 @@ class DbLog{
 		$this->add($type, $zipcode, $time);
 	}
 
-	public function addReminderCreated($zipcode){
+	public function addReminderCreated($zipcode, $time){
 		$type = 5;
-		$this->add($type, $zipcode, NULL);
+		$this->add($type, $zipcode, $time);
 	}
 
 	public function addRiskCreated($zipcode, $time){
