@@ -56,23 +56,19 @@
 	
 	<div class="panel-footer <?php echo $project['accepted'] ? '' : 'hidden'?>">
 		<div class="row">
-			<div class="col-xs-7">
-				<button class="btn btn-info btn-sm" type="button" onclick="pPanels[<?php echo $index?>].viewProject('<?php echo $project['unit'] == 'S' ? 'Standard' : 'Metric'?>', '<?php echo str_pad($project['zip'], 5, '0', STR_PAD_LEFT)?>')" title="View this project's forcast">View</button>
-				<button class="btn btn-default btn-sm <?php echo $_SESSION['id'] == $project['ownerID'] ? '' : 'disabled'?>" type="button" data-toggle="modal" data-target="#editModal-<?php echo $index?>" title="Change name, zipcode, or unit">Edit</button>
-			</div>
-			<div class="col-xs-5" align="right">
-				<button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target="#delModal-<?php echo $index?>" title="Remove yourself from this project"><?php echo $project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
+			<div class="col-xs-12">
+				<button class="btn btn-info btn-sm pull-left" type="button" onclick="pPanels[<?php echo $index?>].viewProject('<?php echo $project['unit'] == 'S' ? 'Standard' : 'Metric'?>', '<?php echo str_pad($project['zip'], 5, '0', STR_PAD_LEFT)?>')" title="View this project's forcast">View</button>
+				<button class="btn btn-default btn-sm pull-left <?php echo $_SESSION['id'] == $project['ownerID'] ? '' : 'disabled'?>" type="button" data-toggle="modal" data-target="#editModal-<?php echo $index?>" title="Change name, zipcode, or unit">Edit</button>
+				<button class="btn btn-danger btn-sm pull-right" type="button" data-toggle="modal" data-target="#delModal-<?php echo $index?>" title="Remove yourself from this project"><?php echo $project['ownerID'] == $_SESSION['id'] ? 'Delete' : 'Leave'?></button>
 			</div>
 		</div>
 	</div>
 	
 	<div class="panel-footer <?php echo $project['accepted'] ? 'hidden' : ''?>">
 		<div class="row">
-			<div class="col-xs-7">
-				<button class="btn btn-primary btn-sm" type="button" onclick="pPanels[<?php echo $index?>].acceptInvite()" title="Accept the invitation to this project">Accept</button>
-			</div>
-			<div class="col-xs-5" align="right">
-				<button class="btn btn-danger btn-sm" type="button" onclick="pPanels[<?php echo $index?>].declineInvite()" title="Decline the invitation to this project">Decline</button>
+			<div class="col-xs-12">
+				<button class="btn btn-primary btn-sm pull-left" type="button" onclick="pPanels[<?php echo $index?>].acceptInvite()" title="Accept the invitation to this project">Accept</button>
+				<button class="btn btn-danger btn-sm pull-right" type="button" onclick="pPanels[<?php echo $index?>].declineInvite()" title="Decline the invitation to this project">Decline</button>
 			</div>
 		</div>
 	</div>
@@ -163,12 +159,8 @@
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-xs-5" align="left">
-							<button class="btn btn-primary" type="button" name="btn_edit" onclick="pPanels[<?php echo $index?>].editProject()">Save</button>
-						</div>
-						<div class="col-xs-7" align="right">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						</div>
+						<button class="btn btn-primary pull-left" type="button" name="btn_edit" onclick="pPanels[<?php echo $index?>].editProject()">Save</button>
+						<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
 					</div>
 				</div>
 			</form>

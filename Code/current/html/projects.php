@@ -342,12 +342,8 @@
 					</div>
 					<div class="modal-footer">
 						<div class="row">
-							<div class="col-xs-7" align="left">
-								<button class="btn btn-primary" type="submit" name="btn_addProject">Add Project</button>
-							</div>
-							<div class="col-xs-5" align="right">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-							</div>
+							<button class="btn btn-primary pull-left" type="submit" name="btn_addProject">Add Project</button>
+							<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
 						</div>
 					</div>
 				</form>
