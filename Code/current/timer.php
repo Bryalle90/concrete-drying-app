@@ -10,10 +10,8 @@
 	require_once($root.'/classes/DbProject.php');
 	require_once($root.'/classes/DbSeries.php');
 	require_once($root.'/classes/DbUser.php');
+	require_once($root.'/classes/DbLog.php');
 	require_once($root.'/classes/mail.php');
-	
-	require_once($root.'/classes/DbChangeInStateNotificationLog.php');
-	require_once($root.'/classes/DbFutureNotificationsLog.php');
 	
 	$LOWRISKBOUND = 0.15;
 	$MODRISKBOUND = 0.20;
@@ -30,10 +28,8 @@
 	$projectdb = new DbProject();
 	$seriesdb = new DbSeries();
 	$userdb = new DbUser();
+	$logger = new DbLog();
 	$mailer = new Email();
-	
-	$riskLog = new DbChangeInStateNotificationLog();
-	$reminderLog = new DbFutureNotificationsLog();
 	
 	date_default_timezone_set('America/New_York');
 	$today = date('Y-m-d', strtotime('now'));
@@ -47,7 +43,7 @@
 				$projectdb->changeReminder($projectID, "");
 			}
 			elseif($reminder == $today){
-				sendReminderEmail($projectID);
+				sendReminderEmail($projectID, $reminder);
 			}
 		}
 	}
@@ -131,32 +127,32 @@
 		return $level;
 	}
 	
-	function sendReminderEmail($projectID){
-		global $projectdb, $userdb, $reminderLog, $mailer;
+	function sendReminderEmail($projectID, $time){
+		global $projectdb, $userdb, $logger, $mailer;
 		$projectName = $projectdb->getName($projectID);
 		$zip = $projectdb->getZipcode($projectID);
+		$logger->addReminderSent($zip, $time);
 		
 		$users = $projectdb->getUsersOfProject($projectID);
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
 			$projectdb->changeReminder($projectID, "");
-			$reminderLog->add($projectID);
 			$mailer->futureNotif($email, $projectName, $zip);
 		}
 	}
 	
 	function sendRiskEmail($projectID, $notificationID, $time, $oldRisk, $newRisk){
-		global $projectdb, $userdb, $riskdb, $riskLog, $mailer;
+		global $projectdb, $userdb, $riskdb, $logger, $mailer;
 		$oldRisk = getRiskLevel($oldRisk);
 		$newRisk = getRiskLevel($newRisk);
 		$projectName = $projectdb->getName($projectID);
 		$zip = $projectdb->getZipcode($projectID);
+		$logger->addRiskEmailSent($zip, $time);
 		
 		$users = $projectdb->getUsersOfProject($projectID);
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
 			$riskdb->deleteNotification($notificationID);
-			$riskLog->add($notificationID);
 			$mailer->changeInRiskNotif($email, $projectName, $zip, $time, $oldRisk, $newRisk);
 		}
 	}
