@@ -107,6 +107,8 @@
 						sendRiskEmail($notification['projectID'], $nID, $notification['time'], $oldRisk, $newRisk);
 					}
 				}
+			} else {
+				$riskdb->deleteNotification($nID);
 			}
 		}
 	}
