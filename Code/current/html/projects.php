@@ -18,7 +18,24 @@
 		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
 		<link href="libraries/bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 		
-		<?php session_start(); ?>
+		<?php
+			session_start();
+					
+			// send user to index if not logged in
+			if(!isset($_SESSION['id'])){
+				?><script> window.location.replace("/login_page.php"); </script><?php
+				exit();
+			}
+			// send user to verify if not verified
+			else if(!$_SESSION['verified']){
+				?><script> window.location.replace("/verify.php"); </script><?php
+				exit();
+			}
+			else if($_SESSION['resetPW']){
+				?><script> window.location.replace("/edit.php"); </script><?php
+				exit();
+			}
+		?>
 		
 		<style>
 			.btn-xl {
@@ -90,22 +107,58 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-offset-0 col-xs-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+					<div class="alertrow row">
+						<div class="alert alert-success" role="alert" id="alertSuccessAddProject" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							Your new project has been added!
+						</div>
+						<div class="alert alert-danger" role="alert" id="alertDangerInvalidZip" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							Could not get data for zip code
+						</div>
+						<div class="alert alert-danger" role="alert" id="alertDangerEmptyZip" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							You must enter a zip code to create a project
+						</div>
+						<div class="alert alert-success" role="alert" id="alertSuccessRemProject" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							Your project has been removed!
+						</div>
+						<div class="alert alert-danger" role="alert" id="alertDangerNotInProj" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							You are not in the project
+						</div>
+						<div class="alert alert-success" role="alert" id="alertSuccessNameChanged" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							The name for your project has been changed
+						</div>
+						<div class="alert alert-success" role="alert" id="alertSuccessZipChanged" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							The zip code for your project has been changed
+						</div>
+						<div class="alert alert-danger" role="alert" id="alertDangerInvalidCoords" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							Unable to get coordinates from zip code
+						</div>
+						<div class="alert alert-success" role="alert" id="alertSuccessUnitChanged" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							The unit for your project has been changed
+						</div>
+						<div class="alert alert-success" role="alert" id="alertSuccessReminderChanged" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							The reminder for your project has been changed
+						</div>
+						<div class="alert alert-danger" role="alert" id="alertDangerNotOwner" hidden="true">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							Only the owner of the project can edit
+						</div>
+					</div>
+					<div class="addbtn row">
+						<div class="col-xs-12" align="center">
+							<button class="btn btn-primary btn-xl popover-show" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project" data-trigger="focus click" data-container="body" data-content="You have no projects, click here to add one" data-placement="bottom">Add Project</button>
+						</div>
+					</div>
 					<?php
-					
-					// send user to index if not logged in
-					if(!isset($_SESSION['id'])){
-						?><script> window.location.replace("/login_page.php"); </script><?php
-						exit();
-					}
-					// send user to verify if not verified
-					else if(!$_SESSION['verified']){
-						?><script> window.location.replace("/verify.php"); </script><?php
-						exit();
-					}
-					else if($_SESSION['resetPW']){
-						?><script> window.location.replace("/edit.php"); </script><?php
-						exit();
-					}
 						
 					require($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
 					require($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
@@ -140,66 +193,31 @@
 									
 									$projectdb->addToProjectTable($title, $location, $_SESSION['id'], $zip, $unit, $time);
 									
-									echo '
-									<div class="alert alert-success" role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										Your new project has been added!
-									</div>
-									';
+									?><script>$('#alertSuccessAddProject').show()</script><?php
 								}
 								catch (Exception $error){
-									echo '
-									<div class="alert alert-danger" role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										invalid zipcode: Could not get data for zip code
-									</div>
-									';
+									?><script>$('#alertDangerInvalidZip').show()</script><?php
 								}
 							} else {
-								echo '
-								<div class="alert alert-danger" role="alert">
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									invalid zipcode: Could not get coordinates for zip code
-								</div>
-								';
+								?><script>$('#alertDangerInvalidCoords').show()</script><?php
 							}
 						} else {
-							echo '
-							<div class="alert alert-danger" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								You must enter a zip code to create a project
-							</div>
-							';
+							?><script>$('#alertDangerEmptyZip').show()</script><?php
 						}
 					}
 					if(isset($_POST['remove'])){
 						if($projectdb->isUserInProject($_POST['projectID'], $_SESSION['id'])){
 							$projectdb->deleteProject($_POST['projectID'], $_SESSION['id']);
-							echo '
-							<div class="alert alert-success" role="alert">
-								Your project has been removed!
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							</div>
-							';
+							?><script>$('#alertSuccessRemProject').show()</script><?php
 						} else {
-							echo '
-							<div class="alert alert-danger" role="alert">
-								error: you are not in the project
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							</div>
-							';
+							?><script>$('#alertDangerNotInProj').show()</script><?php
 						}
 					}
 					if(isset($_POST['edit'])){
 						if($projectdb->getOwner($_POST['projectID']) == $_SESSION['id']){
 							if($_POST['newName'] != ''){
 								$projectdb->changeProjectName($_POST['projectID'], $_POST['newName']);
-								echo '
-								<div class="alert alert-success" role="alert">
-									The name for your project has been changed
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								</div>
-								';
+								?><script>$('#alertSuccessNameChanged').show()</script><?php
 							}
 							if($_POST['newZip'] != ''){
 								
@@ -211,29 +229,14 @@
 									$projectdb->changeProjectLocation($_POST['projectID'], $city.', '.$state);
 									$projectdb->changeProjectZip($_POST['projectID'], $_POST['newZip']);
 									
-									echo '
-									<div class="alert alert-success" role="alert">
-										The zip code for your project has been changed
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									</div>
-									';
+									?><script>$('#alertSuccessZipChanged').show()</script><?php
 								} else {
-									echo '
-									<div class="alert alert-danger" role="alert">
-										error: unable to get coordinates from zip code
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									</div>
-									';
+									?><script>$('#alertDangerInvalidCoords').show()</script><?php
 								}
 							}
 							if($projectdb->getUnit($_POST['projectID']) != $_POST['newUnit'][0]){
 								$projectdb->changeProjectUnit($_POST['projectID'], $_POST['newUnit']);
-								echo '
-								<div class="alert alert-success" role="alert">
-									The unit for your project has been changed
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								</div>
-								';
+								?><script>$('#alertSuccessUnitChanged').show()</script><?php
 							}
 							if($projectdb->getReminder($_POST['projectID']) != $_POST['newReminder']){
 								$projectdb->changeReminder($_POST['projectID'], $_POST['newReminder']);
@@ -245,20 +248,10 @@
 									$logger = new DbLog();
 									$logger->addReminderCreated($zip, $time);
 								}
-								echo '
-								<div class="alert alert-success" role="alert">
-									The reminder for your project has been changed
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								</div>
-								';
+								?><script>$('#alertSuccessReminderChanged').show()</script><?php
 							}
 						} else {
-							echo '
-							<div class="alert alert-danger" role="alert">
-								error: only the owner of the project can edit
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							</div>
-							';
+							?><script>$('#alertDangerNotOwner').show()</script><?php
 						}
 					}
 					if(isset($_POST['accept']) && $projectdb->isUserInProject($_POST['projectID'], $_SESSION['id'])){
@@ -272,17 +265,14 @@
 					$numProjects = count($projectdb->getProjectIDs($_SESSION['id']));
 					include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					?>
-					<div class="addbtn row">
-						<div class="col-xs-12" align="center">
-							<button class="btn btn-primary btn-xl popover-show" type="button" data-toggle="modal" data-target="#newProjectModal" title="Create a new project" data-trigger="focus click" data-container="body" data-content="You have no projects, click here to add one" data-placement="bottom">Add Project</button>
-							<script>
-								// if there are no projects we show a popup telling the user to add one
-								if(<?php echo $numProjects ?> < 1){
-									$('.popover-show').popover('show');
-								}
-							</script>
-						</div>
-					</div>
+					
+					<script>
+						// if there are no projects we show a popup telling the user to add one
+						if(<?php echo $numProjects ?> < 1){
+							$('.popover-show').popover('show');
+						}
+					</script>
+					
 					<script>pPanels = new Array();</script>
 					<div class="panel-group col-xs-12 col-sm-offset-2 col-sm-8" id="accordion3" role="tablist" aria-multiselectable="false">
 						<?php

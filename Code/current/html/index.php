@@ -6,7 +6,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<base href="">
 		<title>Plastic Crack Risk Calculator</title>
-		<?php session_start(); ?>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
 		<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
@@ -21,6 +20,7 @@
 		<link href="libraries/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
+		<?php session_start(); ?>
 	</head>
 	<body>
 
@@ -31,26 +31,42 @@
 						// show top nav bar and zipcode input
 						include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 					?>
-					<div align="center">
-						<form class="form-inline <?php echo isset($_POST['projectID']) ? 'hidden' : '' ?>" action="/index.php" method="get">
-							<div class="form-group">
-								<div class="input-group">
-									<span class="input-group-addon">Unit</span>
-									<select name="unit" class="form-control">
-										<option>Standard</option>
-										<option>Metric</option>
-									</select>
-								</div>
-								<label class="sr-only" for="zipinput">Zip Code</label>
-								<div class="input-group">
-									<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view the forcast of shrinkage crack risk.">
-									<span class="input-group-btn">
-										<button class="btn btn-primary" type="submit">Go!</button>
-									</span>
-								</div>
-								<script> var graphShown = false; </script>
+					<div class="center-block row">
+						<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
+							<div class="alert alert-danger" id="alertFailInvalidZip" role="alert" hidden="true">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								Invalid zipcode: Could not get data for zip code
 							</div>
-						</form>
+							<div class="alert alert-danger" id="alertFailZipLength" role="alert" hidden="true">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								Please enter 5-digit numerical zip code
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
+							<form class="form-inline <?php echo isset($_POST['projectID']) ? 'hidden' : '' ?>" action="/index.php" method="get">
+								<div align="center">
+									<div class="form-group">
+										<div class="input-group">
+											<span class="input-group-addon">Unit</span>
+											<select name="unit" class="form-control">
+												<option>Standard</option>
+												<option>Metric</option>
+											</select>
+										</div>
+										<label class="sr-only" for="zipinput">Zip Code</label>
+										<div class="input-group">
+											<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view the forcast of shrinkage crack risk.">
+											<span class="input-group-btn">
+												<button class="btn btn-primary" type="submit">Go!</button>
+											</span>
+										</div>
+										<script> var graphShown = false; </script>
+									</div>
+								</div>
+							</form>
+						</div>
 					</div>
 					
 					<?php
@@ -77,11 +93,7 @@
 							$isMetric = $_GET['unit'] == "Metric" ? 1 : 0;
 							
 							// instantiate graph helper class
-							?>
-							<script>
-							main = new Main(<?php echo json_encode($zip)?>, <?php echo $isMetric;?>);
-							</script>
-							<?php
+							?><script> main = new Main(<?php echo json_encode($zip)?>, <?php echo $isMetric;?>); </script><?php
 							
 							try{
 								// get city, state, lon, lat from zip code
@@ -140,31 +152,23 @@
 				
 								// draw graph
 								include $_SERVER['DOCUMENT_ROOT']."/html/graph.html";
+								?>
+								<div class="footer navbar-fixed-bottom">
+									<p class="text-center"><font color="red">The results provided by the calculator are intended for educational and informational purposes only.</font></p>
+								</div>
+								<?php
 								
 							}
 							catch (Exception $error){
 								if( $error->getMessage() == "Invalid coordinates."){
-									echo '
-									<div class="alert alert-danger" role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										Invalid zipcode: Could not get data for zip code
-									</div>
-									';
+									?><script>$('#alertFailInvalidZip').show()</script><?php
 								}
 							}
 						} else {
-							echo '
-							<div class="alert alert-danger" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								Please enter 5-digit numerical zip code
-							</div>
-							';
+							?><script>$('#alertFailZipLength').show()</script><?php
 						}
 					}
 					?>
-					<div class="footer navbar-fixed-bottom">
-						<font color="red">The results provided by the calculator are intended for educational and informational purposes only.</font>
-					</div>
 				</div>
 			</div>
 		</div>

@@ -16,9 +16,6 @@
 		<link href="libraries/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
-	</head>
-	
-	<body style="background-color: #DBDBDB">
 		<?php
 		session_start();
 		
@@ -27,73 +24,72 @@
 			?><script> window.location.replace("/index.php"); </script><?php
 			exit();
 		}
-			
-		include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
 		?>
+	</head>
+	
+	<body style="background-color: #DBDBDB">
 			<div class="container-fluid">
-				<div class="col-xs-0 col-sm-2 col-md-3 col-lg-3"></div>
-				<div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-					<?php
-						
-					require($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
-					$userdb = new DbUser();
-
-					if(isset($_GET['code'])){
-						$userID = $userdb->checkForgotCode($_GET['email'], $_GET['code']);
-
-						if($userID){
-							$email = $userdb->getEmail($userID);
-							$newPass = $userdb->resetPass($userID);
-							
-							require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
-							$mailer = new Email();
-							$mailer->ForgotPassword($email, $newPass);
-							
-							echo '
-							<div class="alert alert-success" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								A new password has been sent to your account
-							</div>
-							';
-						} else {
-							echo '
-							<div class="alert alert-danger" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								The code could not be verified. Try sending a new email.
-							</div>
-							';
-						}
-					}
+				<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+				
+					<div class="alert alert-success" id="alertSuccessNewPass" role="alert" hidden="true">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						A new password has been sent to your account
+					</div>
+					<div class="alert alert-danger" id="alertFailNoVerify" role="alert" hidden="true">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						The code could not be verified. Try sending a new email
+					</div>
+					<div class="alert alert-success" id="alertSuccessSendVerify" role="alert" hidden="true">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						An email has been sent to the address provided
+					</div>
+					<div class="alert alert-danger" id="alertFailNoAccount" role="alert" hidden="true">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						No account with this email address exists.
+					</div>
 					
-					if (isset($_POST['btn_forgotSubmit'])){
-						
-						$userID = $userdb->isUser($_POST['tb_forgotEmail']);
-						if($userID){
-							$email = $_POST['tb_forgotEmail'];
-							$code = $userdb->createForgotCode($userID);
+					<?php
+						include $_SERVER['DOCUMENT_ROOT']."/html/navbar.html";
+						require($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
+						$userdb = new DbUser();
 
-							$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
-							$link = $link.'/forgot.php?email='.$email.'&code='.$code;
-							require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
-							$mailer = new Email();
-							$mailer->forgotVerify($email, $link);
-							
-							echo '
-							<div class="alert alert-success" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								An email has been sent to the address provided.
-							</div>
-							';
-						} else {
-							echo '
-							<div class="alert alert-danger" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								No account with this email address exists.
-							</div>
-							';
+						if(isset($_GET['code'])){
+							$userID = $userdb->checkForgotCode($_GET['email'], $_GET['code']);
+
+							if($userID){
+								$email = $userdb->getEmail($userID);
+								$newPass = $userdb->resetPass($userID);
+								
+								require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+								$mailer = new Email();
+								$mailer->ForgotPassword($email, $newPass);
+								
+								?><script>$('#alertSuccessNewPass').show()</script><?php
+							} else {
+								?><script>$('#alertFailNoVerify').show()</script><?php
+							}
 						}
-					}
+						
+						if (isset($_POST['btn_forgotSubmit'])){
+							$userID = $userdb->isUser($_POST['tb_forgotEmail']);
+							
+							if($userID){
+								$email = $_POST['tb_forgotEmail'];
+								$code = $userdb->createForgotCode($userID);
+
+								$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
+								$link = $link.'/forgot.php?email='.$email.'&code='.$code;
+								require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+								$mailer = new Email();
+								$mailer->forgotVerify($email, $link);
+								
+								?><script>$('#alertSuccessSendVerify').show()</script><?php
+							} else {
+								?><script>$('#alertFailNoAccount').show()</script><?php
+							}
+						}
 					?>
+					
 					<div class="well well-lg" align="center">
 						<form class="form-inline" action="#" method="post">
 							<h3 class="form-heading">Please enter your email</h3>
@@ -108,8 +104,8 @@
 							</div>
 						</form>
 					</div>
+					
 				</div>
-				<div class="col-xs-0 col-sm-2 col-md-3 col-lg-3"></div>
 			</div>
 		</div>
 	</body>

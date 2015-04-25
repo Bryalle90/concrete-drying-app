@@ -16,14 +16,36 @@
 		<link href="libraries/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
+		<?php session_start(); ?>
 	</head>
 
 	<body style="background-color: #DBDBDB">		
 		<div class="container-fluid">
 		
-			<div class="col-xs-offset-0 col-sm-offset-2 col-md-offset-3 col-xs-12 col-sm-8 col-md-6">
+			<div class="col-sm-offset-2 col-md-offset-3 col-xs-12 col-sm-8 col-md-6">
+			
+				<div class="alert alert-success" role="alert" id="alertSuccessVerified" hidden="true">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					Your account has been verified!
+				</div>
+				<div class="alert alert-danger" role="alert" id="alertDangerNotVerified" hidden="true">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					The code could not be verified. Try sending a new verification email.
+				</div>
+				<div class="alert alert-success" role="alert" id="alertSuccessEmailSent" hidden="true">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					A new verification email has been sent to your address!
+				</div>
+				<div class="alert alert-danger" role="alert" id="alertDangerAlreadyVerified" hidden="true">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					This email address has already been verified
+				</div>
+				<div class="alert alert-danger" role="alert" id="alertDangerNoAccount" hidden="true">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					This email address does not have an account
+				</div>
+				
 				<?php
-				session_start();
 
 				include($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
 				include($_SERVER['DOCUMENT_ROOT'].'/classes/DbProject.php');
@@ -42,19 +64,9 @@
 						$logger = new DbLog();
 						$logger->addUserVerified();
 
-						echo '
-						<div class="alert alert-success" role="alert">
-							Your account has been verified!
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						</div>
-						';
+						?><script>$('#alertSuccessVerified').show()</script><?php
 					} else {
-						echo '
-						<div class="alert alert-danger" role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							The code could not be verified. Try sending a new verification email.
-						</div>
-						';
+						?><script>$('#alertDangerNotVerified').show()</script><?php
 					}
 				}
 
@@ -100,27 +112,12 @@
 							$mailer = new Email();
 							$mailer->newAccount($email, $link, $code);
 							
-							echo '
-							<div class="alert alert-success" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								A new verification email has been sent to your address!
-							</div>
-							';
+							?><script>$('#alertSuccessEmailSent').show()</script><?php
 						} else {
-							echo '
-							<div class="alert alert-danger" role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								This email address has already been verified
-							</div>
-							';
+							?><script>$('#alertDangerAlreadyVerified').show()</script><?php
 						}
 					} else {
-						echo '
-						<div class="alert alert-danger" role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							This email address does not have an account
-						</div>
-						';
+						?><script>$('#alertDangerNoAccount').show()</script><?php
 					}
 				}
 
