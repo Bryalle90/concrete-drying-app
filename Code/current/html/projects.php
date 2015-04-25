@@ -303,7 +303,7 @@
 	<div class="modal fade" id="newProjectModal" tabindex="-1" role="dialog" aria-labelledby="newProjectLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content container-fluid">
-				<div class="modal-header">
+				<div class="modal-header row">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title" id="newProjectLabel">Create New Project</h4>
 				</div>
