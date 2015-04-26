@@ -50,14 +50,14 @@
 									<div class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Unit</span>
-											<select name="unit" class="form-control">
+											<select name="unit" class="form-control hidezippop">
 												<option>Standard</option>
 												<option>Metric</option>
 											</select>
 										</div>
 										<label class="sr-only" for="zipinput">Zip Code</label>
 										<div class="input-group">
-											<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view a shrinkage crack risk forcast">
+											<input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control popover-show " pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view a shrinkage crack risk forcast">
 											<span class="input-group-btn">
 												<button class="btn btn-primary" type="submit">Go!</button>
 											</span>
@@ -67,7 +67,7 @@
 								</div>
 							</form>
 						</div>
-						<div class="col-xs-offset-3 col-sm-offset-0 col-md-offset-0 col-lg-offset-0 col-xs-6 col-sm-3 col-md-3 col-lg-2 <?php echo (isset($_GET['zip']) || isset($_SESSION['id'])) ? 'hidden' : '' ?>">
+						<div class="col-xs-offset-1 col-sm-offset-0 col-md-offset-0 col-lg-offset-0 col-xs-10 col-sm-3 col-md-3 col-lg-2 <?php echo (isset($_GET['zip']) || isset($_SESSION['id'])) ? 'hidden' : '' ?>">
 							<div class="well well-sm row popover-show" data-trigger="manual" data-placement="bottom" data-content="Sign in to save projects and more!">
 								<h4 class="text-center">Sign in</h4>
 								<?php
