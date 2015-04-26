@@ -114,6 +114,7 @@ class WeatherService{
 		$updatedb = new DbZipUpdate();
 		
 		$timeUpdated = date($updatedb->getLastUpdated($this->zipcode));
+		date_default_timezone_set('America/New_York');
 		$timeNow = date('Y-m-d H:i:s', strtotime('now'));
 		
 		if($timeUpdated == Null){ // zip does not exist in table
