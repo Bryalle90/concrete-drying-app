@@ -91,7 +91,7 @@ else
 <div id="report"></div>
 
 <!--Container that the chart is in -->
-<div id="container" style="height:83vh; min-height:400px; min-width: 1050px;"></div>
+<div id="container" style="height:70vh; min-height:400px; min-width: 1050px;"></div>
 
 <script>
 	var currentZone;
@@ -99,8 +99,8 @@ else
 	var seriesNotifID;
 	var coldWeatherConcTemp = 49;
 	var hotWeatherConcTemp = 85;
-	var numberOfSeries = 1;
-	var concTempArray = main.getConcreteTempArray();
+	var numberOfSeries = 0;
+	
 	var cTempOffset = null;
 	var windOffset = null;
 	var city = main.getCity();
@@ -118,8 +118,8 @@ $(function () {
 	//Weather Data Arrays
 	var evapArray = main.getEvapArray();
 	var originalEvapArray = evapArray;
+	var concTempArray = main.getConcreteTempArray();
 	var airTempArray = main.getAirTempArray();
-	var userConcreteTempArray = {};
 	var humidityArray = main.getHumidityArray();
 	var timeArray = main.getTimeArray();
 	var cloudCoverArray = main.getCloudCoverArray();
@@ -129,7 +129,7 @@ $(function () {
 	var isMetric = main.isMetric();	
 	var arrayLength = evapArray.length;
 	var isOrignalGraph = true;
-
+	var daySuffix = [];
 	
 	//These colors are used for the plotbands and tooltip borders
 	var red = 'rgba(255, 0, 0, 0.8)';
@@ -171,6 +171,7 @@ $(function () {
 	
 	var year = [];
 	var day = [];
+	
 	var hour = [];
 	var month = [];
 	var nameOfMonth = [];
@@ -250,9 +251,55 @@ $(function () {
 		year[i] = d.getFullYear().toString().substr(2,2);
 		nameOfMonth[i] = monthname[d.getMonth()];
 		nameOfDay[i] = weekday[d.getDay()];
+		
+		if (day[i] == 01 || day[i] == 21 || day[i] == 31) {
+			//alert('st');
+			daySuffix[i] = "st";
+		}
+		else if (day[i] == 02 || day[i] == 22) {
+			//alert('nd');
+			daySuffix[i] = "nd";
+		}
+		else if (day[i] == 03 || day[i] == 23) {
+			//alert('rd');
+			daySuffix[i] = "rd";
+		}
+		else {
+			//alert('th');
+			daySuffix[i] = "th";
+		}
+		
+		if (day[i] == 01) {
+			day[i] = 1;
+		}
+		else if (day[i] == 02) {
+			day[i] = 2;
+		}
+		else if (day[i] == 03) {
+			day[i] = 3;
+		}
+		else if (day[i] == 04) {
+			day[i] = 4;
+		}
+		else if (day[i] == 05) {
+			day[i] = 5;
+		}
+		else if (day[i] == 06) {
+			day[i] = 6;
+		}
+		else if (day[i] == 07) {
+			day[i] = 7;
+		}
+		else if (day[i] == 08) {
+			day[i] = 8;
+		}
+		else if (day[i] == 09) {
+			day[i] = 9;
+		}		
+		
 	}
 	
-	var timezone = 'Local time of ' + city + ', ' + state + '<br>' +  nameOfMonth[0] + " " + day[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1];
+	var timezone = 'Local time of ' + city + ', ' + state + '<br>' +  nameOfMonth[0] + " " + day[0] + daySuffix[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1] + daySuffix[day.length - 1];
 
 	//Labels for x-axis
 	var labelDate = [];
@@ -262,7 +309,7 @@ $(function () {
 	var j=0;
 	var x=0;
 	dayName = [];
-	dayName[0] = nameOfDay[0];
+	dayName[0] = nameOfDay[0] + ' ' + day[0];
 	var zero = [];
 	var one = [];
 	var two = [];
@@ -274,12 +321,12 @@ $(function () {
 	zero[0] = hour[0];
 	
 	//Set Labels for x-axis
-	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + day[0] + " at " + hour[0] + ":00";
+	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + day[0] + daySuffix[0] + " at " + hour[0] + ":00";
 	labelDate[0] = hour[0] +", "+ nameOfDay[0];
 	
 	for (var i = 1; i < arrayLength; i++)
 	{
-		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + day[i] + " at " + hour[i] + ":00";
+		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + day[i] + daySuffix[i] + " at " + hour[i] + ":00";
 		labelDate[i] = hour[i] +", "+ nameOfDay[i];
 	
 		if (nameOfDay[i] == nameOfDay[i-1])
@@ -307,7 +354,7 @@ $(function () {
 			if (j == 5) { five[0] = hour[i]; }
 			if (j == 6) { six[0] = hour[i]; }
 			if (j == 7) { seven[0] = hour[i]; }
-			dayName[j] = nameOfDay[i]; 
+			dayName[j] = nameOfDay[i] + ' '+ day[i]; 
 		}
 	}
 
@@ -363,6 +410,7 @@ $(function () {
 			//x axis labels
 			categories:
 			[{
+				
 				name: dayName[0],
 				categories: zero
 			},
@@ -405,6 +453,7 @@ $(function () {
 			//x axis label configuration
 			labels:
 			{
+		
 				rotation: 0,
 				style: { fontSize: '11px' },
 			},
@@ -569,6 +618,13 @@ $(function () {
 				
 				var s = '<div style= "padding: 10px; border: 3px solid '+tmpColor+';">';
 				s +='<b>'+ fullDate[index] +'</b>';
+				if (this.point.color != undefined) {
+					//if (this.point.color == 'red') {
+						//code
+				//	}
+					s+= ' (Click the point to edit your notifcation)';
+				}
+				
 				s += '<br/> <b> Evaporation Rate: ' + main.round(this.y, 2) + evaporationRateLabel;
 				s += '<br/>	\u2022 Temperature: ' + main.round(airTempArray[index], 2) + temperatureLabel;
 				s += '<br/> \u2022 Concrete Temperature: ' + main.round(concreteTemp[index], 2) + temperatureLabel;
@@ -598,12 +654,12 @@ $(function () {
 					//Add hot/cold weather warnings
 					if (concreteTemp[index] <= coldWeatherConcTemp)
 					{
-						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting<div>';
+						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting</div>';
 					}
 					
 					else if (concreteTemp[index] >= hotWeatherConcTemp)
 					{
-						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting<div>';
+						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting</div>';
 					}
 				}//end if
 
@@ -629,17 +685,23 @@ $(function () {
 					//Add hot/cold weather warnings
 					if (main.convertCtoF(concreteTemp[index]) <= coldWeatherConcTemp)
 					{
-						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting<div>';
+						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require cold weather placement <br>techniques, see ACI 306 Guide to Cold Weather Concreting</div>';
 					}
 					
 					else if (main.convertCtoF(concreteTemp[index]) >= hotWeatherConcTemp)
 					{
-						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting<div>';
+						s+= ' <br/> <div style = "color:red">Warning: Ambient temperatures require hot weather placement <br>techniques, see ACI 305 Guide to Hot Weather Concreting</div>';
 					}
 				}//end else metric
 				
+
+				//s+= '</div>';
+				//Add notifications to tooltip
+				
+
+				
 				//return tooltip string
-				s+= '</div>';
+				
 				return s;
 			}, //End tooltip formatter
 		}, //End Tooltip
@@ -664,10 +726,11 @@ $(function () {
 				{
 					hide: function()
 					{
-						this.show();
 						
+						c =$('#container').highcharts();
 						if (this.name == 'Original Prediction')
 						{
+							this.show();
 							alert('Can not delete Original Prediction');
 						}
 						else
@@ -682,16 +745,15 @@ $(function () {
 									
 									success: function(response)
 									{
-										
+										numberOfSeries = numberOfSeries - 1;
 									}
 									});
 							}
-							//Else just remove the series
-							else { this.remove(); }
+							c =$('#container').highcharts();
 							this.remove();
 						}
 						
-						
+						c.redraw();
 					},
 				},
 				
@@ -938,7 +1000,7 @@ $(function () {
 										$("#editNotificationModal").modal('show');});
 									}
 									
-									else if (this.color == '#90EE90') 
+									else if (this.color == 'greenyellow') 
 										//code
 									
 									{
@@ -990,7 +1052,7 @@ $(function () {
 								
 								else
 								{
-									alert('Must be project owner to add a notification.')
+									alert('Must be project owner to add/edit a notification.')
 								}
 							}
 						}//end click event
@@ -1007,6 +1069,7 @@ $(function () {
 		[{
 			name: 'Original Prediction',
 			data: evapArray,
+			
 			lineWidth: 2,
 			//color: 'black',
 			//lineColor: 'red',
@@ -1250,7 +1313,8 @@ $(function () {
 									}
 													
 									else if (notif == 3) {
-										notifyColor = '#90EE90';
+										
+										notifyColor = 'greenyellow';
 									}
 											
 									else if (notif == 4) {
@@ -1318,7 +1382,15 @@ $(function () {
 								name = 'Inside';
 								for (j = 0; j < arrayLength; j++)
 								{
-									tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], insideWindSpeed[j], concTempArray[j]);
+									if (isMetric)
+									{
+										
+										tmpEvapArray[j] = main.calculateEvap(main.convertCtoF(airTempArray[j]), humidityArray[j], 1, main.convertCtoF(concTempArray[j]));
+									}
+									else
+									{
+										tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], insideWindSpeed[j], concTempArray[j]);
+									}
 								}
 								chart.addSeries({
 									name: name,
@@ -1336,7 +1408,15 @@ $(function () {
 								name = 'Concrete temp ' + concrete[i] + ' ' + temperatureLabel + '<br>Outside Wind Speed';
 								for (j = 0; j < arrayLength; j++)
 								{
-									tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], windSpeedArray[j], concrete[i]);
+									if (isMetric)
+									{
+										
+										tmpEvapArray[j] = main.calculateEvap(main.convertCtoF(airTempArray[j]), humidityArray[j], main.convertKphToMph(windSpeedArray[j]), main.convertCtoF(concrete[i]));
+									}
+									else
+									{
+										tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], windSpeedArray[j], concrete[i]);
+									}
 								}
 			
 								chart.addSeries({
@@ -1355,7 +1435,15 @@ $(function () {
 								name = 'Concrete temp ' + concrete[i] + ' ' + temperatureLabel + '<br>Inside';
 								for (j = 0; j < arrayLength; j++)
 								{
-									tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], insideWindSpeed[j], concrete[i]);
+									if (isMetric)
+									{
+										
+										tmpEvapArray[j] = main.calculateEvap(main.convertCtoF(airTempArray[j]), humidityArray[j], 1, main.convertCtoF(concrete[i]));
+									}
+									else
+									{
+										tmpEvapArray[j] = main.calculateEvap(airTempArray[j], humidityArray[j], insideWindSpeed[j], concrete[i]);
+									}
 								}
 			
 								chart.addSeries({
@@ -1440,7 +1528,7 @@ $(function () {
 											}
 											
 											else if (notifyZone[x] == 3) {
-												notifyColor = '#90EE90';
+												notifyColor = 'greenyellow';
 											}
 											
 											else if (notifyZone[x] == 4) {
@@ -1516,7 +1604,14 @@ $(function () {
 				
 				for (i = 0; i < arrayLength; i++)
 				{
-					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], concTempArray[i]);
+					if (isMetric)
+					{
+						newEvapArray[i] = main.calculateEvap(main.convertCtoF(airTempArray[i]), humidityArray[i], 1, main.convertCtoF(concTempArray[i]));
+					}
+					else
+					{
+						newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], concTempArray[i]);
+					}
 				}
 						
 				if (isProject)
@@ -1573,7 +1668,14 @@ $(function () {
 			
 			for (i = 0; i < arrayLength; i++)
 			{
-				newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], cTemp);
+				if (isMetric)
+				{
+					newEvapArray[i] = main.calculateEvap(main.convertCtoF(airTempArray[i]), humidityArray[i], main.convertKphToMph(windSpeedArray[i]), main.convertCtoF(cTemp));
+				}
+				else
+				{
+					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], windSpeedArray[i], cTemp);
+				}
 			}
 				
 			//If project
@@ -1632,7 +1734,14 @@ $(function () {
 				
 				for (i = 0; i < arrayLength; i++)
 				{
-					newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], cTemp);	
+					if (isMetric)
+					{
+						newEvapArray[i] = main.calculateEvap(main.convertCtoF(airTempArray[i]), humidityArray[i], 1, main.convertCtoF(cTemp));
+					}
+					else
+					{
+						newEvapArray[i] = main.calculateEvap(airTempArray[i], humidityArray[i], insideWindSpeed[i], cTemp);	
+					}
 				}
 					
 				if (isProject)
@@ -1737,7 +1846,7 @@ $(function () {
 						}
 											
 						else if (eNotif == 3) {
-							notifyColor = '#90EE90';
+							notifyColor = 'greenyellow';
 						}
 											
 						else if (eNotif == 4) {
