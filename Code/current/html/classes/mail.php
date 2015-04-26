@@ -16,8 +16,8 @@ class Email
 	public function newEmailVerify($email, $url, $code)
 	{
 		$subject = 'Email Change Verification';
-		$body = "Hello, \r\n\r\nWe just wanted to verify that you intended to change your email. Please click the link below to change your email address for your account to this address.
-					If you did not request to change your email, you can simply ignore this message.\r\n\r\n" . $url .
+		$body = "Hello, \r\n\r\nWe just wanted to verify that you intended to change your email. Please click the link below to change your email address for your account to this address.".
+					"If you did not request to change your email, you can simply ignore this message.\r\n\r\n" . $url .
 					"\r\n\r\nThanks!";
 		$this->sendMessage($email, $subject, $body);
 	}
