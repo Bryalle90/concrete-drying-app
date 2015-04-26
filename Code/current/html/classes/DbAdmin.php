@@ -22,53 +22,80 @@ class DbAdmin {
 	}
 	
 	//Totals 
-	//number of accounts
+	//number of accounts	
 	public function getTotalNumberOfAccounts(){
-		$sql = "SELECT COUNT(userID) FROM user";
+		$sql = "SELECT COUNT(type) FROM log WHERE type ='7'";
 		$result = mysql_query($sql);
 
 		return $result;
 	}
+	//number of verified accounts
+	public function getTotalNumberOfAccountsVal(){
+		$sql = "SELECT COUNT(type) FROM log WHERE type ='8'";
+		$result = mysql_query($sql);
+
+		return $result;
+	}	
 	
 	//number of projects
 	public function getTotalNumberOfProjects(){
-		$sql = "SELECT COUNT(projectID) FROM project";
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '9'";
+		$result = mysql_query($sql);
+
+		return $result;
+	}	
+	
+	
+	//future notifications	
+	public function getTotalNumberOfFutureNotificationsCreated(){		
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '5'";
 		$result = mysql_query($sql);
 
 		return $result;
 	}
-	
-	//number of projects with shared users
-	public function getTotalNumberOfSharedProjects(){
-		$sql = "SELECT COUNT(DISTINCT projectID)FROM userProjectLookUp";
-		$resultOne = mysql_query($sql);	
-		$resultOne = mysql_result($resultOne, 0);
 
-		$sql = "SELECT COUNT(projectID) FROM userProjectLookUp";
-		$resultTwo = mysql_query($sql);	
-		$resultTwo = mysql_result($resultTwo, 0);			
-
-		$sql = 'SELECT projectID FROM userProjectLookUp GROUP BY projectID HAVING COUNT(*) >= 2';
-		$resultThree = mysql_query($sql);	
-		$resultThree = mysql_num_rows($resultThree);
-
-		$result = $resultTwo - $resultOne - $resultThree;
-
-		return $result;		
-	}
-	
-	//future notifications
-	public function getTotalNumberOfFutureNotifications(){
-		$empty = '';
-		$sql = "SELECT COUNT(reminder) FROM project WHERE reminder != '$empty'";
+	//sent future notifications
+	public function getTotalNumberOfFutureNotificationsSent(){		
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '3'";
 		$result = mysql_query($sql);
 
 		return $result;
 	}
 	
 	//change in state notifications
-	public function getTotalNumberOfChangeInStateNotifications(){
-		$sql = "SELECT COUNT(changeInStateNotificationID) FROM changeInStateNotification";
+	public function getTotalNumberOfChangeInStateNotificationsCreated(){
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '6'";
+		$result = mysql_query($sql);
+
+		return $result;
+	}
+
+	//sent change in state notifications
+	public function getTotalNumberOfChangeInStateNotificationsSent(){
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '4'";
+		$result = mysql_query($sql);
+
+		return $result;
+	}
+	//guest zip searched
+	public function getZipGuest(){
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '0'";
+		$result = mysql_query($sql);
+
+		return $result;
+	}
+
+	//user zip searched
+	public function getZipUser(){
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '1'";
+		$result = mysql_query($sql);
+
+		return $result;
+	}
+
+	//project zip searched
+	public function getZipProject(){
+		$sql = "SELECT COUNT(type) FROM log WHERE type = '2'";
 		$result = mysql_query($sql);
 
 		return $result;
@@ -91,6 +118,49 @@ class DbAdmin {
 		$yearSecond = $splitArraySecond[0] . $splitArraySecond[1] . $splitArraySecond[2] . $splitArraySecond[3];
 		$monthSecond = $splitArraySecond[5] . $splitArraySecond[6];
 		$daySecond = $splitArraySecond[8] . $splitArraySecond[9];
+	
+		$temp;
+
+		if($yearFirst > $yearSecond){
+			$temp = $yearFirst;
+			$yearFirst = $yearSecond;
+			$yearSecond= $temp;
+			$temp = $monthFirst;
+			$monthFirst = $monthSecond;
+			$monthSecond= $temp;
+			$temp = $dayFirst;
+			$dayFirst = $daySecond;
+			$daySecond= $temp;
+		}else if($yearFirst == $yearSecond){
+			if($monthFirst > $monthSecond){
+				$temp = $yearFirst;
+				$yearFirst = $yearSecond;
+				$yearSecond= $temp;
+				$temp = $monthFirst;
+				$monthFirst = $monthSecond;
+				$monthSecond= $temp;
+				$temp = $dayFirst;
+				$dayFirst = $daySecond;
+				$daySecond= $temp;
+
+			}else if($monthFirst == $monthSecond){
+				if($dayFirst > $daySecond){
+					$temp = $yearFirst;
+					$yearFirst = $yearSecond;
+					$yearSecond= $temp;
+					$temp = $monthFirst;
+					$monthFirst = $monthSecond;
+					$monthSecond= $temp;
+					$temp = $dayFirst;
+					$dayFirst = $daySecond;
+					$daySecond= $temp;
+				}else{					
+				}
+			}else{
+			}
+		}else {						
+		}
+		
 
 		$splitArray;
 
@@ -100,11 +170,11 @@ class DbAdmin {
 
 			$year = $splitArray[0] . $splitArray[1] . $splitArray[2] . $splitArray[3];
 			$month = $splitArray[5] . $splitArray[6];
-			$day = $splitArray[8] . $splitArray[9];			
+			$day = $splitArray[8] . $splitArray[9];						
 
-			if($yearFirst = $year = $yearSecond){
+			if($yearFirst == $year || $year == $yearSecond){
 
-				if($monthFirst = $month = $monthSecond){
+				if($monthFirst == $month || $month == $monthSecond){
 
 					if($dayFirst <= $day && $day <= $daySecond){
 
@@ -125,66 +195,193 @@ class DbAdmin {
 			}
 		}
 		
-		echo $total;
-		echo '<br>';
+		return $total;
 
 		
 	}
 
-	//number of accounts
-	public function getRangeNumberOfAccounts($firstDate, $secondDate){
-		$sql = "SELECT * FROM user";
+	//created accounts
+	public function getRangeNumberOfAccountsCreated($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type ='7' AND logTime !=''";
 		$result = mysql_query($sql);
-		if (!$result || !mysql_num_rows($result))
-			$array[0] = 0;
-		$array = array();
-		while ($row = mysql_fetch_array($result)) {
-			$array[] = $row['createdTime'];
-		}
 
-		$result = $this->getTotal($array, $firstDate, $secondDate);				
-	}
-	
-	//number of projects
-	public function getRangeNumberOfProjects($firstDate, $secondDate){
-		$sql = "SELECT * FROM project";
-		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
 			$array[0] = 0;
 		$array = array();
 		while ($row = mysql_fetch_array($result)) {
-			$array[] = $row['addedTime'];
-		}
-
-		$result = $this->getTotal($array, $firstDate, $secondDate);		
-	}	
-	
-	//future notifications
-	public function getRangeNumberOfFutureNotifications($firstDate, $secondDate){
-		$sql = "SELECT * FROM project WHERE reminder != ''";
-		$result = mysql_query($sql);
-		if (!$result || !mysql_num_rows($result))
-			$array[0] = 0;
-		$array = array();
-		while ($row = mysql_fetch_array($result)) {
-			$array[] = $row['reminder'];
+			$array[] = $row['logTime'];
 		}
 
 		$result = $this->getTotal($array, $firstDate, $secondDate);	
+
+		return $result;			
 	}
 	
-	//change in state notifications
-	public function getRangeNumberOfChangeInStateNotifications($firstDate, $secondDate){
-		$sql = "SELECT * FROM changeInStateNotification";
+	//valadated accounts
+	public function getRangeNumberOfAccountsVal($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '8' AND logTime != ''";
 		$result = mysql_query($sql);
 		if (!$result || !mysql_num_rows($result))
 			$array[0] = 0;
 		$array = array();
 		while ($row = mysql_fetch_array($result)) {
-			$array[] = $row['createdDate'];
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);	
+
+		return $result;			
+	}
+	
+	//created projects
+	public function getRangeNumberOfProjects($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '9' AND logTime != ''";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
 		}
 
 		$result = $this->getTotal($array, $firstDate, $secondDate);
+
+		return $result;		
+	}	
+	
+	//number of projects with shared users
+	public function getTotalNumberOfSharedProjects(){
+		$sql = "SELECT COUNT(DISTINCT projectID)FROM userProjectLookUp";
+		$resultOne = mysql_query($sql);	
+		$resultOne = mysql_result($resultOne, 0);
+
+		$sql = "SELECT COUNT(projectID) FROM userProjectLookUp";
+		$resultTwo = mysql_query($sql);	
+		$resultTwo = mysql_result($resultTwo, 0);			
+
+		$sql = 'SELECT projectID FROM userProjectLookUp GROUP BY projectID HAVING COUNT(*) >= 2';
+		$resultThree = mysql_query($sql);	
+		$resultThree = mysql_num_rows($resultThree);
+
+		$result = $resultTwo - $resultOne - $resultThree;
+
+		return $result;		
+	}
+
+	//created future notifications
+	public function getRangeNumberOfFutureNotificationsCreated($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '5' AND logTime != ''";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);	
+
+		return $result;
+	}
+
+	//sent future notifications
+	public function getRangeNumberOfFutureNotificationsSent($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '3' AND logTime != ''";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);	
+
+		return $result;
+	}
+	
+	//created future notifications
+	public function getRangeNumberChangeInStateNotificationsCreated($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '6' AND logTime != ''";
+
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);	
+
+		return $result;
+	}
+
+	//sent future notifications
+	public function getRangeNumberNumberChangeInStateNotificationsSent($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '4' AND logTime != ''";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);	
+
+		return $result;
+	}
+
+	//guest zip searched
+	public function getRangeZipGuest($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '0' AND logTime != ''";
+		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);
+
+		return $result;
+	}
+
+	//user zip searched
+	public function getRangeZipUser($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '1' AND logTime != ''";
+		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);
+
+		return $result;
+	}
+
+	//project zip searched
+	public function getRangeZipProject($firstDate, $secondDate){
+		$sql = "SELECT * FROM log WHERE type = '2' AND logTime != ''";
+		$result = mysql_query($sql);
+
+		if (!$result || !mysql_num_rows($result))
+			$array[0] = 0;
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['logTime'];
+		}
+
+		$result = $this->getTotal($array, $firstDate, $secondDate);
+
+		return $result;
 	}
 
 	//drop everything from all tables (the reset)
@@ -199,15 +396,11 @@ class DbAdmin {
 		mysql_query($sql);
 		$sql = "DELETE FROM zipUpdate";
 		mysql_query($sql);
-		$sql = "DELETE FROM zipcodeLog";
+		$sql = "DELETE FROM log";
 		mysql_query($sql);
 		$sql = "DELETE FROM changeInStateNotification";
 		mysql_query($sql);
-		$sql = "DELETE FROM changeInStateNotificationLog";
-		mysql_query($sql);
 		$sql = "DELETE FROM futureNotification";
-		mysql_query($sql);
-		$sql = "DELETE FROM futureNotificationLog";
 		mysql_query($sql);
 		$sql = "DELETE FROM projectWeatherData";
 		mysql_query($sql);

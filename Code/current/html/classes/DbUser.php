@@ -178,14 +178,12 @@ class DbUser {
 
 	//changes the users name in the table
 	public function changeName($userID, $name){
-		$name = mysql_real_escape_string($name);
 		$sql = "UPDATE user SET name = '$name' WHERE userID = '$userID'";
 		mysql_query($sql);
 	}
 
 	//changes the users email in the table
 	public function changeEmail($userID, $email){
-		$email = mysql_real_escape_string($email);
 		$email = strtolower($email);
 		$sql = "UPDATE user SET email = '$email' WHERE userID = '$userID'";
 		mysql_query($sql);
@@ -198,6 +196,12 @@ class DbUser {
 		mysql_query($sql);
 
 		$sql = "UPDATE user SET forceNewPass = 0 WHERE userID = '$userID'";
+		mysql_query($sql);
+	}
+
+	//changes the users to an admin
+	public function makeAdmin($userID){
+		$sql = "UPDATE user SET isAdmin = 'y' WHERE userID = '$userID'";
 		mysql_query($sql);
 	}	
 
