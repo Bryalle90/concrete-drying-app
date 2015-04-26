@@ -44,6 +44,7 @@
 			}
 			elseif($reminder == $today){
 				sendReminderEmail($projectID, $reminder);
+				$projectdb->changeReminder($projectID, "");
 			}
 		}
 	}
@@ -138,7 +139,6 @@
 		$users = $projectdb->getUsersOfProject($projectID);
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
-			$projectdb->changeReminder($projectID, "");
 			$mailer->futureNotif($email, $projectName, $zip);
 		}
 	}
@@ -150,11 +150,11 @@
 		$projectName = $projectdb->getName($projectID);
 		$zip = $projectdb->getZipcode($projectID);
 		$logger->addRiskEmailSent($zip, $time);
+		$riskdb->deleteNotification($notificationID);
 		
 		$users = $projectdb->getUsersOfProject($projectID);
 		foreach($users as $userID){
 			$email = $userdb->getEmail($userID);
-			$riskdb->deleteNotification($notificationID);
 			$mailer->changeInRiskNotif($email, $projectName, $zip, $time, $oldRisk, $newRisk);
 		}
 	}
