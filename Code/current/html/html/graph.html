@@ -468,8 +468,9 @@ $(function () {
 				
 				var s = '<div style= "padding: 10px; border: 3px solid '+tmpColor+';">';
 				var timeSplit = timeArray[index].split('-');
-				var d = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
-				s +='<b>'+ d.toDateString() +'</b>';
+				var date = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
+				var fullDateTime = date.toDateString() + ' at ' + date.toTimeString().split(':')[0]+'00';
+				s +='<b>'+ fullDateTime +'</b>';
 				if (this.point.color != undefined) {
 					//if (this.point.color == 'red') {
 						//code
@@ -626,8 +627,9 @@ $(function () {
 									notifTimeID = timeArray[this.x];
 									seriesNotifID = this.series.options.id;
 									var timeSplit = timeArray[this.x].split('-');
-									var d = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
-									document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ d.toDateString();
+									var date = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
+									var fullDateTime = date.toDateString() + ' at ' + date.toTimeString().split(':')[0]+'00';
+									document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ fullDateTime;
 							
 									if (this.y <= 0.15)
 									{
