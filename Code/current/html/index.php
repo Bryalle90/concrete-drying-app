@@ -87,8 +87,8 @@
 								</div>
 							</form>
 						</div>
-						<div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-3 col-lg-offset-1 col-lg-2 <?php echo (isset($_GET['zip']) || isset($_SESSION['id'])) ? 'hidden' : '' ?>">
-							<div class="well well-sm row">
+						<div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-3 col-lg-offset-1 col-lg-2 <?php echo (isset($_GET['zip'])) ? 'hidden' : '' ?>">
+							<div class="well well-sm row <?php echo (isset($_SESSION['id'])) ? 'hidden' : '' ?>">
 								<p class="text-center">Sign in to save projects and more!</p>
 								<?php
 									include $_SERVER['DOCUMENT_ROOT']."/html/login.html";
