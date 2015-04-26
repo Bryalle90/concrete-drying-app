@@ -21,6 +21,18 @@
 		<!-- Custom styles for this template -->
 		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
 		<?php session_start(); ?>
+		
+		<style>
+		.vcenter {
+			min-height: 75%;
+			min-height: 75vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+		}
+		</style>
+		
 	</head>
 	
 	<body style="background-color: #DBDBDB">
@@ -44,22 +56,22 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6">
-							<form class="form-inline <?php echo isset($_POST['projectID']) ? 'hidden' : '' ?>" action="/index.php" method="get">
+						<div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
+							<form class="form-inline <?php echo isset($_GET['zip']) ? '' : 'vcenter' ?> <?php echo isset($_POST['projectID']) ? 'hidden' : '' ?>" action="/index.php" method="get">
 								<div align="center">
 									<div class="form-group">
 										<div class="input-group">
-											<span class="input-group-addon">Unit</span>
-											<select name="unit" class="form-control hidezippop">
+											<span class="input-group-addon <?php echo isset($_GET['zip']) ? '' : 'input-lg' ?>">Unit</span>
+											<select name="unit" class="form-control hidezippop <?php echo isset($_GET['zip']) ? '' : 'input-lg' ?>">
 												<option>Standard</option>
 												<option>Metric</option>
 											</select>
 										</div>
 										<label class="sr-only" for="zipinput">Zip Code</label>
 										<div class="input-group">
-											<input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control popover-show " pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view a shrinkage crack risk forcast">
+											<input style="min-width:200px" name="zip" id="zipinput" type="zip" class="form-control popover-show <?php echo isset($_GET['zip']) ? '' : 'input-lg' ?>" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view a shrinkage crack risk forcast">
 											<span class="input-group-btn">
-												<button class="btn btn-primary" type="submit">Go!</button>
+												<button class="btn btn-primary <?php echo isset($_GET['zip']) ? '' : 'input-lg' ?>" type="submit">Enter</button>
 											</span>
 										</div>
 										<script> var graphShown = false; </script>
@@ -67,12 +79,18 @@
 								</div>
 							</form>
 						</div>
-						<div class="col-xs-offset-1 col-sm-offset-0 col-md-offset-0 col-lg-offset-0 col-xs-10 col-sm-3 col-md-3 col-lg-2 <?php echo (isset($_GET['zip']) || isset($_SESSION['id'])) ? 'hidden' : '' ?>">
-							<div class="well well-sm row popover-show" data-trigger="manual" data-placement="bottom" data-content="Sign in to save projects and more!">
-								<h4 class="text-center">Sign in</h4>
+						<div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-3 col-lg-offset-1 col-lg-2 <?php echo (isset($_GET['zip']) || isset($_SESSION['id'])) ? 'hidden' : '' ?>">
+							<div class="well well-sm row">
+								<p class="text-center">Sign in to save projects and more!</p>
 								<?php
 									include $_SERVER['DOCUMENT_ROOT']."/html/login.html";
 								?>
+							</div>
+							<div class="well well-sm row text-center">
+								<p>Useful links</p>
+								<p><a href="http://www.usnaviguide.com/zip.htm">www.usnaviguide.com/zip.htm</a></p>
+								<p><a href="http://www.zipmap.net">www.zipmap.net</a></p>
+								<p><a href="http://www.unitedstateszipcodes.org">www.unitedstateszipcodes.org</a></p>
 							</div>
 						</div>
 					</div>

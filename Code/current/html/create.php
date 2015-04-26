@@ -138,7 +138,7 @@
 					<p>1. You can save a zipcode you visit often as a project</p>
 					<p>2. You can share projects with other users</p>
 					<p>3. You can recieve notifications if the risk changes for one of your projects</p>
-					<p>4. You can be notified when your project becomes in the prediction range</p>
+					<p>4. You can be set reminders for projects that are not in prediction range</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
