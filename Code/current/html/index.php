@@ -31,6 +31,14 @@
 			justify-content: center;
 			flex-direction: column;
 		}
+		.hscroll
+		{
+			overflow-x:scroll;
+			overflow-y:hidden;
+			height:100%;
+			width:100%;
+			padding: 0 15px;
+		}
 		</style>
 		
 	</head>
@@ -177,8 +185,10 @@
 								$logger->addView($zip, $userType);
 				
 								// draw graph
-								include $_SERVER['DOCUMENT_ROOT']."/html/graph.html";
 								?>
+								<div class="hscroll">
+									<?php include $_SERVER['DOCUMENT_ROOT']."/html/graph.html"; ?>
+								</div>
 								<div class="footer navbar-fixed-bottom">
 									<p class="text-center"><font color="red">The results provided by the calculator are intended for educational and informational purposes only.</font></p>
 								</div>
