@@ -33,7 +33,7 @@
 		}
 		.hscroll
 		{
-			overflow-x:scroll;
+			overflow-x:auto;
 			overflow-y:hidden;
 			height:100%;
 			width:100%;
