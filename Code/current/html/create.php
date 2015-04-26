@@ -60,7 +60,7 @@
 								if($userdb->isUser($_POST['tb_email']) == Null){ // email not already used
 									if ($_POST['tb_pass'] == $_POST['tb_pass2']){
 										$userID = $userdb->addUser(($_POST['tb_name'] != "" ? $_POST['tb_name'] : $_POST['tb_email']), $_POST['tb_email'], $_POST['tb_pass'], 'n');
-										$code = $userdb->getCode($userID);
+										$code = $userdb->changeCode($userID);
 										$email = $_POST['tb_email'];
 
 										$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');

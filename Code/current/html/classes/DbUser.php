@@ -27,14 +27,13 @@ class DbUser {
 	public function addUser($name, $email, $userPass, $isAdmin){
 		$name = mysql_real_escape_string($name);
 		$email = mysql_real_escape_string($email);
-		$hashedPass = $this->hashPass($userPass);
+		$hashedPass = $this->createHash($userPass);
 		$email = strtolower($email);
 		date_default_timezone_set('America/New_York');
 		$time = date('Y-m-d H:i:s', strtotime('now'));
-		$code = $this->createCode();
 
 		$sql = "INSERT INTO user (name, email, userPass, code, forgotCode, createdTime, isAdmin, isValidated, seenNotifMsg, forceNewPass)
-		VALUES ('$name', '$email', '$hashedPass', '$code', NULL, '$time', '$isAdmin', 0, 0, 0)";
+		VALUES ('$name', '$email', '$hashedPass', NULL, NULL, '$time', '$isAdmin', 0, 0, 0)";
 		mysql_query($sql);
 
 		$id = $this->isUser($email);
@@ -50,14 +49,14 @@ class DbUser {
 	//changes the users email in the table
 	public function changeCode($userID){
 		$code = $this->createCode();
-
-		$sql = "UPDATE user SET code = '$code' WHERE userID = '$userID'";
+		$hashedCode = $this->createHash($code);
+		$sql = "UPDATE user SET code = '$hashedCode' WHERE userID = '$userID'";
 		mysql_query($sql);
 
 		return($code);
 	}
 
-	public function getCode($userID){
+	private function getCode($userID){
 		$sql = "SELECT code FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
 
@@ -71,14 +70,12 @@ class DbUser {
 
 	public function checkCode($email, $code){
 		$email = strtolower($email);
-		$sql = "SELECT userID FROM user WHERE code = '$code' AND email = '$email'";
-		$result = mysql_query($sql);
-
-		if (!$result || !mysql_num_rows($result))
-			return(Null);
-
-		$userID = mysql_result($result, 0);
-		return $userID;
+		$userID = $this->isUser($email);
+		
+		if($userID && $this->verifyHash($code, $this->getCode($userID))){
+			return $userID;
+		}
+		return(Null);
 	}
 
 	public function removeCode($userID){
@@ -105,7 +102,7 @@ class DbUser {
 	
 	public function resetPass($userID) {
 		$newPass = $this->randomPassword(10);
-		$newHash = $this->hashPass($newPass);
+		$newHash = $this->createHash($newPass);
 		
 		// save new hash in user table
 		$sql = "UPDATE user SET userPass = '$newHash' WHERE userID = '$userID'";
@@ -123,8 +120,8 @@ class DbUser {
 	
 	public function createForgotCode($userID){
 		$code = $this->createCode();
-
-		$sql = "UPDATE user SET forgotCode = '$code' WHERE userID = '$userID'";
+		$hashedCode = $this->createHash($code);
+		$sql = "UPDATE user SET forgotCode = '$hashedCode' WHERE userID = '$userID'";
 		mysql_query($sql);
 
 		return($code);
@@ -139,16 +136,26 @@ class DbUser {
 		return $result;
 	}
 
-	public function checkForgotCode($email, $code){
-		$email = strtolower($email);
-		$sql = "SELECT userID FROM user WHERE forgotCode = '$code' AND email = '$email'";
+	private function getForgotCode($userID){
+		$sql = "SELECT forgotCode FROM user WHERE userID = '$userID'";
 		$result = mysql_query($sql);
 
 		if (!$result || !mysql_num_rows($result))
 			return(Null);
 
-		$userID = mysql_result($result, 0);
-		return $userID;
+		$result = mysql_result($result, 0);
+
+		return $result;
+	}
+
+	public function checkForgotCode($email, $code){
+		$email = strtolower($email);
+		$userID = $this->isUser($email);
+		
+		if($userID && $this->verifyHash($code, $this->getCode($userID))){
+			return $userID;
+		}
+		return(Null);
 	}
 	
 	public function seenNotificationMsg($userID){
@@ -191,7 +198,7 @@ class DbUser {
 
 	//changes the users password in the table
 	public function changePassword($userID, $password){
-		$hashedPass = $this->hashPass($password);
+		$hashedPass = $this->createHash($password);
 		$sql = "UPDATE user SET userPass = '$hashedPass' WHERE userID = '$userID'";
 		mysql_query($sql);
 
@@ -279,7 +286,7 @@ class DbUser {
 		$id = $this->isUser($email);
 		if($id != Null){
 			$hash = $this->getUserPass($id);
-			if($this->verifyPass($userPass, $hash))
+			if($this->verifyHash($userPass, $hash))
 				return ($id);
 		}
 		return(Null);
@@ -297,12 +304,12 @@ class DbUser {
 		return($id);
 	}
 	
-	private function hashPass($pass){
-		return(password_hash($pass, PASSWORD_BCRYPT, array("cost" => 10)));
+	private function createHash($str){
+		return(password_hash($str, PASSWORD_BCRYPT, array("cost" => 10)));
 	}
 	
-	private function verifyPass($pass, $hash){
-		return(password_verify($pass, $hash));
+	private function verifyHash($str, $hash){
+		return(password_verify($str, $hash));
 	}
 
 }

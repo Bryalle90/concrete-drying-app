@@ -22,8 +22,8 @@
 		<link href="libraries/bootstrap/css/theme.css" rel="stylesheet">
 		<?php session_start(); ?>
 	</head>
-	<body>
-
+	
+	<body style="background-color: #DBDBDB">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12">

@@ -43,7 +43,7 @@
 					</div>
 					<div class="alert alert-success" id="alertSuccessEmailChange" role="alert" hidden="true">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						Your email address has been changed and an email has been sent to the new email to verify
+						An email has been sent to the new address to verify your new email address
 					</div>
 					<div class="alert alert-success" id="alertSuccessPassChange" role="alert" hidden="true">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -73,6 +73,10 @@
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						You must change your password
 					</div>
+					<div class="alert alert-danger" id="alertAlready" role="alert" hidden="true">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						Email address is already in use
+					</div>
 					
 					<?php
 						require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbUser.php');
@@ -88,9 +92,20 @@
 								?><script>$('#alertSuccessNameChange').show()</script><?php
 							}
 							if($_POST['tb_email'] != ""){
-								$userdb->changeEmail($_SESSION['id'], $_POST['tb_email']);
-								$_SESSION['email'] = $userdb->getEmail($_SESSION['id']);
-								?><script>$('#alertSuccessEmailChange').show()</script><?php
+								$email = $_POST['tb_email'];
+								if(!$userdb->isUser($email)){
+									$code = $userdb->changeCode($_SESSION['id']);
+
+									$link = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').htmlspecialchars("://$_SERVER[HTTP_HOST]", ENT_QUOTES, 'UTF-8');
+									$link = $link.'/verify.php?email='.$_SESSION['email'].'&newemail='.$email.'&code='.$code;
+									
+									require_once($_SERVER['DOCUMENT_ROOT'].'/classes/mail.php');
+									$mailer = new Email();
+									$mailer->newEmailVerify($email, $link, $code);
+									?><script>$('#alertSuccessEmailChange').show()</script><?php
+								} else {
+									?><script>$('#alertAlready').show()</script><?php
+								}
 							}
 						}
 						if(isset($_POST['btn_edit2'])){ // if the edit button was pressed

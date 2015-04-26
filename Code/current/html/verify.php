@@ -36,6 +36,10 @@
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					A new verification email has been sent to your address!
 				</div>
+				<div class="alert alert-success" role="alert" id="alertSuccessEmailChanged" hidden="true">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					Your email address has been changed!
+				</div>
 				<div class="alert alert-danger" role="alert" id="alertDangerAlreadyVerified" hidden="true">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					This email address has already been verified
@@ -56,8 +60,11 @@
 				// if $_GET['code'] is not blank check validation table for code and validate account
 				if(isset($_GET['code'])){
 					$userID = $userdb->checkCode($_GET['email'], $_GET['code']);
-
-					if($userID){
+					
+					if(!$userID){ // code and email do not match
+						?><script>$('#alertDangerNotVerified').show()</script><?php
+					}
+					elseif(!isset($_GET['newemail']) && !$userdb->getIsValidated($userID)){ // user is not already verified
 						// set verified in userdb
 						$userdb->validate($userID);
 						require_once($_SERVER['DOCUMENT_ROOT'].'/classes/DbLog.php');
@@ -65,8 +72,12 @@
 						$logger->addUserVerified();
 
 						?><script>$('#alertSuccessVerified').show()</script><?php
-					} else {
-						?><script>$('#alertDangerNotVerified').show()</script><?php
+					}
+					elseif(isset($_GET['newemail'])){ // code is for changing email
+						$userdb->changeEmail($userID, $_GET['newemail']);
+						$userdb->removeCode($userID);
+						$_SESSION['email'] = $userdb->getEmail($_SESSION['id']);
+						?><script>$('#alertSuccessEmailChanged').show()</script><?php
 					}
 				}
 
