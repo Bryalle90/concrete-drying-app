@@ -152,7 +152,7 @@ class DbUser {
 		$email = strtolower($email);
 		$userID = $this->isUser($email);
 		
-		if($userID && $this->verifyHash($code, $this->getCode($userID))){
+		if($userID && $this->verifyHash($code, $this->getForgotCode($userID))){
 			return $userID;
 		}
 		return(Null);
