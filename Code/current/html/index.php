@@ -44,7 +44,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
+						<div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6">
 							<form class="form-inline <?php echo isset($_POST['projectID']) ? 'hidden' : '' ?>" action="/index.php" method="get">
 								<div align="center">
 									<div class="form-group">
@@ -57,7 +57,7 @@
 										</div>
 										<label class="sr-only" for="zipinput">Zip Code</label>
 										<div class="input-group">
-											<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view the forcast of shrinkage crack risk.">
+											<input style="min-width:250px" name="zip" id="zipinput" type="zip" class="form-control popover-show" pattern="\d{5}" maxLength="5" size="5" placeholder="zip code" data-trigger="manual" data-placement="bottom" data-content="Enter the zipcode of your project to view a shrinkage crack risk forcast">
 											<span class="input-group-btn">
 												<button class="btn btn-primary" type="submit">Go!</button>
 											</span>
@@ -66,6 +66,14 @@
 									</div>
 								</div>
 							</form>
+						</div>
+						<div class="col-xs-offset-3 col-sm-offset-0 col-md-offset-0 col-lg-offset-0 col-xs-6 col-sm-3 col-md-3 col-lg-2 <?php echo (isset($_GET['zip']) || isset($_SESSION['id'])) ? 'hidden' : '' ?>">
+							<div class="well well-sm row popover-show" data-trigger="manual" data-placement="bottom" data-content="Sign in to save projects and more!">
+								<h4 class="text-center">Sign in</h4>
+								<?php
+									include $_SERVER['DOCUMENT_ROOT']."/html/login.html";
+								?>
+							</div>
 						</div>
 					</div>
 					
@@ -176,8 +184,8 @@
 		
 		<script>
 			if(!graphShown){
-				$('#zipinput').popover('show');
-				$('#zipinput').focus(
+				$('.popover-show').popover('show');
+				$('.popover-show').focus(
 					function() {
 						$('#zipinput').popover('hide');
 					}
@@ -191,7 +199,7 @@
 				);
 				$('.hidezippop').focus(
 					function() {
-						$('#zipinput').popover('hide');
+						$('.popover-show').popover('hide');
 					}
 				);
 			}
