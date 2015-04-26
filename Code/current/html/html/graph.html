@@ -806,6 +806,7 @@ $(function () {
 										$("#notificationModal").modal('show');});
 									}
 									
+									//If point color is green
 									else if (this.color == 'green')
 									{
 										document.getElementById("notifHasBeenMetAlert").innerHTML = '';
@@ -815,7 +816,6 @@ $(function () {
 										if (currentZone == 0)
 										{
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same. ';
-											
 											document.getElementById("editNotif1").innerHTML = 'Moderate Risk';
 											document.getElementById("editNotif2").innerHTML = 'High Risk';
 											document.getElementById("editNotif3").innerHTML = 'Moderate or High Risk';
@@ -838,6 +838,7 @@ $(function () {
 										$("#editNotificationModal").modal('show');});
 									}
 									
+									//If point color is red
 									else if (this.color == 'red')
 									{
 										document.getElementById("notifHasBeenMetAlert").innerHTML = '';
@@ -846,11 +847,8 @@ $(function () {
 										//current zone = Low Risk
 										if (currentZone == 0)									
 										{
-											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.' ;
-
 											document.getElementById("editNotif1").innerHTML = 'Moderate Risk';
 											document.getElementById("editNotif2").innerHTML = 'Moderate or High Risk';
-										
 										}
 										//current zone = Moderate Risk
 										else if (currentZone == 1)
@@ -863,82 +861,66 @@ $(function () {
 										else if (currentZone == 2)
 										{
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-											
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
 											document.getElementById("editNotif2").innerHTML = 'Moderate Risk';
 											document.getElementById("editNotif3").innerHTML = 'Low or Moderate Risk';
-											
 										}
-										
 										$(document).ready(function(){
 										$("#editNotificationModal").modal('show');});
 									}
 									
+									//If point color is yellow
 									else if (this.color == 'yellow')
 									{
-										
 										document.getElementById("notifHasBeenMetAlert").innerHTML = '';
 										document.getElementById("currentNotifZone").innerHTML = 'moderate risk';									
+										
 										//current zone = Low Risk
 										if (currentZone == 0)									
 										{											
-											
-											
 											document.getElementById("editNotif1").innerHTML = 'High Risk';
-											
 											document.getElementById("editNotif2").innerHTML = 'Moderate or High Risk';
-											
-										
 										}
+										
 										//current zone = Moderate Risk
 										else if (currentZone == 1)
 										{
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
-											
 											document.getElementById("editNotif2").innerHTML = 'High Risk';
-
 											document.getElementById("editNotif3").innerHTML = 'Low or High Risk';
 										}
 										
 										//current zone = High Risk
 										else if (currentZone == 2)
 										{
-											
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
-										
 											document.getElementById("editNotif2").innerHTML = 'Low or Moderate Risk';
-											
 										}
 										
 										$(document).ready(function(){
 										$("#editNotificationModal").modal('show');});
 									}
 									
+									//If point color is orange
 									else if (this.color == 'orange')
 									{
 										document.getElementById("notifHasBeenMetAlert").innerHTML = '';
 										document.getElementById("currentNotifZone").innerHTML = 'moderate or high risk';
+										
 										//current zone = Low Risk
 										if (currentZone == 0)									
-										{											
-											
+										{												
 											document.getElementById("editNotif1").innerHTML = 'Moderate Risk';
 											document.getElementById("editNotif2").innerHTML = 'High Risk';
-											
-										
 										}
+										
 										//current zone = Moderate Risk
 										else if (currentZone == 1)
 										{
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
-											
 											document.getElementById("editNotif2").innerHTML = 'High Risk';
-											
-											
 											document.getElementById("editNotif3").innerHTML = 'Low or High Risk';
 										}
 										
@@ -946,14 +928,11 @@ $(function () {
 										else if (currentZone == 2)
 										{
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-											
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
 											document.getElementById("editNotif2").innerHTML = 'Moderate Risk';
-											
-											document.getElementById("editNotif3").innerHTML = 'Low or Moderate Risk';
-											
-											
+											document.getElementById("editNotif3").innerHTML = 'Low or Moderate Risk';					
 										}
+										
 										$(document).ready(function(){
 										$("#editNotificationModal").modal('show');});
 									}
@@ -962,82 +941,66 @@ $(function () {
 									{
 										document.getElementById("notifHasBeenMetAlert").innerHTML = '';
 										document.getElementById("currentNotifZone").innerHTML = 'low or high risk';
+										
 										//current zone = Low Risk
 										if (currentZone == 0)									
 										{											
-											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-					
+											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';				
 											document.getElementById("editNotif1").innerHTML = 'Moderate Risk';
-											document.getElementById("editNotif2").innerHTML = 'High Risk';
-											
-											document.getElementById("editNotif3").innerHTML = 'Moderate or High Risk';
-											
-										
+											document.getElementById("editNotif2").innerHTML = 'High Risk';								
+											document.getElementById("editNotif3").innerHTML = 'Moderate or High Risk';									
 										}
+										
 										//current zone = Moderate Risk
 										else if (currentZone == 1)
 										{
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
-											
-											document.getElementById("editNotif2").innerHTML = 'High Risk';
-											
-											
+											document.getElementById("editNotif2").innerHTML = 'High Risk';								
 										}
 										
 										//current zone = High Risk
 										else if (currentZone == 2)
 										{
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-											
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
 											document.getElementById("editNotif2").innerHTML = 'Moderate Risk';
-											
-											document.getElementById("editNotif3").innerHTML = 'Low or Moderate Risk';
-										
-											
+											document.getElementById("editNotif3").innerHTML = 'Low or Moderate Risk';										
 										}
+										
 										$(document).ready(function(){
 										$("#editNotificationModal").modal('show');});
 									}
 									
-									else if (this.color == 'greenyellow') 
-										//code
-									
+									else if (this.color == 'greenyellow') 		
 									{
 										document.getElementById("notifHasBeenMetAlert").innerHTML = '';
 										document.getElementById("currentNotifZone").innerHTML = 'low or moderate risk';
+										
 										//current zone = Low Risk
 										if (currentZone == 0)									
 										{											
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-							
 											document.getElementById("editNotif1").innerHTML = 'Moderate Risk';
 											document.getElementById("editNotif2").innerHTML = 'High Risk';
 											document.getElementById("editNotif3").innerHTML = 'Moderate or High Risk';
-											
-										
 										}
+										
 										//current zone = Moderate Risk
 										else if (currentZone == 1)
 										{
 											document.getElementById("notifHasBeenMetAlert").innerHTML = 'The current predicted risk meets your notification reuqirements. Your e-mail notification will be sent later if the current predicted risk remains the same.';
-
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
-											
-											document.getElementById("editNotif2").innerHTML = 'High Risk';
-											
-											
+											document.getElementById("editNotif2").innerHTML = 'High Risk';								
 											document.getElementById("editNotif3").innerHTML = 'Low or High Risk';
 										}
 										
 										//current zone = High Risk
 										else if (currentZone == 2)
 										{
-											
 											document.getElementById("editNotif1").innerHTML = 'Low Risk';
-											document.getElementById("editNotif2").innerHTML = 'Moderate Risk';
-											
+											document.getElementById("editNotif2").innerHTML = 'Moderate Risk';	
 										}
+										
 										$(document).ready(function(){
 										$("#editNotificationModal").modal('show');});
 									}
@@ -1047,7 +1010,6 @@ $(function () {
 										$(document).ready(function(){
 										$("#notificationModal").modal('show');});
 									}
-									
 								}
 								
 								else
@@ -1069,10 +1031,7 @@ $(function () {
 		[{
 			name: 'Original Prediction',
 			data: evapArray,
-			
 			lineWidth: 2,
-			//color: 'black',
-			//lineColor: 'red',
 			id: 'original'
 		}],
 
@@ -1160,25 +1119,6 @@ $(function () {
 			}
 		} //end exporting
 	}); //end chart config
-
-	$("#ResetButton").click(function()
-	{
-		var chartN = $('#container').highcharts();
-		chartN.redraw();
-		for (var ii = 0; ii < arrayLength; ii++)
-		{
-			evapArray[ii] = originalEvapArray[ii];
-			concTempArray[ii] = originalConcTempArray[ii];
-			windSpeedArray[ii] = originalWindSpeedArray[ii];
-			//Update chart
-			//chartN.series[0].data[ii].update(evapArray[ii]);
-			//chartN.series[0].update(chartN.series[0].data[ii].options);
-			//chart.tooltip.refresh(chart.series[0].points[ii]);
-		}
-		//chart.series[0].setData(originalEvapArray)
-		chartN.redraw();
-		isOriginalGraph = true;
-	});
 	
 	$("#sbutton").click(function()
 	{
@@ -1251,7 +1191,6 @@ $(function () {
 		var c = $('#container').highcharts();
 		var notif = document.getElementById("notif").value;
 
-	
 		//0=low; 1=med; 2=high; 3=low/med; 4=med/high ;5=low/high
 		
 		if (notif == 'Low Risk') { notif = 0; }
@@ -1260,7 +1199,6 @@ $(function () {
 		else if (notif == 'Low or Moderate Risk') { notif = 3; }
 		else if (notif == 'Moderate or High Risk') { notif = 4; }
 		else if (notif == 'Low or High Risk') { notif = 5; }
-
 		
 		$.ajax({
 			url: '/php/addNotif.php',
@@ -1330,8 +1268,7 @@ $(function () {
 									//alert (data.category);
 									data.update({
 										color: notifyColor,
-										radius: 5
-									
+										radius: 5	
 									});
 								}
 							});					
@@ -1374,7 +1311,6 @@ $(function () {
 							var tmpWind = '';
 							var tmpEvapArray = [];
 							
-							
 							//IF CONCRETE = 0 use default prediciton
 							//IF WIND = 0 use default prediciton
 							if (concrete[i] == 0 && wind[i] == 1)
@@ -1384,7 +1320,6 @@ $(function () {
 								{
 									if (isMetric)
 									{
-										
 										tmpEvapArray[j] = main.calculateEvap(main.convertCtoF(airTempArray[j]), humidityArray[j], 1, main.convertCtoF(concTempArray[j]));
 									}
 									else
@@ -1437,7 +1372,6 @@ $(function () {
 								{
 									if (isMetric)
 									{
-										
 										tmpEvapArray[j] = main.calculateEvap(main.convertCtoF(airTempArray[j]), humidityArray[j], 1, main.convertCtoF(concrete[i]));
 									}
 									else
@@ -1472,8 +1406,6 @@ $(function () {
 				{
 					if (response != 'None')
 					{
-						//var obj = JSON.parse(response)
-						//alert(response);
 						var obj = JSON.parse(response)
 						var changeInStateID = obj.changeInStateID;
 						var idOfSeries = obj.sid;
@@ -1484,7 +1416,6 @@ $(function () {
 						var numbOfSeries;
 
 						indexArr = [];
-						//alert(changeInStateID.length);
 						
 						//find how many series there are
 						var counter = 0;
@@ -1492,8 +1423,6 @@ $(function () {
 						{
 							counter = counter + 1;
 						}
-						//alert(counter);
-					//	alert(chart.series[1].options.id);
 						
 						//Loop through all the series
 						for(y=0; y < counter; y++)
@@ -1538,27 +1467,20 @@ $(function () {
 											else{
 												notifyColor = 'brown';
 											}
-											//alert(i);
-											//If index of point = index
-												
-													//alert (data.category);
+
 											data.update({
 												color: notifyColor,
 												radius: 5
 							
 												});
-												
-											
 										}
 									});
 								}
 							}
 						}
-
-
 					}
 				}
-				});
+			});
 		}
 	});
 	
@@ -1617,7 +1539,6 @@ $(function () {
 				if (isProject)
 				{
 					if (cTemp == '') { cTemp = 'null'; }
-					//alert(projectID);
 					$.ajax({
 						url: '/php/addSeries.php',
 						type: 'post',
@@ -1801,6 +1722,12 @@ $(function () {
 		else if (eNotif == 'Low or Moderate Risk') { eNotif = 3; }
 		else if (eNotif == 'Moderate or High Risk') { eNotif = 4; }
 		else if (eNotif == 'Low or High Risk') { eNotif = 5; }
+		
+		if (eNotif == '') {
+			alert('Invalid Response')
+		}
+		else
+		{
 		c =$('#container').highcharts();
 		//Loop through all the series
 		
@@ -1867,21 +1794,14 @@ $(function () {
 							color: notifyColor,
 							radius: 5
 							
-						});
-												
-											
+						});						
 					}
 				});
-			}
-							
+			}				
 		}
-				
 			}
 		});
-		
-		
-
-		
+		}
 	});
 	
 	$("#deleteNotifButton").click(function()
@@ -1935,31 +1855,19 @@ $(function () {
 							color: notifyColor,
 							radius: 4
 							
-						});
-												
-											
+						});						
 					}
 				});
-			}
-							
+			}				
 		}
 			}
 			
 		});
 	});
-	
-	
-	
-
 });//End function
-
-
 </script>
 
-
-
 <div id ="button"></div>
-
 <div id="emailModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -1991,6 +1899,7 @@ $(function () {
 			</div>
 			<div class="modal-body">
 				<form>
+					<p>Notifications are checked daily at midnight CST/CDT</p>
 					Receive an e-mail when the predicted risk changes to
 					<select id='notif'>
 						<option id = notif1> </option>
@@ -2018,16 +1927,12 @@ $(function () {
 			<div class="modal-body">
 				<span id = "notifHasBeenMetAlert"> </span><br>
 				<form>
-					Change Notification from <b><span id = "currentNotifZone" > </span></b> to:
-					
-					
+					Change Notification from <b><span id = "currentNotifZone" > </span></b> to:			
 					<select id='eNotif'>
 						<option id = editNotif1> </option>
 						<option id = editNotif2> </option>
 						<option id = editNotif3> </option>
-
-					</select>
-					
+					</select>	
 			</div>
 			<div class = "modal-footer">
 				<button type="button" class="btn btn-danger pull-left" id="deleteNotifButton" >Delete Notification</button>
