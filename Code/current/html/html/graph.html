@@ -159,23 +159,6 @@ $(function () {
 	monthname[9] = "October";
 	monthname[10] = "November";
 	monthname[11] = "December";
-	
-	var weekday = new Array(7);
-	weekday[0] = "Sun";
-	weekday[1] = "Mon";
-	weekday[2] = "Tues";
-	weekday[3] = "Wed";
-	weekday[4] = "Thur";
-	weekday[5] = "Fri";
-	weekday[6] = "Sat";
-	
-	var year = [];
-	var day = [];
-	
-	var hour = [];
-	var month = [];
-	var nameOfMonth = [];
-	var nameOfDay = [];
 
 	//Labels
 	var yaxislabel = "Evaporation Rate";
@@ -239,124 +222,31 @@ $(function () {
 	document.getElementById("cTempLabel").innerHTML = temperatureLabel;
 
 	//Format dates and times
-	for (var i=0; i<arrayLength; i++)
-	{
-		var string = timeArray[i];
-		var partsArray = string.split('-');
-		year[i] = partsArray[0];
-		month[i] = partsArray[1];
-		day[i] = partsArray[2];
-		hour[i] = partsArray[3];
-		var d = new Date(partsArray[0], ((partsArray[1]) - 1), partsArray[2], partsArray[3], 0, 0, 0);
-		year[i] = d.getFullYear().toString().substr(2,2);
-		nameOfMonth[i] = monthname[d.getMonth()];
-		nameOfDay[i] = weekday[d.getDay()];
-		
-		if (day[i] == 01 || day[i] == 21 || day[i] == 31) {
-			//alert('st');
-			daySuffix[i] = "st";
-		}
-		else if (day[i] == 02 || day[i] == 22) {
-			//alert('nd');
-			daySuffix[i] = "nd";
-		}
-		else if (day[i] == 03 || day[i] == 23) {
-			//alert('rd');
-			daySuffix[i] = "rd";
-		}
-		else {
-			//alert('th');
-			daySuffix[i] = "th";
-		}
-		
-		if (day[i] == 01) {
-			day[i] = 1;
-		}
-		else if (day[i] == 02) {
-			day[i] = 2;
-		}
-		else if (day[i] == 03) {
-			day[i] = 3;
-		}
-		else if (day[i] == 04) {
-			day[i] = 4;
-		}
-		else if (day[i] == 05) {
-			day[i] = 5;
-		}
-		else if (day[i] == 06) {
-			day[i] = 6;
-		}
-		else if (day[i] == 07) {
-			day[i] = 7;
-		}
-		else if (day[i] == 08) {
-			day[i] = 8;
-		}
-		else if (day[i] == 09) {
-			day[i] = 9;
-		}		
-		
-	}
-	
-	var timezone = 'Local time of ' + city + ', ' + state + '<br>' +  nameOfMonth[0] + " " + day[0] + daySuffix[0] + " - "+ nameOfMonth[nameOfMonth.length - 1] + " " + day[day.length - 1] + daySuffix[day.length - 1];
-
 	//Labels for x-axis
-	var labelDate = [];
-	var fullDate = [];
-	groupedLabels = [];
-	d = []
-	var j=0;
-	var x=0;
-	dayName = [];
-	dayName[0] = nameOfDay[0] + ' ' + day[0];
-	var zero = [];
-	var one = [];
-	var two = [];
-	var three = [];
-	var four = [];
-	var five = [];
-	var six = [];
-	var seven = [];
-	zero[0] = hour[0];
-	
-	//Set Labels for x-axis
-	fullDate[0] = nameOfDay[0] + " " + nameOfMonth[0] + " " + day[0] + daySuffix[0] + " at " + hour[0] + ":00";
-	labelDate[0] = hour[0] +", "+ nameOfDay[0];
-	
-	for (var i = 1; i < arrayLength; i++)
-	{
-		fullDate[i] = nameOfDay[i] + " " + nameOfMonth[i] + " " + day[i] + daySuffix[i] + " at " + hour[i] + ":00";
-		labelDate[i] = hour[i] +", "+ nameOfDay[i];
-	
-		if (nameOfDay[i] == nameOfDay[i-1])
-		{
-			x += 1;
-			if (j == 0) { zero[x] = hour[i]; }
-			if (j == 1) { one[x] = hour[i]; }
-			if (j == 2) { two[x] = hour[i]; }
-			if (j == 3) { three[x] = hour[i]; }
-			if (j == 4) { four[x] = hour[i]; }
-			if (j == 5) { five[x] = hour[i]; }
-			if (j == 6) { six[x] = hour[i]; }
-			if (j == 7) { seven[x] = hour[i]; }
+	var weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	var names = [];
+	for(i in timeArray){
+		var timeSplit = timeArray[i].split('-');
+		var d = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
+		var dayName = weekday[d.getDay()]+' '+d.getDate();
+		var namesLen = names.length;
+		if(namesLen == 0 || names[namesLen-1]['name'] != dayName){
+			names.push({'name':dayName, 'categories':[]});
+			names[namesLen]['categories'].push(timeSplit[3]);
 		}
-		
-		else
-		{
-			x = 0;
-			j += 1;
-			if (j == 0) { zero[0] = hour[i]; }
-			if (j == 1) { one[0] = hour[i]; }
-			if (j == 2) { two[0] = hour[i]; }
-			if (j == 3) { three[0] = hour[i]; }
-			if (j == 4) { four[0] = hour[i]; }
-			if (j == 5) { five[0] = hour[i]; }
-			if (j == 6) { six[0] = hour[i]; }
-			if (j == 7) { seven[0] = hour[i]; }
-			dayName[j] = nameOfDay[i] + ' '+ day[i]; 
+		else{
+			names[namesLen-1]['categories'].push(timeSplit[3]);
 		}
 	}
+	
+	// Format timezone label
+	var timeSplit = timeArray[0].split('-');
+	var firstDate = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
+	
+	var timeSplit = timeArray[timeArray.length - 1].split('-');
+	var lastDate = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
+	
+	var timezone = 'Local time of '+city+', '+state+'<br>'+firstDate.toDateString()+' - '+lastDate.toDateString();
 
 	//Chart Configuration
 	$('#container').highcharts
@@ -408,47 +298,7 @@ $(function () {
 			title: { text: timezone },
 			
 			//x axis labels
-			categories:
-			[{
-				
-				name: dayName[0],
-				categories: zero
-			},
-			
-			{
-				name: dayName[1],
-				categories: one
-			},
-			
-			{
-				name: dayName[2],
-				categories: two
-			},
-			
-			{
-				name: dayName[3],
-				categories: three
-			},
-			
-			{
-				name: dayName[4],
-				categories: four
-			},
-			
-			{
-				name: dayName[5],
-				categories: five
-			},
-		
-			{
-				name: dayName[6],
-				categories: six
-			},
-
-			{
-				name: dayName[7],
-				categories: seven
-			}],
+			categories: names,
 			
 			//x axis label configuration
 			labels:
@@ -617,7 +467,9 @@ $(function () {
 				}
 				
 				var s = '<div style= "padding: 10px; border: 3px solid '+tmpColor+';">';
-				s +='<b>'+ fullDate[index] +'</b>';
+				var timeSplit = timeArray[index].split('-');
+				var d = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
+				s +='<b>'+ d.toDateString() +'</b>';
 				if (this.point.color != undefined) {
 					//if (this.point.color == 'red') {
 						//code
@@ -773,7 +625,9 @@ $(function () {
 									//c =$('#container').highcharts();
 									notifTimeID = timeArray[this.x];
 									seriesNotifID = this.series.options.id;
-									document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ fullDate[this.x];
+									var timeSplit = timeArray[this.x].split('-');
+									var d = new Date(timeSplit[0], timeSplit[1]-1, timeSplit[2], timeSplit[3], 0, 0, 0);
+									document.getElementById("notiftitle").innerHTML = 'Add Notification for '+ d.toDateString();
 							
 									if (this.y <= 0.15)
 									{
