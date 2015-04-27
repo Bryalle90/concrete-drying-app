@@ -53,10 +53,10 @@ class Email
 		$this->sendMessage($email, $subject, $body);
 	}
 
-	public function emailGraph($email, $url, $zipcode, $name, $usrmsg) 
+	public function emailGraph($email, $url, $zipcode, $name, $usrmsg)
 	{
 		$subject = 'Plastic Shinkage Cracks';
-		$body = "Hello,\r\n\r\n".$name." has sent you the probablility that concrete will form plastic shinkage cracks for zip code: ".$zipcode.".\r\n\r\n".$name." said: ".addslashes($usrmsg)."\r\n\r\nClick the link below to see the predictions.\r\n\r\n" . $url .
+		$body = "Hello,\r\n\r\n".$name." has sent you the probablility that concrete will form plastic shinkage cracks for zip code: ".$zipcode.".\r\n\r\n".$name." said: ".$usrmsg."\r\n\r\nClick the link below to see the predictions.\r\n\r\n" . $url .
 					"\r\n\r\nThanks!";
 		$this->sendMessage($email, $subject, $body);
 	} 
