@@ -384,6 +384,19 @@ class DbAdmin {
 		return $result;
 	}
 
+	public function getAllEmails(){
+
+		$sql = "SELECT * FROM user WHERE isValidated = '1'";
+		$result = mysql_query($sql);
+		if (!$result || !mysql_num_rows($result))
+			return(Null);
+		$array = array();
+		while ($row = mysql_fetch_array($result)) {
+			$array[] = $row['email'];
+		}
+		return $array;
+	}
+
 	//drop everything from all tables (the reset)
 	public function dropAll(){
 		$sql = "DELETE FROM project";
