@@ -71,6 +71,13 @@ class Email
 		$this->sendMessage($email, $subject, $body);
 	}
 
+	public function databaseReset($email)
+	{
+		$subject = "Plastic Shrinkage Cracks Account Deleted";
+		$body = "Hello, \r\n\r\nWe had to reset the database. All accounts, projects, and notifications have been deleted. You will have to create a new account.\r\n\r\nSorry for the inconvenience. ";
+		$this->sendMessage($email, $subject, $body);
+	}
+
 	public function changeInRiskNotif($email, $projectName, $zipcode, $date, $oldRisk, $newRisk) 
 	{
 		$url = 'https://plasticcracks.siue.edu/projects.php';
