@@ -624,6 +624,8 @@ $(function () {
 							{
 								if (isOwner)
 								{
+document.getElementById('notifHasBeenMetAlert').innerHTML = '';
+document.getElementById('editNotif3').innerHTML = '';
 									
 									//c =$('#container').highcharts();
 									notifTimeID = timeArray[this.x];
@@ -1082,7 +1084,7 @@ $(function () {
 					//c =$('#container').highcharts();
 				
 					//Loop through all the series
-					for(y=0; y < numberOfSeries; y++)
+					for(y=0; y <= numberOfSeries; y++)
 					{
 		
 						if (c.series[y].options.id == seriesNotifID)
@@ -1348,20 +1350,34 @@ $(function () {
 	$("#emailGraph").click(function()
 	{
 		var c = $('#container').highcharts();
-		var email = document.getElementById("email").value;
+		var email = document.getElementById("emailAdd").value;
 		name = document.getElementById("name").value;
 		var message = document.getElementById("message").value;
 		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-		
 		//validate email
-		if (email == '' || emailReg.test(email) == false) { alert('Invalid e-mail address'); }
+		if (email == '' ) { alert('Invalid e-mail address'); }
 		else if (name == '') { alert('Please enter your name'); }
 		//else send email
 		else
 		{
-			var url = window.location.href;
-			$("#emailSuccess").show();
-			$('#emailModal').modal('toggle');
+			
+			var urlG = window.location.href;
+			$.ajax({
+				url: '/php/emailGraph.php',
+				type: 'post',
+				data: {emailURL: urlG,
+					emailAdd: email,
+					zip: zipCode,
+					userName: name,
+					msg: message},
+				success: function(successMsg)
+				{
+					
+					$("#emailSuccess").show();
+					$('#emailModal').modal('toggle');
+		
+				}
+			});
 		}
 	});
 
@@ -1604,7 +1620,7 @@ $(function () {
 					$("#changeNotif").show();
 					$('#editNotificationModal').modal('toggle');
 					
-					for(y=0; y < numberOfSeries; y++)
+					for(y=0; y <= numberOfSeries; y++)
 			{
 	
 			if (c.series[y].options.id == seriesNotifID)
@@ -1689,7 +1705,7 @@ $(function () {
 					$("#deleteNotif").show();
 					$('#editNotificationModal').modal('toggle');
 					
-			for(y=0; y < numberOfSeries; y++)
+			for(y=0; y <= numberOfSeries; y++)
 			{
 	
 			if (c.series[y].options.id == seriesNotifID)
@@ -1734,13 +1750,13 @@ $(function () {
 			</div>
 			<div class="modal-body">
 				<form onsubmit="return false;">
-					<input class="form-control" id="email" type="text" placeholder='E-mail Address' required>
+					<input class="form-control" id="emailAdd" type="text" placeholder='E-mail Address' required>
 					<input class="form-control" id="name" type="text" placeholder='Name' required>
 
 						<textarea name = "message" id = 'message' class="form-control" placeholder="Add message...." ></textarea>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" id='emailGraph'>Send E-mail</button>
+				<button type="button" class="btn btn-primary" id='emailGraph' >Send E-mail</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 				</form>
@@ -1757,7 +1773,7 @@ $(function () {
 			</div>
 			<div class="modal-body">
 				<form>
-					<p>Notifications are checked daily at midnight CST/CDT</p>
+					<p>Notifications are checked every 6 hours</p>
 					Receive an e-mail when the predicted risk changes to
 					<select id='notif'>
 						<option id = notif1> </option>
