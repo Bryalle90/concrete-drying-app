@@ -1,0 +1,363 @@
+zip: 60123
+time: 664ms
+
+zip: 60006
+time: 580ms
+
+zip: 60460
+time: 546ms
+
+zip: 60096
+time: 475ms
+
+zip: 60138
+time: 17532ms
+
+zip: 60474
+time: 787ms
+
+zip: 60150
+time: 469ms
+
+zip: 60137
+time: 417ms
+
+zip: 60422
+time: 546ms
+
+zip: 60011
+time: 461ms
+
+average time: 2247.7ms
+median time: 546ms
+min time: 417ms
+max time: 17532ms
+
+zip: 60123
+time: 664ms
+
+zip: 60006
+time: 580ms
+
+zip: 60460
+time: 546ms
+
+zip: 60096
+time: 475ms
+
+zip: 60138
+time: 17532ms
+
+zip: 60474
+time: 787ms
+
+zip: 60150
+time: 469ms
+
+zip: 60137
+time: 417ms
+
+zip: 60422
+time: 546ms
+
+zip: 60011
+time: 461ms
+
+average time: 2247.7ms
+median time: 546ms
+min time: 417ms
+max time: 17532ms
+
+zip: 60163
+time: 707ms
+
+zip: 60141
+time: 444ms
+
+zip: 60078
+time: 3871ms
+
+zip: 60077
+time: 12830ms
+
+zip: 60133
+time: 445ms
+
+zip: 60007
+time: 455ms
+
+zip: 60454
+time: 481ms
+
+zip: 60459
+time: 13582ms
+
+zip: 60137
+time: 633ms
+
+zip: 60091
+time: 616ms
+
+average time: 3406.4ms
+median time: 624.5ms
+min time: 444ms
+max time: 13582ms
+
+
+zip: 60145
+time: 13004ms
+
+zip: 60065
+time: 541ms
+
+zip: 60425
+time: 605ms
+
+zip: 60411
+time: 510ms
+
+zip: 60002
+time: 582ms
+
+zip: 60071
+time: 497ms
+
+zip: 60169
+time: 476ms
+
+zip: 60192
+time: 1695ms
+
+zip: 60047
+time: 738ms
+
+zip: 60477
+time: 12314ms
+
+average time: 3096.2ms
+median time: 593.5ms
+min time: 476ms
+max time: 13004ms
+
+
+
+zip: 60049
+time: 954ms
+
+zip: 60412
+time: 483ms
+
+zip: 60083
+time: 445ms
+
+zip: 60064
+time: 441ms
+
+zip: 60173
+time: 514ms
+
+zip: 60156
+time: 399ms
+
+zip: 60185
+time: 13296ms
+
+zip: 60195
+time: 461ms
+
+zip: 60033
+time: 526ms
+
+zip: 60004
+time: 593ms
+
+average time: 1811.2ms
+median time: 498.5ms
+min time: 399ms
+max time: 13296ms
+
+
+
+zip: 60136
+time: 659ms
+
+zip: 60020
+time: 484ms
+
+zip: 60159
+time: 1506ms
+
+zip: 60060
+time: 473ms
+
+zip: 60034
+time: 544ms
+
+zip: 60164
+time: 15199ms
+
+zip: 60461
+time: 15672ms
+
+zip: 60410
+time: 14867ms
+
+zip: 60026
+time: 518ms
+
+zip: 60020
+time: 14449ms
+
+average time: 6437.1ms
+median time: 1082.5ms
+min time: 473ms
+max time: 15672ms
+
+
+
+zip: 60169
+time: 14423ms
+
+zip: 60018
+time: 823ms
+
+zip: 60187
+time: 481ms
+
+zip: 60459
+time: 529ms
+
+zip: 60487
+time: 732ms
+
+zip: 60152
+time: 483ms
+
+zip: 60086
+time: 1729ms
+
+zip: 60199
+time: 579ms
+
+zip: 60086
+time: 1672ms
+
+zip: 60203
+time: 14256ms
+
+average time: 3570.7ms
+median time: 777.5ms
+min time: 481ms
+max time: 14423ms
+
+
+
+zip: 60201
+time: 15294ms
+
+zip: 60067
+time: 663ms
+
+zip: 60037
+time: 503ms
+
+zip: 60465
+time: 543ms
+
+zip: 60001
+time: 1487ms
+
+zip: 60119
+time: 13196ms
+
+zip: 60452
+time: 15831ms
+
+zip: 60420
+time: 606ms
+
+zip: 60480
+time: 555ms
+
+zip: 60132
+time: 1506ms
+
+average time: 5018.4ms
+median time: 1075ms
+min time: 503ms
+max time: 15831ms
+
+
+
+zip: 60499
+time: 569ms
+
+zip: 60146
+time: 3450ms
+
+zip: 60017
+time: 580ms
+
+zip: 60055
+time: 13360ms
+
+zip: 60026
+time: 547ms
+
+zip: 60055
+time: 521ms
+
+zip: 60104
+time: 458ms
+
+zip: 60457
+time: 13002ms
+
+zip: 60124
+time: 625ms
+
+zip: 60435
+time: 14870ms
+
+average time: 4798.2ms
+median time: 602.5ms
+min time: 458ms
+max time: 14870ms
+
+
+
+zip: 60121
+time: 1750ms
+
+zip: 60454
+time: 477ms
+
+zip: 60428
+time: 1478ms
+
+zip: 60113
+time: 547ms
+
+zip: 60302
+time: 15236ms
+
+zip: 60005
+time: 603ms
+
+zip: 60125
+time: 15632ms
+
+zip: 60031
+time: 508ms
+
+zip: 60115
+time: 538ms
+
+zip: 60302
+time: 518ms
+
+average time: 3728.7ms
+median time: 575ms
+min time: 477ms
+max time: 15632ms
+
