@@ -252,7 +252,7 @@ class DbAdmin {
 	//number of projects with shared users
 	public function getTotalNumberOfSharedProjects(){		
 
-		$sql = 'SELECT projectID FROM userProjectLookUp GROUP BY projectID HAVING COUNT(*) >= 2';
+		$sql = 'SELECT projectID FROM userProjectLookup GROUP BY projectID HAVING COUNT(*) >= 2';
 		$result = mysql_query($sql);	
 		$result = mysql_num_rows($result);
 
