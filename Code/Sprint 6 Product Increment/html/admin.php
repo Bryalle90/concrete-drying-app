@@ -156,7 +156,7 @@
 							<td>';
 								$result = $admindb->getTotalNumberOfSharedProjects();
 								if($result != NULL){
-									echo mysql_result($result, 0);
+									echo $result;
 								}else{
 									echo '0';
 								}
