@@ -1,0 +1,9 @@
+To set up server for first use:
+	1. install webserver with PHP
+	2. install MySQL
+	3. edit zipinfo.csv file path in 'Create Database and Tables.txt'
+	4. copy all text in 'Create Database and Tables.txt' and paste to MySQL
+	5. copy all web files in html folder to root web directory
+	6. log in with default admin and change password/email
+	   default admin username: root@admin
+			  pasword: pass
